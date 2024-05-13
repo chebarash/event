@@ -1,0 +1,10 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.header p {
+  color: var(--subFg);
+  font-size: 16px;
+}
