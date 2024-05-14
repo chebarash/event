@@ -1,4 +1,71 @@
 .event {
   display: flex;
   flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.event span {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border-radius: 32px;
+}
+
+.event span p {
+  position: absolute;
+  top: 19px;
+  left: 19px;
+  border-radius: 13px;
+  padding: 0 12px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--subFg);
+}
+
+.event > div {
+  display: flex;
+  gap: 15px;
+}
+
+.box {
+  display: flex;
+  padding: 2px;
+  background: var(--fg);
+  height: 40px;
+  border-radius: 20px;
+}
+
+.title,
+.date {
+  display: flex;
+  padding: 10px 16px;
+  background: var(--bg);
+  border-radius: 18px;
+  height: 100%;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.date {
+  background: none;
+  color: var(--bg);
+}
+
+.arrow {
+  width: 40px;
+  height: 40px;
+  background: var(--accent);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
