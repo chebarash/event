@@ -11,7 +11,8 @@
 .logo {
   color: var(--subFg);
   font-size: 16px;
-  transition: transform ease 200ms;
+  transition: transform ease 200ms, opacity ease 200ms, height ease 200ms,
+    margin-top ease 200ms;
 }
 
 .logo {
@@ -31,7 +32,9 @@
   opacity: 0;
 }
 
-.unvisible p,
-.unvisible .motto {
-  transform: translateY(-300px);
+.nothome .motto:nth-child(3),
+.nothome p {
+  opacity: 0;
+  height: 0;
+  margin-top: -30px;
 }
