@@ -22,7 +22,7 @@ const events: Array<{
     cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
     description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
     author: `Shamsiddinkhuja`,
-    date: Date.now() + d,
+    date: 1718908389747 + d,
     venue: `Conference Hall`,
   },
   {
@@ -31,7 +31,7 @@ const events: Array<{
     cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
     description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
     author: `Shamsiddinkhuja`,
-    date: Date.now(),
+    date: 1718908389747,
     venue: `Conference Hall`,
   },
   {
@@ -40,7 +40,7 @@ const events: Array<{
     cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
     description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
     author: `Shamsiddinkhuja`,
-    date: Date.now() + d,
+    date: 1718908389747 + d,
     venue: `Conference Hall`,
   },
   {
@@ -49,7 +49,7 @@ const events: Array<{
     cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
     description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
     author: `Shamsiddinkhuja`,
-    date: Date.now() + d * 2,
+    date: 1718908389747 + d * 2,
     venue: `Conference Hall`,
   },
   {
@@ -58,7 +58,7 @@ const events: Array<{
     cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
     description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
     author: `Shamsiddinkhuja`,
-    date: Date.now() + d * 2,
+    date: 1718908389747 + d * 2,
     venue: `Conference Hall`,
   },
   {
@@ -67,7 +67,7 @@ const events: Array<{
     cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
     description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
     author: `Shamsiddinkhuja`,
-    date: Date.now() + d * 2,
+    date: 1718908389747 + d * 2,
     venue: `Conference Hall`,
   },
   {
@@ -76,7 +76,7 @@ const events: Array<{
     cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
     description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
     author: `Shamsiddinkhuja`,
-    date: Date.now() + d * 2,
+    date: 1718908389747 + d * 2,
     venue: `Conference Hall`,
   },
 ];
@@ -91,7 +91,7 @@ export default function Home() {
 
   const list = events.filter(
     ({ date }) =>
-      new Date(Date.now() + d * day).toDateString() ==
+      new Date(1718908389747 + d * day).toDateString() ==
       new Date(date).toDateString()
   );
 
