@@ -20,12 +20,12 @@
 
 .section::before {
   left: 0;
-  transform: translateX(calc(-1 * (var(--paddingY) + 10px)));
+  transform: translateX(calc(-1 * (var(--paddingY) + 20px)));
 }
 
 .section::after {
   right: 0;
-  transform: translateX(calc(var(--paddingY) + 10px));
+  transform: translateX(calc(var(--paddingY) + 20px));
 }
 
 .title {
