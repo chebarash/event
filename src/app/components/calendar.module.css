@@ -32,8 +32,8 @@
 }
 
 .weekend {
-  background: var(--subAccent);
-  color: var(--accent);
+  background: var(--accent);
+  color: var(--bg);
 }
 
 .day {

@@ -6,7 +6,6 @@
   --subBg: #e6e6e6;
 
   --accent: #ff0d0d;
-  --subAccent: #ffe5e5;
 
   --fg: #000000;
   --subFg: #4d4d4d;
@@ -15,7 +14,6 @@
   --subBg: var(--tg-theme-secondary-bg-color);
 
   --accent: var(--tg-theme-accent-text-color);
-  --subAccent: var(--tg-theme-accent-text-color);
 
   --fg: var(--tg-theme-text-color);
   --subFg: var(--tg-theme-subtitle-text-color);
