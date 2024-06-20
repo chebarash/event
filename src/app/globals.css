@@ -64,11 +64,13 @@ body::after {
 }
 
 body::before {
-  top: -30px;
+  top: 0;
+  transform: translateY(-30px);
 }
 
 body::after {
-  bottom: -30px;
+  bottom: 0;
+  transform: translateY(30px);
 }
 
 a {

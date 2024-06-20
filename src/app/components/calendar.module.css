@@ -19,11 +19,13 @@
 }
 
 .section::before {
-  left: calc(-1 * (var(--paddingY) + 10px));
+  left: 0;
+  transform: translateX(calc(-1 * (var(--paddingY) + 10px)));
 }
 
 .section::after {
-  right: calc(-1 * (var(--paddingY) + 10px));
+  right: 0;
+  transform: translateX(calc(var(--paddingY) + 10px));
 }
 
 .title {
