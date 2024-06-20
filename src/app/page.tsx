@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <Calendar />
-      {Array(10).fill(
+      {Array(8).fill(
         <Event
           title="Gifted Hands for ACS"
           category="Movie Night"
