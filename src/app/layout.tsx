@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Header from "./components/header";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Event",
@@ -18,12 +16,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
+        <Script
           src="https://telegram.org/js/telegram-web-app.js"
-          async
-        ></script>
+          strategy="beforeInteractive"
+        />
       </head>
-      <body className={inter.className}>
+      <body>
         <Header />
         {children}
       </body>

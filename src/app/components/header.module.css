@@ -1,10 +1,37 @@
-.header {
+.visible,
+.unvisible {
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
 
-.header p {
+.visible p,
+.unvisible p,
+.motto,
+.logo {
   color: var(--subFg);
   font-size: 16px;
+  transition: transform ease 200ms;
+}
+
+.logo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999999;
+  padding: calc(var(--paddingX) / 2) calc(var(--paddingY));
+  background: #ffffff00;
+  backdrop-filter: blur(5px);
+  pointer-events: none;
+}
+
+.visible .logo {
+  transform: translateY(-100px);
+  opacity: 0;
+}
+
+.unvisible p,
+.unvisible .motto {
+  transform: translateY(-300px);
 }
