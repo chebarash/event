@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import styles from "./event.module.css";
+import { useEffect, useState } from "react";
 
 export default function Event({
   _id,
@@ -17,6 +18,12 @@ export default function Event({
   date: number;
   venue: string;
 }) {
+  const [time, setTime] = useState<string>();
+
+  useEffect(() => {
+    setTime(new Date(date).toLocaleString(`en`, { timeStyle: `short` }));
+  }, []);
+
   return (
     <Link href={`/events/${_id}`} className={styles.event}>
       <span>
@@ -26,9 +33,7 @@ export default function Event({
       <div>
         <div className={styles.box}>
           <p className={styles.title}>{title}</p>
-          <p className={styles.date}>
-            {new Date(date).toLocaleString(`en`, { timeStyle: `short` })}
-          </p>
+          <p className={styles.date}>{time}</p>
         </div>
         <div className={styles.arrow}>
           <svg width="19" height="19" viewBox="0 0 19 19" fill="none">

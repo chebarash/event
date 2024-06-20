@@ -9,10 +9,12 @@ export default function Calendar({
   day: number;
   setDay: Dispatch<SetStateAction<number>>;
 }) {
-  const date = new Date();
+  const [month, setMonth] = useState<string>();
   const [list, setList] = useState<Array<JSX.Element>>([]);
 
   useEffect(() => {
+    const date = new Date();
+    setMonth(date.toLocaleString(`en`, { month: `long` }));
     setList([]);
     for (let i = 0; i < 10; i++) {
       let thisDay = new Date(date);
@@ -41,9 +43,7 @@ export default function Calendar({
 
   return (
     <section className={styles.section}>
-      <p className={styles.title}>
-        {date.toLocaleString(`en`, { month: `long` })}
-      </p>
+      <p className={styles.title}>{month}</p>
       <ul className={styles.list}>{list}</ul>
     </section>
   );
