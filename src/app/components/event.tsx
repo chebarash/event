@@ -29,8 +29,8 @@ export default function Event({
             <path
               d="M3 16L17 2M17 2V16M17 2H3"
               stroke="var(--bg)"
-              stroke-width="4"
-              stroke-linecap="square"
+              strokeWidth="4"
+              strokeLinecap="square"
             />
           </svg>
         </div>
