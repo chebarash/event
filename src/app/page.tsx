@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Calendar from "./components/calendar";
 import Event from "./components/event";
+import useTelegramInitData from "./hooks/telegram";
 import styles from "./page.module.css";
 
 const d = 1000 * 60 * 60 * 24;
@@ -81,7 +82,12 @@ const events: Array<{
 ];
 
 export default function Home() {
+  const { hash } = useTelegramInitData();
   const [day, setDay] = useState<number>(0);
+
+  useEffect(() => {
+    console.log({ hash });
+  }, [hash]);
 
   const list = events.filter(
     ({ date }) =>
@@ -91,10 +97,12 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <Calendar day={day} setDay={setDay} />
-      {list.map((event) => (
-        <Event {...event} key={event._id} />
-      ))}
+      <Suspense>
+        <Calendar day={day} setDay={setDay} />
+        {list.map((event) => (
+          <Event {...event} key={event._id} />
+        ))}
+      </Suspense>
     </main>
   );
 }

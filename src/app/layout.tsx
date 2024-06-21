@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import Header from "./components/header";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Event",
@@ -22,7 +23,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Header />
+        <Suspense>
+          <Header />
+        </Suspense>
         {children}
       </body>
     </html>
