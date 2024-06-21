@@ -1,13 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import styles from "./header.module.css";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
-  const pathname = usePathname();
-  const router = useRouter();
+  const params = useSearchParams().get(`_id`);
 
   useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
@@ -29,8 +28,8 @@ export default function Header() {
   return (
     <header
       className={[
-        isVisible || pathname != `/` ? styles.visible : styles.unvisible,
-        pathname == `/` ? `` : styles.nothome,
+        isVisible || params ? styles.visible : styles.unvisible,
+        !params ? `` : styles.nothome,
       ].join(` `)}
     >
       <span className={styles.logo}>
@@ -61,7 +60,7 @@ export default function Header() {
           />
         </svg>
       </span>
-      <button onClick={() => router.back()}>
+      <Link href="/">
         <svg
           className={styles.motto}
           width="120"
@@ -94,7 +93,7 @@ export default function Header() {
             fill="var(--accent)"
           />
         </svg>
-      </button>
+      </Link>
       <svg
         className={styles.motto}
         width="100%"

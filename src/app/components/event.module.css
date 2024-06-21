@@ -3,6 +3,8 @@
   flex-direction: column;
   gap: 15px;
   align-items: center;
+  transition: transform ease 200ms, opacity ease 100ms, height ease 200ms,
+    margin-top ease 200ms;
 }
 
 .event span {
@@ -32,16 +34,18 @@
 }
 
 .event > div {
-  display: flex;
+  display: grid;
   gap: 15px;
+  grid-template-columns: 1fr 40px;
+  align-items: center;
 }
 
 .box {
   display: flex;
   padding: 2px;
   background: var(--fg);
-  height: 40px;
   border-radius: 20px;
+  align-items: center;
 }
 
 .title,
@@ -59,6 +63,7 @@
   text-transform: lowercase;
   background: none;
   color: var(--bg);
+  white-space: nowrap;
 }
 
 .arrow {
@@ -69,4 +74,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.active {
+}
+
+.inactive {
+  opacity: 0;
+  height: 0;
+  margin-top: -30px;
 }

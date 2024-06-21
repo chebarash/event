@@ -1,6 +1,7 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect, useState, JSX } from "react";
 import styles from "./calendar.module.css";
+import { useSearchParams } from "next/navigation";
 
 export default function Calendar({
   day,
@@ -11,6 +12,7 @@ export default function Calendar({
 }) {
   const [month, setMonth] = useState<string>();
   const [list, setList] = useState<Array<JSX.Element>>([]);
+  const params = useSearchParams().get(`_id`);
 
   useEffect(() => {
     const date = new Date();
@@ -42,7 +44,9 @@ export default function Calendar({
   }, [day]);
 
   return (
-    <section className={styles.section}>
+    <section
+      className={[styles.section, !params ? `` : styles.nothome].join(` `)}
+    >
       <p className={styles.title}>{month}</p>
       <ul className={styles.list}>{list}</ul>
     </section>

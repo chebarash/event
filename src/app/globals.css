@@ -9,13 +9,13 @@
   --fg: #000000;
   --subFg: #4d4d4d;
 
-  --bg: var(--tg-theme-bg-color);
+  /* --bg: var(--tg-theme-bg-color);
   --subBg: var(--tg-theme-secondary-bg-color);
 
   --accent: var(--tg-theme-accent-text-color);
 
   --fg: var(--tg-theme-text-color);
-  --subFg: var(--tg-theme-subtitle-text-color);
+  --subFg: var(--tg-theme-subtitle-text-color); */
 
   --paddingY: 24px;
   --paddingX: 40px;

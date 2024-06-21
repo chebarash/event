@@ -18,7 +18,7 @@ const events: Array<{
 }> = [
   {
     _id: `gdsgdgds1`,
-    title: `Gifted Hands for ACS1`,
+    title: `Gifted Hands for ACS`,
     cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
     description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
     author: `Shamsiddinkhuja`,

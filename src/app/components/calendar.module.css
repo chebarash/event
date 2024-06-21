@@ -3,6 +3,14 @@
   flex-direction: column;
   gap: 10px;
   position: relative;
+  transition: transform ease 200ms, opacity ease 200ms, height ease 200ms,
+    margin-top ease 200ms;
+}
+
+.nothome {
+  opacity: 0;
+  height: 0;
+  margin-top: -30px;
 }
 
 .section::before,

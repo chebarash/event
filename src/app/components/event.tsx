@@ -2,6 +2,7 @@
 import Link from "next/link";
 import styles from "./event.module.css";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function Event({
   _id,
@@ -19,13 +20,20 @@ export default function Event({
   venue: string;
 }) {
   const [time, setTime] = useState<string>();
+  const params = useSearchParams().get(`_id`);
 
   useEffect(() => {
     setTime(new Date(date).toLocaleString(`en`, { timeStyle: `short` }));
   }, []);
 
   return (
-    <Link href={`/events/${_id}`} className={styles.event}>
+    <Link
+      href={`?_id=${_id}`}
+      className={[
+        styles.event,
+        params ? (params == _id ? styles.active : styles.inactive) : ``,
+      ].join(` `)}
+    >
       <span>
         <p>{author}</p>
         <img src={cover} alt={title} />
