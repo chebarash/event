@@ -49,8 +49,16 @@ export default function Event({
           <p>{description}</p>
         </div>
         <section>
-          <div>{day}</div>
-          <div>{time}</div>
+          <div>
+            {day?.split(` `).map((t) => (
+              <p>{t}</p>
+            ))}
+          </div>
+          <div>
+            {time?.split(` `).map((t) => (
+              <p>{t}</p>
+            ))}
+          </div>
           <div>{venue}</div>
         </section>
       </div>
