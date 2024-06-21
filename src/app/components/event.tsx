@@ -1,8 +1,7 @@
 "use client";
-import Link from "next/link";
 import styles from "./event.module.css";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Event({
   _id,
@@ -24,6 +23,7 @@ export default function Event({
   const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
   const params = useSearchParams().get(`_id`);
+  const router = useRouter();
 
   useEffect(() => {
     const d = new Date(date);
@@ -32,8 +32,10 @@ export default function Event({
   }, []);
 
   return (
-    <Link
-      href={`?_id=${_id}`}
+    <button
+      id={_id}
+      disabled={!!params}
+      onClick={() => router.push(`?_id=${_id}`)}
       className={[
         styles.event,
         params ? (params == _id ? styles.active : styles.inactive) : ``,
@@ -78,6 +80,6 @@ export default function Event({
           </svg>
         </div>
       </div>
-    </Link>
+    </button>
   );
 }

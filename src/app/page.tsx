@@ -99,9 +99,11 @@ export default function Home() {
     <main className={styles.main}>
       <Suspense>
         <Calendar day={day} setDay={setDay} />
-        {list.map((event) => (
-          <Event {...event} key={event._id} />
-        ))}
+        {list.length ? (
+          list.map((event) => <Event {...event} key={event._id} />)
+        ) : (
+          <p className={styles.no}>No Events</p>
+        )}
       </Suspense>
     </main>
   );

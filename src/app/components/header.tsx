@@ -32,7 +32,7 @@ export default function Header() {
         !params ? `` : styles.nothome,
       ].join(` `)}
     >
-      <Link href="/" className={styles.logo}>
+      <Link href={`/#${params}`} className={styles.logo}>
         <svg width="120" height="18" viewBox="0 0 120 18" fill="none">
           <path
             className={styles.event}

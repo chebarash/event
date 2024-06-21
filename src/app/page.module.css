@@ -3,3 +3,11 @@
   flex-direction: column;
   gap: 30px;
 }
+
+.no {
+  margin: auto;
+  padding: 30px;
+  font-weight: 700;
+  font-size: 40px;
+  opacity: 0.1;
+}
