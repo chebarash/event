@@ -132,13 +132,13 @@
 }
 
 .full > section > div:nth-child(1) {
-  background: var(--subBg);
-  color: var(--fg);
+  background: var(--fg);
+  color: var(--subBg);
 }
 
 .full > section > div:nth-child(2) {
-  background: var(--fg);
-  color: var(--subBg);
+  background: var(--subBg);
+  color: var(--fg);
 }
 
 .full > section > div:nth-child(3) {
