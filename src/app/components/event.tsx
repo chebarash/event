@@ -8,8 +8,10 @@ export default function Event({
   _id,
   title,
   cover,
+  description,
   author,
   date,
+  venue,
 }: {
   _id: string;
   title: string;
@@ -19,11 +21,14 @@ export default function Event({
   date: number;
   venue: string;
 }) {
+  const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
   const params = useSearchParams().get(`_id`);
 
   useEffect(() => {
-    setTime(new Date(date).toLocaleString(`en`, { timeStyle: `short` }));
+    const d = new Date(date);
+    setTime(d.toLocaleString(`en`, { timeStyle: `short` }));
+    setDay(d.toLocaleDateString(`en`, { month: `long` }) + " " + d.getDate());
   }, []);
 
   return (
@@ -38,7 +43,18 @@ export default function Event({
         <p>{author}</p>
         <img src={cover} alt={title} />
       </span>
-      <div>
+      <div className={styles.full}>
+        <div>
+          <h1>{title}</h1>
+          <p>{description}</p>
+        </div>
+        <section>
+          <div>{day}</div>
+          <div>{time}</div>
+          <div>{venue}</div>
+        </section>
+      </div>
+      <div className={styles.mini}>
         <div className={styles.box}>
           <p className={styles.title}>{title}</p>
           <p className={styles.date}>{time}</p>
