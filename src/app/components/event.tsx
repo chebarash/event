@@ -50,13 +50,13 @@ export default function Event({
         </div>
         <section>
           <div>
-            {day?.split(` `).map((t) => (
-              <p>{t}</p>
+            {day?.split(` `).map((t, i) => (
+              <p key={i}>{t}</p>
             ))}
           </div>
           <div>
-            {time?.split(` `).map((t) => (
-              <p>{t}</p>
+            {time?.split(` `).map((t, i) => (
+              <p key={i}>{t}</p>
             ))}
           </div>
           <div>{venue}</div>
