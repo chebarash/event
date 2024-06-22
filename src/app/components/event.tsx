@@ -27,15 +27,10 @@ export default function Event({
 
   useEffect(() => {
     window.Telegram.WebApp.MainButton.setParams({
-      text: params ? `Join` : `Scan QR`,
-      is_active: true,
-      is_visible: true,
+      text: `Join`,
+      is_active: !!params,
+      is_visible: !!params,
     });
-    window.Telegram.WebApp.MainButton.onClick(
-      params
-        ? () => {}
-        : () => window.Telegram.WebApp.showScanQrPopup({ text: `Test` })
-    );
     if (params) window.Telegram.WebApp.BackButton.show();
     else window.Telegram.WebApp.BackButton.hide();
     window.Telegram.WebApp.BackButton.onClick(() => router.push(`/`));
