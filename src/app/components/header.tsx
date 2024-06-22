@@ -9,11 +9,6 @@ export default function Header() {
   const params = useSearchParams().get(`_id`);
 
   useEffect(() => {
-    if (params) window.Telegram.WebApp.BackButton.show();
-    else window.Telegram.WebApp.BackButton.hide();
-  }, [params]);
-
-  useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
     return () => window.removeEventListener("scroll", listenToScroll);
   }, []);

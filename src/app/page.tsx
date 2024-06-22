@@ -2,7 +2,6 @@
 import { Suspense, useEffect, useState } from "react";
 import Calendar from "./components/calendar";
 import Event from "./components/event";
-import useTelegramInitData from "./hooks/telegram";
 import styles from "./page.module.css";
 
 const d = 1000 * 60 * 60 * 24;
@@ -82,12 +81,7 @@ const events: Array<{
 ];
 
 export default function Home() {
-  const { hash } = useTelegramInitData();
   const [day, setDay] = useState<number>(0);
-
-  useEffect(() => {
-    console.log({ hash });
-  }, [hash]);
 
   const list = events.filter(
     ({ date }) =>
