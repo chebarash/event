@@ -31,6 +31,9 @@ export default function Event({
       is_active: !!params,
       is_visible: !!params,
     });
+    if (params) window.Telegram.WebApp.BackButton.show();
+    else window.Telegram.WebApp.BackButton.hide();
+    window.Telegram.WebApp.BackButton.onClick(() => router.push(`/`));
   }, [params]);
 
   useEffect(() => {

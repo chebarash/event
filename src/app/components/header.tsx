@@ -9,6 +9,11 @@ export default function Header() {
   const params = useSearchParams().get(`_id`);
 
   useEffect(() => {
+    if (params) window.Telegram.WebApp.BackButton.show();
+    else window.Telegram.WebApp.BackButton.hide();
+  }, [params]);
+
+  useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
     return () => window.removeEventListener("scroll", listenToScroll);
   }, []);
@@ -32,7 +37,7 @@ export default function Header() {
         !params ? `` : styles.nothome,
       ].join(` `)}
     >
-      <Link href={`/#${params}`} className={styles.logo}>
+      <Link href="/" className={styles.logo}>
         <svg width="120" height="18" viewBox="0 0 120 18" fill="none">
           <path
             className={styles.event}

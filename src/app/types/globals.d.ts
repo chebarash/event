@@ -1,8 +1,8 @@
-import type { TelegramWebApps } from "telegram-webapps-types";
+import { TelegramWebApps } from "./telegram";
 
 declare global {
   interface Window {
-    Telegram: TelegramWebApps.SDK;
+    Telegram: { WebApp: TelegramWebApps.WebApp };
   }
 
   namespace NodeJS {
