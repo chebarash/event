@@ -26,6 +26,14 @@ export default function Event({
   const router = useRouter();
 
   useEffect(() => {
+    window.Telegram.WebApp.MainButton.setParams({
+      text: `Join`,
+      is_active: !!params,
+      is_visible: !!params,
+    });
+  }, [params]);
+
+  useEffect(() => {
     const d = new Date(date);
     setTime(d.toLocaleString(`en`, { timeStyle: `short` }));
     setDay(d.toLocaleDateString(`en`, { month: `long` }) + " " + d.getDate());
