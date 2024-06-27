@@ -3,7 +3,6 @@ import Script from "next/script";
 import "./globals.css";
 import Header from "./components/header";
 import { Suspense } from "react";
-import { SessProvider } from "./hooks/session";
 
 export const metadata: Metadata = {
   title: "Event",
@@ -24,12 +23,10 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <SessProvider>
-          <Suspense>
-            <Header />
-          </Suspense>
-          {children}
-        </SessProvider>
+        <Suspense>
+          <Header />
+        </Suspense>
+        {children}
       </body>
     </html>
   );
