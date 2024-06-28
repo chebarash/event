@@ -5,3 +5,35 @@
   font-size: 40px;
   opacity: 0.1;
 }
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.list.toLeft {
+  animation: left 250ms ease;
+}
+
+@keyframes left {
+  from {
+    transform: translateX(100vw);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.toRight {
+  animation: right 250ms ease;
+}
+
+@keyframes right {
+  from {
+    transform: translateX(-100vw);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

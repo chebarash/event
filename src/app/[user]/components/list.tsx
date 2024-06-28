@@ -1,6 +1,9 @@
+"use client";
 import styles from "./list.module.css";
-import { EventType } from "../types/types";
 import Event from "./event";
+import { EventType } from "../types/types";
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function List({
   day,
@@ -9,19 +12,38 @@ export default function List({
   day: number;
   events: Array<EventType>;
 }) {
-  const list = events.filter(
-    ({ date }) =>
-      new Date(Date.now() + 1000 * 60 * 60 * 24 * day).toDateString() ==
-      new Date(date).toDateString()
-  );
+  const params = useSearchParams().get(`_id`);
+  const router = useRouter();
+  const [localDay, setLocalDay] = useState(0);
+  const [direction, setDirection] = useState(``);
+  const [list, setList] = useState<Array<EventType>>([]);
+
+  useEffect(() => {
+    if (params) window.Telegram.WebApp.BackButton.show();
+    else window.Telegram.WebApp.BackButton.hide();
+    window.Telegram.WebApp.BackButton.onClick(() => router.push(`?`));
+  }, [params]);
+
+  useEffect(() => {
+    if (localDay == day) setDirection(``);
+    else setDirection(localDay < day ? styles.toLeft : styles.toRight);
+    setTimeout(() => setLocalDay(day), 250);
+    setList(
+      events.filter(
+        ({ date }) =>
+          new Date(Date.now() + 1000 * 60 * 60 * 24 * day).toDateString() ==
+          new Date(date).toDateString()
+      )
+    );
+  }, [day, localDay]);
 
   return (
-    <>
+    <div className={[styles.list, direction].join(` `)}>
       {list.length ? (
         list.map((event) => <Event {...event} key={event._id} />)
       ) : (
         <p className={styles.no}>No Events</p>
       )}
-    </>
+    </div>
   );
 }
