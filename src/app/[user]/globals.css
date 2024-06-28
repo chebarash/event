@@ -17,8 +17,8 @@
   --fg: var(--tg-theme-text-color);
   --subFg: var(--tg-theme-subtitle-text-color);
 
-  --paddingY: 24px;
-  --paddingX: 40px;
+  --paddingX: 24px;
+  --paddingY: 40px;
 }
 
 button {
@@ -58,7 +58,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  padding: var(--paddingX) var(--paddingY);
+  padding: var(--paddingY) var(--paddingX);
 }
 
 body::after {
