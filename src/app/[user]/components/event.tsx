@@ -12,11 +12,14 @@ export default function Event({
   author,
   date,
   venue,
+  duration,
 }: EventType) {
   const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
+
+  const hours = duration / (1000 * 60 * 60);
 
   useEffect(() => {
     window.Telegram.WebApp.MainButton.setParams({
@@ -63,6 +66,9 @@ export default function Event({
             ))}
           </div>
           <div>{venue}</div>
+          <div>
+            {hours} {hours == 1 ? `hour` : `hours`}
+          </div>
         </section>
       </div>
       <div className={styles.mini}>
