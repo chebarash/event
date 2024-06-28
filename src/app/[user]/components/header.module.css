@@ -59,7 +59,7 @@
 
 .unvisible .header {
   position: fixed;
-  bottom: calc(100vh - 60px);
+  top: 0;
   left: 0;
   right: 0;
   z-index: 999999;
