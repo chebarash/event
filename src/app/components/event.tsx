@@ -2,24 +2,17 @@
 import styles from "./event.module.css";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { EventType } from "../types/types";
 
 export default function Event({
   _id,
   title,
-  cover,
+  picture,
   description,
   author,
   date,
   venue,
-}: {
-  _id: string;
-  title: string;
-  cover: string;
-  description: string;
-  author: string;
-  date: number;
-  venue: string;
-}) {
+}: EventType) {
   const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
   const params = useSearchParams().get(`_id`);
@@ -53,8 +46,8 @@ export default function Event({
       ].join(` `)}
     >
       <span>
-        <p>{author}</p>
-        <img src={cover} alt={title} />
+        <p>{author.given_name}</p>
+        <img src={picture} alt={title} />
       </span>
       <div className={styles.full}>
         <div>

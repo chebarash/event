@@ -1,103 +1,31 @@
 "use client";
 import { Suspense, useEffect, useState } from "react";
 import Calendar from "./components/calendar";
-import Event from "./components/event";
 import styles from "./page.module.css";
-
-const d = 1000 * 60 * 60 * 24;
-
-const events: Array<{
-  _id: string;
-  title: string;
-  cover: string;
-  description: string;
-  author: string;
-  date: number;
-  venue: string;
-}> = [
-  {
-    _id: `gdsgdgds1`,
-    title: `Gifted Hands for ACS`,
-    cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
-    description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
-    author: `Shamsiddinkhuja`,
-    date: Date.now() + d,
-    venue: `Conference Hall`,
-  },
-  {
-    _id: `gdsgdgds2`,
-    title: `Gifted Hands for ACS2`,
-    cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
-    description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
-    author: `Shamsiddinkhuja`,
-    date: Date.now(),
-    venue: `Conference Hall`,
-  },
-  {
-    _id: `gdsgdgds3`,
-    title: `Gifted Hands for ACS3`,
-    cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
-    description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
-    author: `Shamsiddinkhuja`,
-    date: Date.now() + d,
-    venue: `Conference Hall`,
-  },
-  {
-    _id: `gdsgdgds4`,
-    title: `Gifted Hands for ACS4`,
-    cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
-    description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
-    author: `Shamsiddinkhuja`,
-    date: Date.now() + d * 2,
-    venue: `Conference Hall`,
-  },
-  {
-    _id: `gdsgdgds5`,
-    title: `Gifted Hands for ACS5`,
-    cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
-    description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
-    author: `Shamsiddinkhuja`,
-    date: Date.now() + d * 2,
-    venue: `Conference Hall`,
-  },
-  {
-    _id: `gdsgdgds6`,
-    title: `Gifted Hands for ACS6`,
-    cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
-    description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
-    author: `Shamsiddinkhuja`,
-    date: Date.now() + d * 2,
-    venue: `Conference Hall`,
-  },
-  {
-    _id: `gdsgdgds7`,
-    title: `Gifted Hands for ACS7`,
-    cover: `https://movieguide.b-cdn.net/wp-content/uploads/2014/05/Gifted-Hands-Review-Slider.jpg`,
-    description: `Dr Ben Carson, a neurosurgeon who was raised by a single mother and faced many difficulties in his childhood, faces a challenge to operate two Siamese twins linked by the skull.`,
-    author: `Shamsiddinkhuja`,
-    date: Date.now() + d * 2,
-    venue: `Conference Hall`,
-  },
-];
+import { EventType } from "./types/types";
+import List from "./components/list";
+import Loading from "./components/loader";
 
 export default function Home() {
   const [day, setDay] = useState<number>(0);
+  const [events, setEvents] = useState<Array<EventType>>();
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const list = events.filter(
-    ({ date }) =>
-      new Date(Date.now() + d * day).toDateString() ==
-      new Date(date).toDateString()
-  );
+  useEffect(() => {
+    (async () => {
+      const response = await fetch("https://event-api.chebarash.uz/event");
+      if (response.status == 200) setEvents(await response.json());
+      setLoading(false);
+    })();
+  }, []);
+
+  if (loading || !events) return <Loading />;
 
   return (
     <main className={styles.main}>
       <Suspense>
         <Calendar day={day} setDay={setDay} />
-        {list.length ? (
-          list.map((event) => <Event {...event} key={event._id} />)
-        ) : (
-          <p className={styles.no}>No Events</p>
-        )}
+        <List day={day} events={events} />
       </Suspense>
     </main>
   );
