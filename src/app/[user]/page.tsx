@@ -13,8 +13,9 @@ export default function Home() {
 
   useEffect(() => {
     (async () => {
-      const response = await fetch("https://event-api.chebarash.uz/event");
-      if (response.status == 200) setEvents(await response.json());
+      const event = await fetch(`https://event-api.chebarash.uz/event`);
+      if (event.status == 200) setEvents(await event.json());
+
       setLoading(false);
     })();
   }, []);

@@ -61,7 +61,6 @@ body {
   padding: var(--paddingX) var(--paddingY);
 }
 
-body::before,
 body::after {
   content: "";
   position: fixed;
@@ -72,11 +71,6 @@ body::after {
   filter: blur(16px);
   z-index: 9999;
   pointer-events: none;
-}
-
-body::before {
-  top: 0;
-  transform: translateY(-30px);
 }
 
 body::after {
