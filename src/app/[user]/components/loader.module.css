@@ -1,6 +1,17 @@
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+}
+
 .svg {
   animation: rotate 1s infinite ease;
-  margin: 50px auto;
+}
+
+.node {
+  animation: opacity 1s infinite ease;
+  position: absolute;
 }
 
 @keyframes rotate {
@@ -12,18 +23,17 @@
   }
 }
 
-.node {
-  animation: opacity 2s infinite linear;
-}
-
 @keyframes opacity {
   0% {
     opacity: 1;
+    transform: scale(1) rotate(0deg);
   }
   50% {
     opacity: 0;
+    transform: scale(0);
   }
   100% {
     opacity: 1;
+    transform: scale(1) rotate(360deg);
   }
 }
