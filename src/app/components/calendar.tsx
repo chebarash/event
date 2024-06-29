@@ -1,7 +1,7 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect, useState, JSX } from "react";
 import styles from "./calendar.module.css";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { EventType } from "../types/types";
 
 export default function Calendar({
@@ -16,6 +16,7 @@ export default function Calendar({
   const [month, setMonth] = useState<string>();
   const [list, setList] = useState<Array<JSX.Element>>([]);
   const params = useSearchParams().get(`_id`);
+  const router = useRouter();
 
   useEffect(() => {
     const event = events.find(({ _id }) => _id == params);
@@ -27,7 +28,7 @@ export default function Calendar({
       setDay(
         Math.round((thisDay.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
       );
-    }
+    } else router.push(`?`);
   }, [params]);
 
   useEffect(() => {

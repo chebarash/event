@@ -18,13 +18,8 @@ export default function Header() {
       const u = await res.json();
       if (res.status == 200 && u != null) setUser(u);
       else {
-        window.Telegram.WebApp.showConfirm(`log in`, (ok) => {
-          if (ok)
-            window.Telegram.WebApp.openLink(
-              `https://event-api.chebarash.uz/auth`
-            );
-          else window.Telegram.WebApp.close();
-        });
+        window.Telegram.WebApp.showAlert(`log in`);
+        window.Telegram.WebApp.close();
       }
     })();
     window.addEventListener("scroll", listenToScroll);
