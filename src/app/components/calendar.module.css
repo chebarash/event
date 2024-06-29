@@ -73,6 +73,10 @@
   gap: 6px;
 }
 
+.button:disabled {
+  opacity: 0.3;
+}
+
 .weekend {
   color: var(--accent);
   background: transparent;

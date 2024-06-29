@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <Suspense>
-        <Calendar day={day} setDay={setDay} />
+        <Calendar day={day} setDay={setDay} events={events} />
         <List day={day} events={events} />
       </Suspense>
     </main>

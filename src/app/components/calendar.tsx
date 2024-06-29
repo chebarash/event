@@ -2,13 +2,16 @@
 import { Dispatch, SetStateAction, useEffect, useState, JSX } from "react";
 import styles from "./calendar.module.css";
 import { useSearchParams } from "next/navigation";
+import { EventType } from "../types/types";
 
 export default function Calendar({
   day,
   setDay,
+  events,
 }: {
   day: number;
   setDay: Dispatch<SetStateAction<number>>;
+  events: Array<EventType>;
 }) {
   const [month, setMonth] = useState<string>();
   const [list, setList] = useState<Array<JSX.Element>>([]);
@@ -30,7 +33,17 @@ export default function Calendar({
             i == day ? styles.active : ``,
           ].join(` `)}
         >
-          <button className={styles.button} onClick={() => setDay(i)}>
+          <button
+            className={styles.button}
+            onClick={() => setDay(i)}
+            disabled={
+              !events.filter(
+                ({ date }) =>
+                  new Date(thisDay).toDateString() ==
+                  new Date(date).toDateString()
+              ).length
+            }
+          >
             <p className={styles.day}>
               {thisDay
                 .toLocaleDateString(`en`, { weekday: `short` })
