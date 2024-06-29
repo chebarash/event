@@ -6,11 +6,18 @@ import Link from "next/link";
 import { UserType } from "../types/types";
 import Image from "next/image";
 
-export default function Header({ user }: { user: UserType }) {
+export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const params = useSearchParams().get(`_id`);
-
+  const [user, setUser] = useState<UserType>();
   useEffect(() => {
+    (async () => {
+      const res = await fetch(
+        `https://event-api.chebarash.uz/user?id=${window.Telegram.WebApp.initDataUnsafe.user?.id}`
+      );
+      if (res.status == 200) setUser(await res.json());
+      else window.Telegram.WebApp.close();
+    })();
     window.addEventListener("scroll", listenToScroll);
     return () => window.removeEventListener("scroll", listenToScroll);
   }, []);
@@ -96,7 +103,9 @@ export default function Header({ user }: { user: UserType }) {
               />
             </svg>
           </Link>
-          <Image src={user.picture} width={36} height={36} alt="picture" />
+          {user && (
+            <Image src={user.picture} width={36} height={36} alt="picture" />
+          )}
         </div>
       </div>
       <svg
