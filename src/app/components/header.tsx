@@ -13,7 +13,9 @@ export default function Header() {
   useEffect(() => {
     (async () => {
       const res = await fetch(
-        `https://event-api.chebarash.uz/user?id=${window.Telegram.WebApp.initDataUnsafe.user?.id}`
+        `https://event-api.chebarash.uz/user?id=${
+          window.Telegram.WebApp.initDataUnsafe.user?.id || `1443794846`
+        }`
       );
       if (res.status == 200) setUser(await res.json());
       else window.Telegram.WebApp.close();

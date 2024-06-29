@@ -39,11 +39,9 @@ export default function List({
 
   return (
     <div className={[styles.list, direction].join(` `)}>
-      {list.length ? (
-        list.map((event) => <Event {...event} key={event._id} />)
-      ) : (
-        <p className={styles.no}>No Events</p>
-      )}
+      {list.map((event) => (
+        <Event {...event} key={event._id} />
+      ))}
     </div>
   );
 }
