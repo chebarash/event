@@ -8,6 +8,7 @@
 .visible p,
 .unvisible p,
 .motto {
+  line-height: 1.5;
   display: flex;
   color: var(--subFg);
   font-size: 16px;
