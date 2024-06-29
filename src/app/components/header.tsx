@@ -15,8 +15,17 @@ export default function Header() {
       const res = await fetch(
         `https://event-api.chebarash.uz/user?id=${window.Telegram.WebApp.initDataUnsafe.user?.id}`
       );
-      if (res.status == 200) setUser(await res.json());
-      else window.Telegram.WebApp.close();
+      const u = await res.json();
+      if (res.status == 200 && u != null) setUser(u);
+      else {
+        window.Telegram.WebApp.showConfirm(`log in`, (ok) => {
+          if (ok)
+            window.Telegram.WebApp.openLink(
+              `https://event-api.chebarash.uz/auth`
+            );
+          else window.Telegram.WebApp.close();
+        });
+      }
     })();
     window.addEventListener("scroll", listenToScroll);
     return () => window.removeEventListener("scroll", listenToScroll);

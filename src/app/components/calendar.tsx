@@ -18,11 +18,24 @@ export default function Calendar({
   const params = useSearchParams().get(`_id`);
 
   useEffect(() => {
+    const event = events.find(({ _id }) => _id == params);
+    if (event) {
+      const date = new Date();
+      date.setHours(0, 0, 0, 0);
+      const thisDay = new Date(event.date);
+      thisDay.setHours(0, 0, 0, 0);
+      setDay(
+        Math.round((thisDay.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
+      );
+    }
+  }, [params]);
+
+  useEffect(() => {
     const date = new Date();
     setMonth(date.toLocaleString(`en`, { month: `long` }));
     setList([]);
     for (let i = 0; i < 10; i++) {
-      let thisDay = new Date(date);
+      const thisDay = new Date(date);
       thisDay.setDate(date.getDate() + i);
       setList((list) => [
         ...list,
