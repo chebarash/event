@@ -11,13 +11,16 @@ export default function Home() {
   const [events, setEvents] = useState<Array<EventType>>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    (async () => {
-      const event = await fetch(`https://event-api.chebarash.uz/event`);
-      if (event.status == 200) setEvents(await event.json());
+  const load = async () => {
+    const event = await fetch(`https://event-api.chebarash.uz/event`);
+    if (event.status == 200) setEvents(await event.json());
+    else return await load();
 
-      setLoading(false);
-    })();
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    load();
   }, []);
 
   if (loading || !events) return <Loading />;
