@@ -17,7 +17,7 @@ export default function Header() {
   });
 
   useEffect(() => {
-    if (error) {
+    if (error == `User not found`) {
       window.Telegram.WebApp.showAlert(`log in`);
       window.Telegram.WebApp.close();
     }

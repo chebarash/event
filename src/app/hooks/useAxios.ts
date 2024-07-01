@@ -8,7 +8,7 @@ const useAxios = <T>(config: AxiosRequestConfig) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData: () => Promise<void> = async () => {
       setLoading(true);
       setError(null);
       try {
@@ -20,8 +20,10 @@ const useAxios = <T>(config: AxiosRequestConfig) => {
         );
         setData(response.data);
       } catch (err) {
-        if (axios.isAxiosError(err)) setError(err.message);
-        else setError(`An unexpected error occurred`);
+        if (axios.isAxiosError(err)) {
+          if (err.message == `Network Error`) return await fetchData();
+          setError(err.response?.data.message || err.message);
+        } else setError(`An unexpected error occurred`);
       } finally {
         setLoading(false);
       }
