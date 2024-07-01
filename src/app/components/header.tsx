@@ -21,6 +21,9 @@ export default function Header() {
       window.Telegram.WebApp.showAlert(`log in`);
       window.Telegram.WebApp.close();
     }
+  }, [error]);
+
+  useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
     return () => window.removeEventListener("scroll", listenToScroll);
   }, []);

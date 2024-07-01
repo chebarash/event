@@ -42,13 +42,12 @@ export default function Calendar({
         ...list,
         <li
           key={i}
-          className={[
-            [6, 0].includes(thisDay.getDay()) ? styles.weekend : styles.li,
-            i == day ? styles.active : ``,
-          ].join(` `)}
+          className={
+            [6, 0].includes(thisDay.getDay()) ? styles.weekend : styles.li
+          }
         >
           <button
-            className={styles.button}
+            className={[styles.button, i == day ? styles.active : ``].join(` `)}
             onClick={() => setDay(i)}
             disabled={
               !events.filter(({ date }) => {

@@ -56,12 +56,10 @@
 .weekend {
   display: flex;
   border-radius: 10px;
-  background: var(--subBg);
 }
 
-.li.active {
-  background: var(--fg);
-  color: var(--bg);
+.button:disabled {
+  opacity: 0.3;
 }
 
 .button {
@@ -71,10 +69,9 @@
   justify-content: center;
   padding: 12px;
   gap: 6px;
-}
-
-.button:disabled {
-  opacity: 0.3;
+  display: flex;
+  border-radius: 10px;
+  background: var(--subBg);
 }
 
 .weekend {
@@ -87,7 +84,7 @@
   z-index: 1;
 }
 
-.weekend::after {
+.weekend .button::after {
   content: "";
   position: absolute;
   top: 0;
@@ -99,11 +96,16 @@
   opacity: 0.2;
 }
 
-.weekend.active {
+.li .active {
+  background: var(--fg);
+  color: var(--bg) !important;
+}
+
+.weekend .active {
   color: var(--bg);
 }
 
-.weekend.active::after {
+.weekend .active::after {
   opacity: 1;
 }
 
