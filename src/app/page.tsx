@@ -11,7 +11,7 @@ export default function Home() {
   const [events, setEvents] = useState<Array<EventType>>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const load = async () => {
+  const load: () => Promise<void> = async () => {
     const event = await fetch(`https://event-api.chebarash.uz/event`);
     if (event.status == 200) setEvents(await event.json());
     else return await load();
