@@ -31,8 +31,14 @@ export default function Event({
 
   useEffect(() => {
     const d = new Date(date);
-    setTime(d.toLocaleString(`en`, { timeStyle: `short` }));
-    setDay(d.toLocaleDateString(`en`, { month: `long` }) + " " + d.getDate());
+    setTime(
+      d.toLocaleString(`en`, { timeStyle: `short`, timeZone: `Etc/UTC` })
+    );
+    setDay(
+      d.toLocaleDateString(`en`, { month: `long`, timeZone: `Etc/UTC` }) +
+        " " +
+        d.getDate()
+    );
   }, []);
 
   return (

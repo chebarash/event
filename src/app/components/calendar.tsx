@@ -22,9 +22,9 @@ export default function Calendar({
     const event = events.find(({ _id }) => _id == params);
     if (event) {
       const date = new Date();
-      date.setHours(0, 0, 0, 0);
+      date.setUTCHours(0, 0, 0, 0);
       const thisDay = new Date(event.date);
-      thisDay.setHours(0, 0, 0, 0);
+      thisDay.setUTCHours(0, 0, 0, 0);
       setDay(
         Math.round((thisDay.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
       );
@@ -51,11 +51,16 @@ export default function Calendar({
             className={styles.button}
             onClick={() => setDay(i)}
             disabled={
-              !events.filter(
-                ({ date }) =>
-                  new Date(thisDay).toDateString() ==
-                  new Date(date).toDateString()
-              ).length
+              !events.filter(({ date }) => {
+                return (
+                  new Date(thisDay).toLocaleDateString(`en`, {
+                    timeZone: `Etc/UTC`,
+                  }) ==
+                  new Date(date).toLocaleDateString(`en`, {
+                    timeZone: `Etc/UTC`,
+                  })
+                );
+              }).length
             }
           >
             <p className={styles.day}>

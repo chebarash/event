@@ -31,8 +31,15 @@ export default function List({
     setList(
       events.filter(
         ({ date }) =>
-          new Date(Date.now() + 1000 * 60 * 60 * 24 * day).toDateString() ==
-          new Date(date).toDateString()
+          new Date(Date.now() + 1000 * 60 * 60 * 24 * day).toLocaleDateString(
+            `en`,
+            {
+              timeZone: `Etc/UTC`,
+            }
+          ) ==
+          new Date(date).toLocaleDateString(`en`, {
+            timeZone: `Etc/UTC`,
+          })
       )
     );
   }, [day, localDay]);
