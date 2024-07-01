@@ -5,23 +5,22 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { UserType } from "../types/types";
 import Image from "next/image";
+import useAxios from "../hooks/useAxios";
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const params = useSearchParams().get(`_id`);
-  const [user, setUser] = useState<UserType>();
+
+  const { data, error, loading } = useAxios<UserType>({
+    url: `/user`,
+    method: `get`,
+  });
+
   useEffect(() => {
-    (async () => {
-      const res = await fetch(
-        `https://event-api.chebarash.uz/user?id=${window.Telegram.WebApp.initDataUnsafe.user?.id}`
-      );
-      const u = await res.json();
-      if (res.status == 200 && u != null) setUser(u);
-      else {
-        window.Telegram.WebApp.showAlert(`log in`);
-        window.Telegram.WebApp.close();
-      }
-    })();
+    if (error) {
+      window.Telegram.WebApp.showAlert(`log in`);
+      window.Telegram.WebApp.close();
+    }
     window.addEventListener("scroll", listenToScroll);
     return () => window.removeEventListener("scroll", listenToScroll);
   }, []);
@@ -107,8 +106,8 @@ export default function Header() {
               />
             </svg>
           </Link>
-          {user && (
-            <Image src={user.picture} width={36} height={36} alt="picture" />
+          {data && (
+            <Image src={data.picture} width={36} height={36} alt="picture" />
           )}
         </div>
       </div>

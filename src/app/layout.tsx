@@ -5,8 +5,8 @@ import Header from "./components/header";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Event",
-  description: "The ultimate hub for students",
+  title: `Event`,
+  description: `The ultimate hub for students`,
 };
 
 export default function RootLayout({

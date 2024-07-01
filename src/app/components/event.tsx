@@ -36,7 +36,7 @@ export default function Event({
     );
     setDay(
       d.toLocaleDateString(`en`, { month: `long`, timeZone: `Etc/UTC` }) +
-        " " +
+        ` ` +
         d.getDate()
     );
   }, []);
