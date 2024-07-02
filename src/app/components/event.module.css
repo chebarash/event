@@ -35,7 +35,7 @@
   justify-content: center;
   background: var(--bg);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--subFg);
 }
 
@@ -62,7 +62,7 @@
   background: var(--bg);
   border-radius: 18px;
   height: 100%;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
 }
 

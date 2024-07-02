@@ -3,30 +3,13 @@ import { useEffect, useState } from "react";
 import styles from "./header.module.css";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { UserType } from "../types/types";
 import Image from "next/image";
-import useAxios from "../hooks/useAxios";
+import useUser from "../hooks/useUser";
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const params = useSearchParams().get(`_id`);
-
-  const { data, error, loading } = useAxios<UserType>({
-    url: `/user`,
-    method: `get`,
-  });
-
-  useEffect(() => {
-    if (error == `User not found`) {
-      window.Telegram.WebApp.showConfirm(`log in`, (okPressed) => {
-        if (okPressed)
-          window.Telegram.WebApp.openLink(
-            `https://event-api.chebarash.uz/auth`
-          );
-        window.Telegram.WebApp.close();
-      });
-    }
-  }, [error]);
+  const user = useUser();
 
   useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
@@ -114,8 +97,20 @@ export default function Header() {
               />
             </svg>
           </Link>
-          {data && (
-            <Image src={data.picture} width={36} height={36} alt="picture" />
+          {user ? (
+            <Image src={user.picture} width={36} height={36} alt="picture" />
+          ) : (
+            <button
+              className={styles.login}
+              onClick={() => {
+                window.Telegram.WebApp.openLink(
+                  `https://event-api.chebarash.uz/auth`
+                );
+                window.Telegram.WebApp.close();
+              }}
+            >
+              Log In
+            </button>
           )}
         </div>
       </div>

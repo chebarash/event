@@ -3,6 +3,7 @@ import styles from "./event.module.css";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EventType } from "../types/types";
+import useUser from "../hooks/useUser";
 
 export default function Event({
   _id,
@@ -18,14 +19,15 @@ export default function Event({
   const [time, setTime] = useState<string>();
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
+  const user = useUser();
 
   const hours = duration / (1000 * 60 * 60);
 
   useEffect(() => {
     window.Telegram.WebApp.MainButton.setParams({
       text: `Join`,
-      is_active: !!params,
-      is_visible: !!params,
+      is_active: !!params && !!user,
+      is_visible: !!params && !!user,
     });
   }, [params]);
 
@@ -52,7 +54,11 @@ export default function Event({
       ].join(` `)}
     >
       <span>
-        <p>{author.given_name}</p>
+        <p>
+          {author.given_name
+            .toLowerCase()
+            .replace(/\b(\w)/g, (x) => x.toUpperCase())}
+        </p>
         <img src={picture} alt={title} />
       </span>
       <div className={styles.full}>
