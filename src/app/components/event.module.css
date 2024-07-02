@@ -192,3 +192,14 @@
   font-family: "Dela Gothic One", sans-serif;
   font-size: 20px;
 }
+
+.titleBox {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.titleBox .arrow {
+  width: 32px;
+  height: 32px;
+}

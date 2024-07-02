@@ -44,10 +44,10 @@ export default function Event({
   }, []);
 
   return (
-    <button
+    <div
       id={_id}
-      disabled={!!params}
-      onClick={() => router.push(`?_id=${_id}`)}
+      style={{ cursor: params != _id ? `pointer` : `default` }}
+      onClick={params != _id ? () => router.push(`?_id=${_id}`) : undefined}
       className={[
         styles.event,
         params ? (params == _id ? styles.active : styles.inactive) : ``,
@@ -61,44 +61,69 @@ export default function Event({
         </p>
         <img src={picture} alt={title} />
       </span>
-      <div className={styles.full}>
-        <div>
-          <h1>{title}</h1>
-          <p>{description}</p>
-        </div>
-        <section>
+      {params == _id ? (
+        <div className={styles.full}>
           <div>
-            {day?.split(` `).map((t, i) => (
-              <p key={i}>{t}</p>
-            ))}
+            <div className={styles.titleBox}>
+              <h1>{title}</h1>
+              <button
+                className={styles.arrow}
+                onClick={() =>
+                  window.Telegram.WebApp.switchInlineQuery(title, [
+                    `bots`,
+                    `channels`,
+                    `groups`,
+                    `users`,
+                  ])
+                }
+              >
+                <svg width="14" height="14" viewBox="0 0 19 19" fill="none">
+                  <path
+                    d="M3 16L17 2M17 2V16M17 2H3"
+                    stroke="var(--bg)"
+                    strokeWidth="4"
+                    strokeLinecap="square"
+                  />
+                </svg>
+              </button>
+            </div>
+            <p>{description}</p>
           </div>
-          <div>
-            {time?.split(` `).map((t, i) => (
-              <p key={i}>{t}</p>
-            ))}
-          </div>
-          <div>{venue}</div>
-          <div>
-            {hours} {hours == 1 ? `hour` : `hours`}
-          </div>
-        </section>
-      </div>
-      <div className={styles.mini}>
-        <div className={styles.box}>
-          <p className={styles.title}>{title}</p>
-          <p className={styles.date}>{time}</p>
+          <section>
+            <div>
+              {day?.split(` `).map((t, i) => (
+                <p key={i}>{t}</p>
+              ))}
+            </div>
+            <div>
+              {time?.split(` `).map((t, i) => (
+                <p key={i}>{t}</p>
+              ))}
+            </div>
+            <div>{venue}</div>
+            <div>
+              {hours} {hours == 1 ? `hour` : `hours`}
+            </div>
+          </section>
         </div>
-        <div className={styles.arrow}>
-          <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
-            <path
-              d="M3 16L17 2M17 2V16M17 2H3"
-              stroke="var(--bg)"
-              strokeWidth="4"
-              strokeLinecap="square"
-            />
-          </svg>
+      ) : (
+        <div className={styles.mini}>
+          <div className={styles.box}>
+            <p className={styles.title}>{title}</p>
+            <p className={styles.date}>{time}</p>
+          </div>
+          <div className={styles.arrow}>
+            <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
+              <path
+                d="M3 16L17 2M17 2V16M17 2H3"
+                stroke="var(--bg)"
+                strokeWidth="4"
+                strokeLinecap="square"
+              />
+            </svg>
+          </div>
         </div>
-      </div>
-    </button>
+      )}
+    </div>
   );
 }
