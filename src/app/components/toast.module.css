@@ -9,6 +9,8 @@
   animation: ap 200ms ease, hi 2000ms ease forwards;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(5px);
+  background: #ffffff00;
 }
 
 .toast::after {

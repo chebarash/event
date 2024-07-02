@@ -9,7 +9,7 @@ import useUser from "../hooks/useUser";
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const params = useSearchParams().get(`_id`);
-  const user = useUser();
+  const { user, loading } = useUser();
 
   useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
@@ -97,20 +97,29 @@ export default function Header() {
               />
             </svg>
           </Link>
-          {user ? (
-            <Image src={user.picture} width={36} height={36} alt="picture" />
-          ) : (
-            <button
-              className={styles.login}
-              onClick={() => {
-                window.Telegram.WebApp.openLink(
-                  `https://event-api.chebarash.uz/auth`
-                );
-                window.Telegram.WebApp.close();
-              }}
-            >
-              Log In
-            </button>
+          {!loading && (
+            <>
+              {user ? (
+                <Image
+                  src={user.picture}
+                  width={36}
+                  height={36}
+                  alt="picture"
+                />
+              ) : (
+                <button
+                  className={styles.login}
+                  onClick={() => {
+                    window.Telegram.WebApp.openLink(
+                      `https://event-api.chebarash.uz/auth`
+                    );
+                    window.Telegram.WebApp.close();
+                  }}
+                >
+                  Log In
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>

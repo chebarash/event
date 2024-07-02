@@ -3,7 +3,10 @@ import { createContext, useContext } from "react";
 import { UserType } from "../types/types";
 import useAxios from "./useAxios";
 
-const UserContext = createContext<UserType | null>(null);
+const UserContext = createContext<{ user: UserType | null; loading: boolean }>({
+  user: null,
+  loading: true,
+});
 
 export function UserProvider({
   children,
@@ -15,7 +18,11 @@ export function UserProvider({
     method: `get`,
   });
 
-  return <UserContext.Provider value={data}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user: data, loading }}>
+      {children}
+    </UserContext.Provider>
+  );
 }
 
 export default function useUser() {

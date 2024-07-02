@@ -19,7 +19,7 @@ export default function Event({
   const [time, setTime] = useState<string>();
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
-  const user = useUser();
+  const { user } = useUser();
 
   const hours = duration / (1000 * 60 * 60);
 
@@ -29,7 +29,7 @@ export default function Event({
       is_active: !!params && !!user,
       is_visible: !!params && !!user,
     });
-  }, [params]);
+  }, [params, user]);
 
   useEffect(() => {
     const d = new Date(date);
