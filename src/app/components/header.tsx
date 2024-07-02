@@ -18,8 +18,13 @@ export default function Header() {
 
   useEffect(() => {
     if (error == `User not found`) {
-      window.Telegram.WebApp.showAlert(`log in`);
-      window.Telegram.WebApp.close();
+      window.Telegram.WebApp.showConfirm(`log in`, (okPressed) => {
+        if (okPressed)
+          window.Telegram.WebApp.openLink(
+            `https://event-api.chebarash.uz/auth`
+          );
+        window.Telegram.WebApp.close();
+      });
     }
   }, [error]);
 
