@@ -16,14 +16,7 @@ export default function Home() {
   });
 
   if (loading) return <Loading />;
-  if (error || !data)
-    return (
-      <div>
-        Error: {error}
-        <br />
-        Reopen
-      </div>
-    );
+  if (error || !data) return <></>;
 
   return (
     <main className={styles.main}>

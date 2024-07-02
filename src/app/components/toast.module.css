@@ -1,0 +1,49 @@
+.toast {
+  display: flex;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  position: relative;
+  color: var(--accent);
+  animation: ap 200ms ease, hi 2000ms ease forwards;
+  align-items: center;
+  justify-content: center;
+}
+
+.toast::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: var(--accent);
+  border-radius: 10px;
+  opacity: 0.2;
+}
+
+@keyframes ap {
+  from {
+    margin-bottom: -38px;
+    transform: translateY(200px);
+  }
+  to {
+    margin-bottom: 0;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hi {
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+}

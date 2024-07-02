@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import Header from "./components/header";
 import { Suspense } from "react";
+import { ToastProvider } from "./hooks/useToast";
 
 export const metadata: Metadata = {
   title: `Event`,
@@ -23,10 +24,12 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Suspense>
-          <Header />
-        </Suspense>
-        {children}
+        <ToastProvider>
+          <Suspense>
+            <Header />
+          </Suspense>
+          {children}
+        </ToastProvider>
       </body>
     </html>
   );
