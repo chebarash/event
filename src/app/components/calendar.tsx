@@ -22,7 +22,7 @@ export default function Calendar({
     const event = events.find(({ _id }) => _id == params);
     if (event) {
       const date = new Date();
-      date.setUTCHours(0, 0, 0, 0);
+      date.setHours(0, 0, 0, 0);
       const thisDay = new Date(event.date);
       thisDay.setUTCHours(0, 0, 0, 0);
       setDay(
@@ -52,9 +52,7 @@ export default function Calendar({
             disabled={
               !events.filter(({ date }) => {
                 return (
-                  new Date(thisDay).toLocaleDateString(`en`, {
-                    timeZone: `Etc/UTC`,
-                  }) ==
+                  new Date(thisDay).toLocaleDateString(`en`) ==
                   new Date(date).toLocaleDateString(`en`, {
                     timeZone: `Etc/UTC`,
                   })

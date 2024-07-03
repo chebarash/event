@@ -32,10 +32,7 @@ export default function List({
       events.filter(
         ({ date }) =>
           new Date(Date.now() + 1000 * 60 * 60 * 24 * day).toLocaleDateString(
-            `en`,
-            {
-              timeZone: `Etc/UTC`,
-            }
+            `en`
           ) ==
           new Date(date).toLocaleDateString(`en`, {
             timeZone: `Etc/UTC`,
