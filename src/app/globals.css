@@ -1,21 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
 :root {
-  --bg: #ffffff;
-  --subBg: #e6e6e6;
+  --bg: var(--tg-theme-bg-color, #ffffff);
+  --subBg: var(--tg-theme-secondary-bg-color, #e6e6e6);
 
-  --accent: #ff0d0d;
+  --accent: var(--tg-theme-accent-text-color, #ff0d0d);
 
-  --fg: #000000;
-  --subFg: #4d4d4d;
-
-  --bg: var(--tg-theme-bg-color);
-  --subBg: var(--tg-theme-secondary-bg-color);
-
-  --accent: var(--tg-theme-accent-text-color);
-
-  --fg: var(--tg-theme-text-color);
-  --subFg: var(--tg-theme-subtitle-text-color);
+  --fg: var(--tg-theme-text-color, #000000);
+  --subFg: var(--tg-theme-subtitle-text-color, #4d4d4d);
 
   --paddingX: 24px;
   --paddingY: 40px;

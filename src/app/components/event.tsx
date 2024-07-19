@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EventType } from "../types/types";
 import useUser from "../hooks/useUser";
+import useAxios from "../hooks/useAxios";
 
 export default function Event({
   _id,
@@ -20,6 +21,11 @@ export default function Event({
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
   const { user } = useUser();
+  const { fetchData } = useAxios({
+    url: `/registration?_id=${_id}`,
+    method: `get`,
+    manual: true,
+  });
 
   const hours = duration / (1000 * 60 * 60);
 
@@ -29,6 +35,7 @@ export default function Event({
       is_active: !!params && !!user,
       is_visible: !!params && !!user,
     });
+    window.Telegram.WebApp.MainButton.onClick(fetchData);
   }, [params, user]);
 
   useEffect(() => {
