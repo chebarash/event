@@ -15,20 +15,23 @@ export default function Calendar({
   const [list, setList] = useState<Array<JSX.Element>>([]);
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
-  const { events } = useEvents();
+  const { events, loading } = useEvents();
 
   useEffect(() => {
-    const event = events.find(({ _id }) => _id == params);
-    if (event) {
-      const date = new Date();
-      date.setHours(0, 0, 0, 0);
-      const thisDay = new Date(event.date);
-      thisDay.setHours(0, 0, 0, 0);
-      setDay(
-        Math.round((thisDay.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
-      );
-    } else router.push(`?`);
-  }, [params, events]);
+    if (!loading && params) {
+      const event = events.find(({ _id }) => _id == params);
+      if (event) {
+        const date = new Date();
+        date.setHours(0, 0, 0, 0);
+        event.date.setHours(0, 0, 0, 0);
+        setDay(
+          Math.round(
+            (event.date.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+          )
+        );
+      } else router.push(`?`);
+    }
+  }, [params, events, loading]);
 
   useEffect(() => {
     const date = new Date();

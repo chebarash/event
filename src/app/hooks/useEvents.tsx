@@ -20,7 +20,8 @@ export function EventsProvider({
   children: React.ReactNode;
 }>) {
   const [events, setEvents] = useState<Array<EventType>>([]);
-  const { data, error, loading } = useAxios<Array<EventType>>({
+  const [loading, setLoading] = useState<boolean>(true);
+  const { data, error } = useAxios<Array<EventType>>({
     url: `/event`,
     method: `get`,
   });
@@ -31,7 +32,10 @@ export function EventsProvider({
   });
 
   useEffect(() => {
-    if (data) setEvents(data);
+    if (data) {
+      setEvents(data);
+      setLoading(false);
+    }
   }, [data]);
 
   const update = async (_id: string) => {

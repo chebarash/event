@@ -22,14 +22,21 @@ export default function Home() {
     };
     if (params) {
       const event = events.find(({ _id }) => _id == params);
+      const { themeParams } = window.Telegram.WebApp;
       window.Telegram.WebApp.MainButton.setParams({
-        text: event && event.registered ? `Unregister` : `Register`,
-        color:
-          event && event.registered
-            ? window.Telegram.WebApp.themeParams.section_bg_color
-            : window.Telegram.WebApp.themeParams.button_color,
         is_active: !!user,
         is_visible: !!user,
+        ...(event && event.registered
+          ? {
+              text: `Unregister`,
+              color: themeParams.section_bg_color,
+              text_color: themeParams.text_color,
+            }
+          : {
+              text: `Register`,
+              color: themeParams.button_color,
+              text_color: themeParams.button_text_color,
+            }),
       });
       window.Telegram.WebApp.MainButton.offClick(fn);
       window.Telegram.WebApp.MainButton.onClick(fn);
