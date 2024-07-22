@@ -4,19 +4,15 @@ import Event from "./event";
 import { EventType } from "../types/types";
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import useEvents from "../hooks/useEvents";
 
-export default function List({
-  day,
-  events,
-}: {
-  day: number;
-  events: Array<EventType>;
-}) {
+export default function List({ day }: { day: number }) {
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
   const [localDay, setLocalDay] = useState(0);
   const [direction, setDirection] = useState(``);
   const [list, setList] = useState<Array<EventType>>([]);
+  const { events } = useEvents();
 
   useEffect(() => {
     if (params) window.Telegram.WebApp.BackButton.show();
@@ -35,7 +31,7 @@ export default function List({
           date.toDateString()
       )
     );
-  }, [day, localDay]);
+  }, [day, localDay, events]);
 
   return (
     <div className={[styles.list, direction].join(` `)}>

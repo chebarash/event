@@ -5,6 +5,7 @@ import Header from "./components/header";
 import { Suspense } from "react";
 import { ToastProvider } from "./hooks/useToast";
 import { UserProvider } from "./hooks/useUser";
+import { EventsProvider } from "./hooks/useEvents";
 
 export const metadata: Metadata = {
   title: `Event`,
@@ -27,10 +28,12 @@ export default function RootLayout({
       <body>
         <ToastProvider>
           <UserProvider>
-            <Suspense>
-              <Header />
-            </Suspense>
-            {children}
+            <EventsProvider>
+              <Suspense>
+                <Header />
+              </Suspense>
+              {children}
+            </EventsProvider>
           </UserProvider>
         </ToastProvider>
       </body>

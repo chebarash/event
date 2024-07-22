@@ -2,27 +2,23 @@
 import { Suspense, useState } from "react";
 import Calendar from "./components/calendar";
 import styles from "./page.module.css";
-import { EventType } from "./types/types";
 import List from "./components/list";
 import Loading from "./components/loader";
-import useAxios from "./hooks/useAxios";
+import useEvents from "./hooks/useEvents";
 
 export default function Home() {
   const [day, setDay] = useState<number>(0);
 
-  const { data, error, loading } = useAxios<Array<EventType>>({
-    url: `/event`,
-    method: `get`,
-  });
+  const { loading, error } = useEvents();
 
   if (loading) return <Loading />;
-  if (error || !data) return <></>;
+  if (error) return <></>;
 
   return (
     <main className={styles.main}>
       <Suspense>
-        <Calendar day={day} setDay={setDay} events={data} />
-        <List day={day} events={data} />
+        <Calendar day={day} setDay={setDay} />
+        <List day={day} />
       </Suspense>
     </main>
   );

@@ -2,21 +2,20 @@
 import { Dispatch, SetStateAction, useEffect, useState, JSX } from "react";
 import styles from "./calendar.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
-import { EventType } from "../types/types";
+import useEvents from "../hooks/useEvents";
 
 export default function Calendar({
   day,
   setDay,
-  events,
 }: {
   day: number;
   setDay: Dispatch<SetStateAction<number>>;
-  events: Array<EventType>;
 }) {
   const [month, setMonth] = useState<string>();
   const [list, setList] = useState<Array<JSX.Element>>([]);
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
+  const { events } = useEvents();
 
   useEffect(() => {
     const event = events.find(({ _id }) => _id == params);
@@ -29,7 +28,7 @@ export default function Calendar({
         Math.round((thisDay.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
       );
     } else router.push(`?`);
-  }, [params]);
+  }, [params, events]);
 
   useEffect(() => {
     const date = new Date();
@@ -65,7 +64,7 @@ export default function Calendar({
         </li>,
       ]);
     }
-  }, [day]);
+  }, [day, events]);
 
   return (
     <section

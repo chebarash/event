@@ -9,13 +9,16 @@ const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
 
-  const fetchData: () => Promise<T | null> = async () => {
+  const fetchData: (params?: {
+    [name: string]: any;
+  }) => Promise<T | null> = async (params = {}) => {
     setLoading(true);
     setError(null);
     try {
       config.headers = {
         Authorization: window.Telegram.WebApp.initDataUnsafe.user?.id,
       };
+      config.params = { ...config.params, ...params };
       const response: AxiosResponse<T> = await axiosInstance.request<T>(config);
       setData(response.data);
       return response.data;
