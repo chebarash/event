@@ -7,6 +7,7 @@ export type EventType = {
   date: Date;
   venue: string;
   duration: number;
+  registered?: boolean;
 };
 
 export type UserType = {
