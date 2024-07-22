@@ -7,13 +7,11 @@ const EventsContext = createContext<{
   events: Array<EventType>;
   loading: boolean;
   error?: string | null;
-  unregister: (_id: string) => any;
-  register: (_id: string) => any;
+  update: (_id: string) => any;
 }>({
   events: [],
   loading: true,
-  unregister: () => {},
-  register: () => {},
+  update: () => {},
 });
 
 export function EventsProvider({
@@ -26,7 +24,7 @@ export function EventsProvider({
     url: `/event`,
     method: `get`,
   });
-  const { fetchData } = useAxios<Array<EventType>>({
+  const { fetchData } = useAxios<{ registered: boolean }>({
     url: `/registration`,
     method: `get`,
     manual: true,
@@ -36,27 +34,27 @@ export function EventsProvider({
     if (data) setEvents(data);
   }, [data]);
 
-  const update = async (params: { _id: string; registered?: boolean }) => {
-    window.Telegram.WebApp.MainButton.showProgress(true);
-    const result = await fetchData(params);
-    if (result)
-      setEvents((events) =>
-        events.map((event) => ({
-          ...event,
-          registered:
-            params._id == event._id ? !params.registered : event.registered,
-        }))
-      );
-    window.Telegram.WebApp.MainButton.hideProgress();
+  const update = async (_id: string) => {
+    const event = events.find((event) => event._id == _id);
+    if (event) {
+      window.Telegram.WebApp.MainButton.showProgress(true);
+      const result = await fetchData({
+        _id,
+        ...(event.registered ? { registered: true } : {}),
+      });
+      if (result)
+        setEvents(
+          events.map((event) => ({
+            ...event,
+            registered: _id == event._id ? result.registered : event.registered,
+          }))
+        );
+      window.Telegram.WebApp.MainButton.hideProgress();
+    }
   };
 
-  const unregister = (_id: string) => update({ _id, registered: true });
-  const register = (_id: string) => update({ _id });
-
   return (
-    <EventsContext.Provider
-      value={{ events, loading, error, unregister, register }}
-    >
+    <EventsContext.Provider value={{ events, loading, error, update }}>
       {children}
     </EventsContext.Provider>
   );

@@ -31,8 +31,8 @@ export default function RootLayout({
             <EventsProvider>
               <Suspense>
                 <Header />
+                {children}
               </Suspense>
-              {children}
             </EventsProvider>
           </UserProvider>
         </ToastProvider>

@@ -3,8 +3,6 @@ import styles from "./event.module.css";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EventType } from "../types/types";
-import useUser from "../hooks/useUser";
-import useEvents from "../hooks/useEvents";
 
 export default function Event({
   _id,
@@ -21,26 +19,8 @@ export default function Event({
   const [time, setTime] = useState<string>();
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
-  const { user } = useUser();
-  const { register, unregister } = useEvents();
 
   const hours = duration / (1000 * 60 * 60);
-
-  useEffect(() => {
-    window.Telegram.WebApp.MainButton.setParams({
-      text: registered ? `Unregister` : `Register`,
-      is_active: !!params && !!user,
-      is_visible: !!params && !!user,
-    });
-    window.Telegram.WebApp.MainButton.onClick(() =>
-      (registered ? unregister : register)(_id)
-    );
-    return () => {
-      window.Telegram.WebApp.MainButton.offClick(() =>
-        (registered ? unregister : register)(_id)
-      );
-    };
-  }, [params, user, registered]);
 
   useEffect(() => {
     setTime(date.toLocaleString(`en`, { timeStyle: `short` }));
