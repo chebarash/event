@@ -3,8 +3,8 @@ export type EventType = {
   title: string;
   picture: string;
   description: string;
-  author: UserType;
-  date: string;
+  authors: Array<UserType>;
+  date: Date;
   venue: string;
   duration: number;
 };

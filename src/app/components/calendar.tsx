@@ -24,7 +24,7 @@ export default function Calendar({
       const date = new Date();
       date.setHours(0, 0, 0, 0);
       const thisDay = new Date(event.date);
-      thisDay.setUTCHours(0, 0, 0, 0);
+      thisDay.setHours(0, 0, 0, 0);
       setDay(
         Math.round((thisDay.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
       );
@@ -50,14 +50,9 @@ export default function Calendar({
             className={[styles.button, i == day ? styles.active : ``].join(` `)}
             onClick={() => setDay(i)}
             disabled={
-              !events.filter(({ date }) => {
-                return (
-                  new Date(thisDay).toLocaleDateString(`en`) ==
-                  new Date(date).toLocaleDateString(`en`, {
-                    timeZone: `Etc/UTC`,
-                  })
-                );
-              }).length
+              !events.filter(
+                ({ date }) => thisDay.toDateString() == date.toDateString()
+              ).length
             }
           >
             <p className={styles.day}>

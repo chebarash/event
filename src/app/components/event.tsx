@@ -11,7 +11,7 @@ export default function Event({
   title,
   picture,
   description,
-  author,
+  authors,
   date,
   venue,
   duration,
@@ -39,14 +39,9 @@ export default function Event({
   }, [params, user]);
 
   useEffect(() => {
-    const d = new Date(date);
-    setTime(
-      d.toLocaleString(`en`, { timeStyle: `short`, timeZone: `Etc/UTC` })
-    );
+    setTime(date.toLocaleString(`en`, { timeStyle: `short` }));
     setDay(
-      d.toLocaleDateString(`en`, { month: `long`, timeZone: `Etc/UTC` }) +
-        ` ` +
-        d.getUTCDate()
+      date.toLocaleDateString(`en`, { month: `long` }) + ` ` + date.getDate()
     );
   }, []);
 
@@ -62,7 +57,7 @@ export default function Event({
     >
       <span>
         <p>
-          {author.given_name
+          {authors[0].given_name
             .toLowerCase()
             .replace(/\b(\w)/g, (x) => x.toUpperCase())}
         </p>
