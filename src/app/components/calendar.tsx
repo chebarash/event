@@ -1,5 +1,12 @@
 "use client";
-import { Dispatch, SetStateAction, useEffect, useState, JSX } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  JSX,
+  useRef,
+} from "react";
 import styles from "./calendar.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import useEvents from "../hooks/useEvents";
@@ -16,6 +23,36 @@ export default function Calendar({
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
   const { events, loading } = useEvents();
+  const scrollContainerRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    const date = new Date();
+    setMonth(date.toLocaleString(`en`, { month: `long` }));
+    const handleScroll = () => {
+      if (scrollContainerRef.current) {
+        const elements = scrollContainerRef.current.children;
+        let visibleElementIndex = -1;
+
+        for (let i = 0; i < elements.length; i++) {
+          const rect = elements[i].getBoundingClientRect();
+          if (rect.left >= 0 && rect.right <= window.innerWidth) {
+            visibleElementIndex = i;
+            break;
+          }
+        }
+
+        const thisDay = new Date(date);
+        thisDay.setDate(date.getDate() + visibleElementIndex);
+        setMonth(thisDay.toLocaleString(`en`, { month: `long` }));
+      }
+    };
+
+    scrollContainerRef.current?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      scrollContainerRef.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     if (!loading && params) {
@@ -35,9 +72,8 @@ export default function Calendar({
 
   useEffect(() => {
     const date = new Date();
-    setMonth(date.toLocaleString(`en`, { month: `long` }));
     setList([]);
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 40; i++) {
       const thisDay = new Date(date);
       thisDay.setDate(date.getDate() + i);
       setList((list) => [
@@ -74,7 +110,9 @@ export default function Calendar({
       className={[styles.section, !params ? `` : styles.nothome].join(` `)}
     >
       <p className={styles.title}>{month}</p>
-      <ul className={styles.list}>{list}</ul>
+      <ul className={styles.list} ref={scrollContainerRef}>
+        {list}
+      </ul>
     </section>
   );
 }
