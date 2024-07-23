@@ -7,42 +7,40 @@
 
 .svg {
   animation: rotate 1s infinite ease;
+  -webkit-animation: rotate 1s infinite ease;
 }
 
 .node {
-  animation: scale 1s infinite ease, opacity 0.5s infinite ease alternate;
+  animation: opacity 1s infinite ease;
+  -webkit-animation: opacity 1s infinite ease;
   position: absolute;
 }
 
 @keyframes rotate {
   from {
-    transform: rotate(360deg);
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
   }
   to {
-    transform: rotate(0deg);
-  }
-}
-
-@keyframes scale {
-  0% {
-    -webkit-transform: scale(1) rotate(360deg);
-    transform: scale(1) rotate(360deg);
-  }
-  50% {
-    -webkit-transform: scale(0);
-    transform: scale(0);
-  }
-  100% {
-    -webkit-transform: scale(1) rotate(0deg);
-    transform: scale(1) rotate(0deg);
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
   }
 }
 
 @keyframes opacity {
-  from {
+  0% {
     opacity: 1;
+    transform: scale(1) rotate(0deg);
+    -webkit-transform: scale(1) rotate(0deg);
   }
-  to {
+  50% {
     opacity: 0;
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(360deg);
+    -webkit-transform: scale(1) rotate(360deg);
   }
 }
