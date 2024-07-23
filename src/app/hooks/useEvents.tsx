@@ -46,13 +46,17 @@ export function EventsProvider({
         _id,
         ...(event.registered ? { registered: true } : {}),
       });
-      if (result)
+      if (result) {
         setEvents(
           events.map((event) => ({
             ...event,
             registered: _id == event._id ? result.registered : event.registered,
           }))
         );
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred(
+          result.registered ? `success` : `warning`
+        );
+      }
       window.Telegram.WebApp.MainButton.hideProgress();
     }
   };
