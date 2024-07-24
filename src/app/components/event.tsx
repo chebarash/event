@@ -3,6 +3,7 @@ import styles from "./event.module.css";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EventType } from "../types/types";
+import Image from "next/image";
 
 export default function Event({
   _id,
@@ -61,9 +62,12 @@ export default function Event({
             .toLowerCase()
             .replace(/\b(\w)/g, (x) => x.toUpperCase())}
         </p>
-        <img
+        <Image
           src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + picture}
-          alt={title}
+          alt="cover"
+          width={800}
+          height={450}
+          priority
         />
       </span>
       {params == _id ? (
@@ -92,7 +96,15 @@ export default function Event({
                 </svg>
               </button>
             </div>
-            <p>{description}</p>
+            <div
+              className={styles.description}
+              dangerouslySetInnerHTML={{
+                __html: description.replace(
+                  /\<blockquote expandable\>/g,
+                  `<blockquote expandable tabindex="0">`
+                ),
+              }}
+            ></div>
           </div>
           <section>
             <div>
