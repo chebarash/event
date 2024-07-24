@@ -111,7 +111,7 @@ export default function Header() {
                   className={styles.login}
                   onClick={() => {
                     window.Telegram.WebApp.openLink(
-                      `https://event-api.chebarash.uz/auth`
+                      `${process.env.NEXT_PUBLIC_BASE_URL}/auth`
                     );
                     window.Telegram.WebApp.close();
                   }}

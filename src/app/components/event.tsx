@@ -61,7 +61,10 @@ export default function Event({
             .toLowerCase()
             .replace(/\b(\w)/g, (x) => x.toUpperCase())}
         </p>
-        <img src={picture} alt={title} />
+        <img
+          src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + picture}
+          alt={title}
+        />
       </span>
       {params == _id ? (
         <div className={styles.full}>
