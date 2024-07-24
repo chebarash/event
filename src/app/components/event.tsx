@@ -99,10 +99,19 @@ export default function Event({
             <div
               className={styles.description}
               dangerouslySetInnerHTML={{
-                __html: description.replace(
-                  /\<blockquote expandable\>/g,
-                  `<blockquote expandable tabindex="0">`
-                ),
+                __html: description
+                  .replace(
+                    /\<blockquote expandable\>/g,
+                    `<blockquote expandable tabindex="0">`
+                  )
+                  .replace(
+                    /<a\s+(?:[^>]*?\s+)?href\s*=\s*(['"])(https?:\/\/t\.me\/\S+|tg:\/\/user\?id=\d+)\1[^>]*>(.*?)<\/a>/gi,
+                    `<button onclick="window.Telegram.WebApp.openTelegramLink('$2');">$3</button>`
+                  )
+                  .replace(
+                    /<a\s+(?:[^>]*?\s+)?href\s*=\s*(['"])(.*?)\1[^>]*>(.*?)<\/a>/gi,
+                    `<button onclick="window.Telegram.WebApp.openLink('$2');">$3</button>`
+                  ),
               }}
             ></div>
           </div>

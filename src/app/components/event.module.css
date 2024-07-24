@@ -151,7 +151,7 @@
   font-style: italic;
 }
 
-.description a {
+.description button {
   color: var(--accent);
   text-decoration: underline;
   font-weight: 500;
