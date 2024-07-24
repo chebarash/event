@@ -101,8 +101,16 @@ export default function Event({
               dangerouslySetInnerHTML={{
                 __html: description
                   .replace(
-                    /\<blockquote expandable\>/g,
+                    /<blockquote expandable>/g,
                     `<blockquote expandable tabindex="0">`
+                  )
+                  .replace(
+                    /<pre>(.*?)<\/pre>/g,
+                    `<pre onclick="navigator.clipboard.writeText('$1')" tabindex="0">$1</pre>`
+                  )
+                  .replace(
+                    /<code>(.*?)<\/code>/g,
+                    `<code onclick="navigator.clipboard.writeText('$1')" tabindex="0">$1</code>`
                   )
                   .replace(
                     /<a\s+(?:[^>]*?\s+)?href\s*=\s*(['"])(https?:\/\/t\.me\/\S+|tg:\/\/user\?id=\d+)\1[^>]*>(.*?)<\/a>/gi,

@@ -162,6 +162,7 @@
   font-family: "Sometype Mono", monospace;
   font-weight: 500;
   font-style: normal;
+  cursor: pointer;
 }
 
 .description pre {
@@ -220,10 +221,12 @@
   overflow: hidden;
   max-height: calc(1.5em * 3 + 10px);
   transition: max-height ease 0.5s;
+  cursor: pointer;
 }
 
 .description blockquote[expandable]:focus {
   max-height: calc(1.5em * 30 + 16px);
+  cursor: unset;
 }
 
 .description blockquote[expandable]:before {
