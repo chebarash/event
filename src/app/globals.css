@@ -25,6 +25,8 @@ button:disabled {
 *,
 *::before,
 *::after {
+  scroll-behavior: smooth;
+
   box-sizing: border-box;
   padding: 0;
   margin: 0;
@@ -95,7 +97,7 @@ a {
   flex-direction: column;
   gap: 12px;
   align-items: center;
-  padding: 20px;
+  padding: 30px;
   user-select: none;
   pointer-events: none;
 }

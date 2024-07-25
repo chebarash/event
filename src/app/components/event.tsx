@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EventType } from "../types/types";
 import Image from "next/image";
+import ToJsx from "./jsx";
 
 export default function Event({
   _id,
@@ -56,7 +57,7 @@ export default function Event({
           />
         </svg>
       )}
-      <span>
+      <span className={styles.cover}>
         <p>
           {authors[0].given_name
             .toLowerCase()
@@ -96,32 +97,7 @@ export default function Event({
                 </svg>
               </button>
             </div>
-            <div
-              className={styles.description}
-              dangerouslySetInnerHTML={{
-                __html: description
-                  .replace(
-                    /<blockquote expandable>/g,
-                    `<blockquote expandable tabindex="0">`
-                  )
-                  .replace(
-                    /<pre>(.*?)<\/pre>/g,
-                    `<pre onclick="navigator.clipboard.writeText('$1')" tabindex="0">$1</pre>`
-                  )
-                  .replace(
-                    /<code>(.*?)<\/code>/g,
-                    `<code onclick="navigator.clipboard.writeText('$1')" tabindex="0">$1</code>`
-                  )
-                  .replace(
-                    /<a\s+(?:[^>]*?\s+)?href\s*=\s*(['"])(https?:\/\/t\.me\/\S+|tg:\/\/user\?id=\d+)\1[^>]*>(.*?)<\/a>/gi,
-                    `<button onclick="window.Telegram.WebApp.openTelegramLink('$2');">$3</button>`
-                  )
-                  .replace(
-                    /<a\s+(?:[^>]*?\s+)?href\s*=\s*(['"])(.*?)\1[^>]*>(.*?)<\/a>/gi,
-                    `<button onclick="window.Telegram.WebApp.openLink('$2');">$3</button>`
-                  ),
-              }}
-            ></div>
+            <ToJsx>{description}</ToJsx>
           </div>
           <section>
             <div>

@@ -28,7 +28,7 @@
   }
 }
 
-.event span {
+.cover {
   display: flex;
   justify-content: center;
   position: relative;
@@ -38,13 +38,13 @@
   border-radius: 32px;
 }
 
-.event span img {
+.cover img {
   object-fit: cover;
   width: 100%;
   height: 100%;
 }
 
-.event span p {
+.cover p {
   position: absolute;
   top: 19px;
   left: 19px;
@@ -131,123 +131,6 @@
 .full h1 {
   font-weight: 700;
   font-size: 24px;
-}
-
-.description,
-.description * {
-  white-space: pre-line;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.description b,
-.description b * {
-  font-weight: 600;
-}
-
-.description i,
-.description i * {
-  font-style: italic;
-}
-
-.description button {
-  color: var(--accent);
-  text-decoration: underline;
-  font-weight: 500;
-}
-
-.description code,
-.description pre {
-  font-family: "Sometype Mono", monospace;
-  font-weight: 500;
-  font-style: normal;
-  cursor: pointer;
-}
-
-.description pre {
-  color: var(--fg);
-  padding: 6px 12px;
-  border-left: var(--subFg) 4px solid;
-  border-radius: 5px 10px 10px 5px;
-  margin-left: -4px;
-  position: relative;
-}
-
-.description pre::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background: var(--fg);
-  border-radius: 0 10px 10px 0;
-  opacity: 0.15;
-}
-
-.description blockquote {
-  color: var(--accent);
-  padding: 6px 30px 6px 12px;
-  position: relative;
-  border-left: var(--accent) 4px solid;
-  border-radius: 5px 10px 10px 5px;
-  margin-left: -4px;
-}
-
-.description blockquote:not([expandable]):before {
-  content: '"';
-  color: var(--accent);
-  position: absolute;
-  top: 13px;
-  right: 13px;
-  font-weight: 600;
-  font-size: 30px;
-}
-
-.description blockquote::after {
-  content: '"';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background: var(--accent);
-  border-radius: 0 10px 10px 0;
-  opacity: 0.15;
-}
-
-.description blockquote[expandable] {
-  overflow: hidden;
-  max-height: calc(1.5em * 3 + 10px);
-  transition: max-height ease 0.5s;
-  cursor: pointer;
-}
-
-.description blockquote[expandable]:focus {
-  max-height: calc(1.5em * 30 + 16px);
-  cursor: unset;
-}
-
-.description blockquote[expandable]:before {
-  content: "";
-  position: absolute;
-  bottom: 14px;
-  right: 14px;
-  font-weight: 600;
-  font-size: 30px;
-  color: var(--subFg);
-  width: 10px;
-  height: 10px;
-  border-top: 3px solid var(--accent);
-  border-left: 3px solid var(--accent);
-  border-radius: 4px 0 0 0;
-  transform: rotate(-135deg);
-  transition: transform ease 0.3s;
-}
-
-.description blockquote[expandable]:focus:before {
-  transform: rotate(45deg);
 }
 
 .full > div {

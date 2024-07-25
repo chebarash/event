@@ -4,7 +4,7 @@ import Toast from "../components/toast";
 
 type MessagesType = Array<{ message: string; date: number; error: boolean }>;
 type ToastType = {
-  toast: (message: string, error: boolean) => any;
+  toast: (message: string, error?: boolean) => any;
 };
 
 const ToastContext = createContext<ToastType>({
@@ -18,7 +18,7 @@ export function ToastProvider({
 }>) {
   const [messages, setMessages] = useState<MessagesType>([]);
 
-  const toast = (message: string, error: boolean) => {
+  const toast = (message: string, error: boolean = false) => {
     const mess = { message, date: Date.now(), error };
     setMessages((messages) => [...messages, mess]);
     setTimeout(() => {

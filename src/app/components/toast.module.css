@@ -5,7 +5,7 @@
   font-size: 16px;
   font-weight: 500;
   position: relative;
-  animation: ap 200ms ease, hi 2000ms ease forwards;
+  animation: ap 0.1s ease, hi 2s ease forwards;
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(5px);
@@ -25,7 +25,7 @@
 }
 
 .default::after {
-  background: var(--fg);
+  background: var(--subFg);
 }
 
 .toast::after {
@@ -36,7 +36,7 @@
   right: 0;
   left: 0;
   border-radius: 10px;
-  opacity: 0.2;
+  opacity: 0.1;
 }
 
 @keyframes ap {

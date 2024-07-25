@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { ToastProvider } from "./hooks/useToast";
 import { UserProvider } from "./hooks/useUser";
 import { EventsProvider } from "./hooks/useEvents";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: `Event`,
@@ -26,6 +27,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <Analytics />
         <ToastProvider>
           <UserProvider>
             <EventsProvider>

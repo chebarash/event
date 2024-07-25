@@ -49,6 +49,10 @@ export function EventsProvider({
         ...(event.registered ? { registered: true } : {}),
       });
       if (result) {
+        if (result.registered) {
+          document.body.scrollTop = 0;
+          document.documentElement.scrollTop = 0;
+        }
         setEvents(
           events.map((event) => ({
             ...event,
