@@ -24,11 +24,11 @@ const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
       return response.data;
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        toast(err.response?.data.message || err.message);
+        toast(err.response?.data.message || err.message, true);
         if (err.message == `Network Error`) return await fetchData();
         setError(err.response?.data.message || err.message);
       } else {
-        toast(`An unexpected error occurred`);
+        toast(`An unexpected error occurred`, true);
         setError(`An unexpected error occurred`);
       }
       return null;

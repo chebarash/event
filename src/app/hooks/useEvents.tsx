@@ -41,7 +41,9 @@ export function EventsProvider({
   const update = async (_id: string) => {
     const event = events.find((event) => event._id == _id);
     if (event) {
-      window.Telegram.WebApp.MainButton.showProgress(true);
+      const { MainButton, HapticFeedback } = window.Telegram.WebApp;
+      MainButton.showProgress(true);
+      MainButton.disable();
       const result = await fetchData({
         _id,
         ...(event.registered ? { registered: true } : {}),
@@ -53,11 +55,12 @@ export function EventsProvider({
             registered: _id == event._id ? result.registered : event.registered,
           }))
         );
-        window.Telegram.WebApp.HapticFeedback.notificationOccurred(
+        HapticFeedback.notificationOccurred(
           result.registered ? `success` : `warning`
         );
       }
-      window.Telegram.WebApp.MainButton.hideProgress();
+      MainButton.enable();
+      MainButton.hideProgress();
     }
   };
 
