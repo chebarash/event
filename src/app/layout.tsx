@@ -25,6 +25,7 @@ export default function RootLayout({
           src="https://telegram.org/js/telegram-web-app.js"
           strategy="beforeInteractive"
         />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body>
         <Analytics />
