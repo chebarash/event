@@ -14,41 +14,72 @@ export default function Home() {
   const params = useSearchParams().get(`_id`);
   const { events, loading, error, update } = useEvents();
   const { user } = useUser();
+  const [qr, setQr] = useState(``);
 
   useEffect(() => {
+    const { offEvent, onEvent, closeScanQrPopup } = window.Telegram.WebApp;
+    const fn = ({ data }: { data: string }) => {
+      setQr(data);
+      closeScanQrPopup();
+    };
+    onEvent(`qrTextReceived`, fn);
+    return () => {
+      offEvent(`qrTextReceived`, fn);
+    };
+  }, []);
+
+  useEffect(() => {
+    const { themeParams, MainButton } = window.Telegram.WebApp;
     const fn = () => {
       const params = p.get(`_id`);
+      const event = events.find(({ _id }) => _id == params);
+      if (event && event.registered) {
+        const timeGap = new Date().getTime() - event.date.getTime();
+        if (timeGap > 0)
+          return window.Telegram.WebApp.showScanQrPopup({
+            text: `Ask the organizers to provide a QR code`,
+          });
+      }
       if (params) update(params);
     };
     if (params) {
       const event = events.find(({ _id }) => _id == params);
-      const { themeParams } = window.Telegram.WebApp;
-      window.Telegram.WebApp.MainButton.setParams({
-        is_active: !!user,
-        is_visible: !!user,
-        ...(event && event.registered
-          ? {
-              text: `Unregister`,
-              color: themeParams.section_bg_color,
-              text_color: themeParams.text_color,
-            }
-          : {
-              text: `Register`,
-              color: themeParams.button_color,
-              text_color: themeParams.button_text_color,
-            }),
-      });
-      window.Telegram.WebApp.MainButton.offClick(fn);
-      window.Telegram.WebApp.MainButton.onClick(fn);
+      if (event && event.registered) {
+        const timeGap = new Date().getTime() - event.date.getTime();
+        MainButton.setParams({
+          is_active: !!user && timeGap < event.duration,
+          is_visible: !!user && timeGap < event.duration,
+          ...(timeGap > 0
+            ? {
+                text: `Scan QR`,
+                color: themeParams.button_color,
+                text_color: themeParams.button_text_color,
+              }
+            : {
+                text: `Unregister`,
+                color: themeParams.section_bg_color,
+                text_color: themeParams.text_color,
+              }),
+        });
+      } else
+        MainButton.setParams({
+          is_active: !!user,
+          is_visible: !!user,
+          text: `Register`,
+          color: themeParams.button_color,
+          text_color: themeParams.button_text_color,
+        });
+      MainButton.offClick(fn);
+      MainButton.onClick(fn);
     } else {
-      window.Telegram.WebApp.MainButton.setParams({
+      MainButton.setParams({
         is_active: false,
         is_visible: false,
       });
-      window.Telegram.WebApp.MainButton.offClick(fn);
+      MainButton.offClick(fn);
     }
     return () => {
-      window.Telegram.WebApp.MainButton.offClick(fn);
+      MainButton.offClick(fn);
     };
   }, [params, events]);
 
@@ -57,6 +88,7 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
+      {qr}
       <Calendar day={day} setDay={setDay} />
       <List day={day} />
     </main>

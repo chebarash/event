@@ -60,10 +60,11 @@ export default function Calendar({
       if (event) {
         const date = new Date();
         date.setHours(0, 0, 0, 0);
-        event.date.setHours(0, 0, 0, 0);
+        const eventDate = new Date(event.date);
+        eventDate.setHours(0, 0, 0, 0);
         setDay(
           Math.round(
-            (event.date.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+            (eventDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
           )
         );
       } else router.push(`?`);
