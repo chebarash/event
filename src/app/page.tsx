@@ -44,31 +44,34 @@ export default function Home() {
     };
     if (params) {
       const event = events.find(({ _id }) => _id == params);
-      if (event && event.registered) {
+      if (event) {
         const timeGap = new Date().getTime() - event.date.getTime();
+        const active =
+          !!user &&
+          timeGap < event.duration &&
+          (event.registered || timeGap < 0);
         MainButton.setParams({
-          is_active: !!user && timeGap < event.duration,
-          is_visible: !!user && timeGap < event.duration,
+          is_active: active,
+          is_visible: active,
           ...(timeGap > 0
             ? {
                 text: `Scan QR`,
                 color: themeParams.button_color,
                 text_color: themeParams.button_text_color,
               }
-            : {
+            : event.registered
+            ? {
                 text: `Unregister`,
                 color: themeParams.section_bg_color,
                 text_color: themeParams.text_color,
+              }
+            : {
+                text: `Register`,
+                color: themeParams.button_color,
+                text_color: themeParams.button_text_color,
               }),
         });
-      } else
-        MainButton.setParams({
-          is_active: !!user,
-          is_visible: !!user,
-          text: `Register`,
-          color: themeParams.button_color,
-          text_color: themeParams.button_text_color,
-        });
+      }
       MainButton.offClick(fn);
       MainButton.onClick(fn);
     } else {
