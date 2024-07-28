@@ -12,32 +12,32 @@ export default function Home() {
   const [day, setDay] = useState<number>(0);
   const p = useSearchParams();
   const params = useSearchParams().get(`_id`);
-  const { events, loading, error, update } = useEvents();
+  const { events, loading, error, update, participated } = useEvents();
   const { user } = useUser();
-  const [qr, setQr] = useState(``);
 
   useEffect(() => {
-    const { offEvent, onEvent, closeScanQrPopup } = window.Telegram.WebApp;
+    const { offEvent, onEvent } = window.Telegram.WebApp;
     const fn = ({ data }: { data: string }) => {
-      setQr(data);
-      closeScanQrPopup();
+      const params = p.get(`_id`);
+      if (data == params) participated(data);
     };
+    offEvent(`qrTextReceived`, fn);
     onEvent(`qrTextReceived`, fn);
     return () => {
       offEvent(`qrTextReceived`, fn);
     };
-  }, []);
+  }, [participated]);
 
   useEffect(() => {
     const { themeParams, MainButton } = window.Telegram.WebApp;
     const fn = () => {
       const params = p.get(`_id`);
       const event = events.find(({ _id }) => _id == params);
-      if (event && event.registered) {
+      if (event && event.registration) {
         const timeGap = new Date().getTime() - event.date.getTime();
         if (timeGap > 0)
           return window.Telegram.WebApp.showScanQrPopup({
-            text: `Ask the organizers to provide a QR code`,
+            text: `Ask the organizers`,
           });
       }
       if (params) update(params);
@@ -49,7 +49,8 @@ export default function Home() {
         const active =
           !!user &&
           timeGap < event.duration &&
-          (event.registered || timeGap < 0);
+          (!!event.registration || timeGap < 0) &&
+          !event.registration?.participated;
         MainButton.setParams({
           is_active: active,
           is_visible: active,
@@ -59,7 +60,7 @@ export default function Home() {
                 color: themeParams.button_color,
                 text_color: themeParams.button_text_color,
               }
-            : event.registered
+            : event.registration
             ? {
                 text: `Unregister`,
                 color: themeParams.section_bg_color,
@@ -91,7 +92,6 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      {qr}
       <Calendar day={day} setDay={setDay} />
       <List day={day} />
     </main>

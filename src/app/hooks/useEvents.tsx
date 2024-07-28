@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-import { EventType } from "../types/types";
+import { EventType, RegistrationType } from "../types/types";
 import useAxios from "./useAxios";
 
 const EventsContext = createContext<{
@@ -8,10 +8,12 @@ const EventsContext = createContext<{
   loading: boolean;
   error?: string | null;
   update: (_id: string) => any;
+  participated: (_id: string) => any;
 }>({
   events: [],
   loading: true,
   update: () => {},
+  participated: () => {},
 });
 
 export function EventsProvider({
@@ -25,8 +27,18 @@ export function EventsProvider({
     url: `/event`,
     method: `get`,
   });
-  const { fetchData } = useAxios<{ registered: boolean }>({
+
+  const { fetchData: registration } = useAxios<{
+    registration?: RegistrationType;
+  }>({
     url: `/registration`,
+    method: `get`,
+    manual: true,
+  });
+  const { fetchData: participate } = useAxios<{
+    registration: RegistrationType;
+  }>({
+    url: `/participate`,
     method: `get`,
     manual: true,
   });
@@ -44,23 +56,24 @@ export function EventsProvider({
       const { MainButton, HapticFeedback } = window.Telegram.WebApp;
       MainButton.showProgress(true);
       MainButton.disable();
-      const result = await fetchData({
+      const result = await registration({
         _id,
-        ...(event.registered ? { registered: true } : {}),
+        ...(event.registration ? { registered: true } : {}),
       });
       if (result) {
-        if (result.registered) {
+        if (result.registration) {
           document.body.scrollTop = 0;
           document.documentElement.scrollTop = 0;
         }
         setEvents(
           events.map((event) => ({
             ...event,
-            registered: _id == event._id ? result.registered : event.registered,
+            registration:
+              _id == event._id ? result.registration : event.registration,
           }))
         );
         HapticFeedback.notificationOccurred(
-          result.registered ? `success` : `warning`
+          result.registration ? `success` : `warning`
         );
       }
       MainButton.enable();
@@ -68,8 +81,29 @@ export function EventsProvider({
     }
   };
 
+  const participated = async (_id: string) => {
+    const event = events.find((event) => event._id == _id);
+    if (event) {
+      const result = await participate({ _id });
+      if (result) {
+        const { closeScanQrPopup, HapticFeedback } = window.Telegram.WebApp;
+        closeScanQrPopup();
+        setEvents(
+          events.map((event) => ({
+            ...event,
+            registration:
+              _id == event._id ? result.registration : event.registration,
+          }))
+        );
+        HapticFeedback.notificationOccurred(`success`);
+      }
+    }
+  };
+
   return (
-    <EventsContext.Provider value={{ events, loading, error, update }}>
+    <EventsContext.Provider
+      value={{ events, loading, error, update, participated }}
+    >
       {children}
     </EventsContext.Provider>
   );

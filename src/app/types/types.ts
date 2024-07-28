@@ -7,7 +7,7 @@ export type EventType = {
   date: Date;
   venue: string;
   duration: number;
-  registered?: boolean;
+  registration?: RegistrationType;
 };
 
 export type UserType = {
@@ -17,4 +17,14 @@ export type UserType = {
   picture: string;
   email: string;
   id: number;
+};
+
+export type RegistrationType = {
+  _id: string;
+  user: string;
+  event: string;
+  date: Date;
+  participated?: Date;
+  rate?: number;
+  comment?: string;
 };
