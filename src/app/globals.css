@@ -59,6 +59,7 @@ body {
   flex-direction: column;
   gap: 30px;
   padding: var(--paddingY) var(--paddingX);
+  overflow: hidden;
 }
 
 body::after {

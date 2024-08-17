@@ -10,6 +10,7 @@
 .jsx b,
 .jsx b * {
   font-weight: 600;
+  color: var(--fg);
 }
 
 .jsx i,
@@ -59,6 +60,10 @@
   border-left: var(--accent) 4px solid;
   border-radius: 5px 10px 10px 5px;
   margin-left: -4px;
+}
+
+.jsx blockquote * {
+  color: var(--accent);
 }
 
 .jsx blockquote:not(.expandable, .expanded):before {

@@ -5,5 +5,5 @@ export default function QrPage({
 }: {
   params: { data: string };
 }) {
-  return <Qr data={data as string}></Qr>;
+  return <Qr data={decodeURIComponent(data)}></Qr>;
 }

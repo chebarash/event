@@ -11,6 +11,39 @@ const tags: Array<{
   ) => (html: string, i: number) => JSX.Element | string;
 }> = [
   {
+    regex: /<blockquote expandable>([\s\S]*?)<\/blockquote>/gi,
+    Component: ({ children }) => {
+      const [expanded, setExpand] = useState(false);
+      return (
+        <blockquote
+          className={expanded ? styles.expanded : styles.expandable}
+          onClick={() => setExpand(!expanded)}
+        >
+          {children}
+        </blockquote>
+      );
+    },
+  },
+  {
+    regex: /<blockquote>([\s\S]*?)<\/blockquote>/gi,
+    Component: ({ children }) => <blockquote>{children}</blockquote>,
+  },
+  {
+    regex: /<tg-spoiler>([\s\S]*?)<\/tg-spoiler>/gi,
+    Component: ({ children }) => {
+      const [visible, setVisibility] = useState(false);
+      return (
+        <span
+          className={visible ? styles.visible : styles.unvisible}
+          onClick={() => setVisibility(!visible)}
+        >
+          <span className={styles.noise}></span>
+          {children}
+        </span>
+      );
+    },
+  },
+  {
     regex: /<b>([\s\S]*?)<\/b>/gi,
     Component: ({ children }) => <b>{children}</b>,
   },
@@ -55,39 +88,6 @@ const tags: Array<{
         >
           {children}
         </pre>
-      );
-    },
-  },
-  {
-    regex: /<blockquote expandable>([\s\S]*?)<\/blockquote>/gi,
-    Component: ({ children }) => {
-      const [expanded, setExpand] = useState(false);
-      return (
-        <blockquote
-          className={expanded ? styles.expanded : styles.expandable}
-          onClick={() => setExpand(!expanded)}
-        >
-          {children}
-        </blockquote>
-      );
-    },
-  },
-  {
-    regex: /<blockquote>([\s\S]*?)<\/blockquote>/gi,
-    Component: ({ children }) => <blockquote>{children}</blockquote>,
-  },
-  {
-    regex: /<tg-spoiler>([\s\S]*?)<\/tg-spoiler>/gi,
-    Component: ({ children }) => {
-      const [visible, setVisibility] = useState(false);
-      return (
-        <span
-          className={visible ? styles.visible : styles.unvisible}
-          onClick={() => setVisibility(!visible)}
-        >
-          <span className={styles.noise}></span>
-          {children}
-        </span>
       );
     },
   },
