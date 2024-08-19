@@ -62,6 +62,10 @@ export default function Event({
           {authors[0].given_name
             .toLowerCase()
             .replace(/\b(\w)/g, (x) => x.toUpperCase())}
+          {` `}
+          {authors[0].family_name
+            .toLowerCase()
+            .replace(/\b(\w)/g, (x) => x.toUpperCase())}
         </p>
         <Image
           src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + picture}
