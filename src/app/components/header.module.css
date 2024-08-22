@@ -68,8 +68,21 @@
   z-index: 999999;
   padding: calc(var(--paddingY) / 2) calc(var(--paddingX));
   background: #ffffff00;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
   animation: bum 200ms ease;
+  z-index: 99;
+}
+
+.unvisible .header::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 76px;
+  background: var(--bg);
+  opacity: 0.1;
+  z-index: -1;
 }
 
 @keyframes bum {
