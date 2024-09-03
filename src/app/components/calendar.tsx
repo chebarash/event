@@ -67,7 +67,7 @@ export default function Calendar({
             (eventDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
           )
         );
-      } else router.push(`?`);
+      } else router.push(`/?`);
     }
   }, [params, events, loading]);
 

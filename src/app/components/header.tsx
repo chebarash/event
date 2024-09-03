@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import styles from "./header.module.css";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import useUser from "../hooks/useUser";
@@ -9,6 +9,8 @@ import useUser from "../hooks/useUser";
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const params = useSearchParams().get(`_id`);
+  const pathname = usePathname();
+  const router = useRouter();
   const { user, loading } = useUser();
 
   useEffect(() => {
@@ -28,16 +30,22 @@ export default function Header() {
     }
   };
 
+  const isHome = !params && pathname != `/admin`;
+
   return (
     <header
       className={[
         isVisible ? styles.visible : styles.unvisible,
-        !params ? `` : styles.nothome,
+        isHome ? `` : styles.nothome,
       ].join(` `)}
     >
       <div className={styles.container}>
         <div className={styles.header}>
-          <Link href="?" className={styles.logo}>
+          <button
+            onClick={router.back}
+            disabled={isHome}
+            className={styles.logo}
+          >
             <svg width="120" height="18" viewBox="0 0 120 18" fill="none">
               <path
                 d="M36.2008 9.15852C39.6249 9.15852 41.337 10.1801 41.337 12.2233C41.337 13.1814 41.1042 13.9987 40.6387 14.675C40.1731 15.3373 39.3396 15.8587 38.1382 16.2391C36.9367 16.6055 35.2697 16.7886 33.1372 16.7886H23C23.1201 14.055 23.1802 11.4976 23.1802 9.11625C23.1802 6.73492 23.1201 4.17746 23 1.44386H28.2939V1.46499H33.0921C34.9543 1.46499 36.4186 1.61295 37.4849 1.90885C38.5662 2.19067 39.3246 2.60634 39.7601 3.15588C40.2106 3.70542 40.4359 4.40291 40.4359 5.24835C40.4359 6.10788 40.113 6.87583 39.4673 7.55218C38.8365 8.21444 37.7477 8.74989 36.2008 9.15852ZM28.2939 5.31176V7.27741H32.619C33.5502 7.27741 34.1959 7.19991 34.5564 7.04491C34.9318 6.88992 35.1195 6.6081 35.1195 6.19947C35.1195 5.87538 34.9243 5.64993 34.5338 5.52312C34.1584 5.38221 33.5201 5.31176 32.619 5.31176H28.2939ZM32.619 12.9207C33.4 12.9207 33.9932 12.8926 34.3987 12.8362C34.8192 12.7657 35.1195 12.653 35.2998 12.498C35.48 12.3289 35.5701 12.1035 35.5701 11.8217C35.5701 11.4553 35.3523 11.1946 34.9168 11.0396C34.4963 10.8705 33.7304 10.786 32.619 10.786H28.2939V12.9207H32.619Z"
@@ -96,16 +104,26 @@ export default function Header() {
                 fill="var(--accent)"
               />
             </svg>
-          </Link>
+          </button>
           {!loading && (
             <>
               {user ? (
-                <Image
-                  src={user.picture}
-                  width={36}
-                  height={36}
-                  alt="picture"
-                />
+                <span>
+                  {pathname != `/admin` && user.organizer && (
+                    <Link
+                      href={`/admin${params ? `?_id=${params}` : ``}`}
+                      className={styles.add}
+                    >
+                      Add
+                    </Link>
+                  )}
+                  <Image
+                    src={user.picture}
+                    width={36}
+                    height={36}
+                    alt="picture"
+                  />
+                </span>
               ) : (
                 <button
                   className={styles.login}

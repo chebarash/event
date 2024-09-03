@@ -16,7 +16,8 @@ export default function Event({
   venue,
   duration,
   registration,
-}: EventType) {
+  open,
+}: EventType & { open?: boolean }) {
   const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
   const params = useSearchParams().get(`_id`);
@@ -29,16 +30,18 @@ export default function Event({
     setDay(
       date.toLocaleDateString(`en`, { month: `long` }) + ` ` + date.getDate()
     );
-  }, []);
+  }, [date]);
+
+  const active = params == _id || open;
 
   return (
     <div
       id={_id}
-      style={{ cursor: params != _id ? `pointer` : `default` }}
-      onClick={params != _id ? () => router.push(`?_id=${_id}`) : undefined}
+      style={{ cursor: !active ? `pointer` : `default` }}
+      onClick={!active ? () => router.push(`/?_id=${_id}`) : undefined}
       className={[
         styles.event,
-        params ? (params == _id ? styles.active : styles.inactive) : ``,
+        params || open ? (active ? styles.active : styles.inactive) : ``,
       ].join(` `)}
     >
       {registration && (
@@ -59,13 +62,11 @@ export default function Event({
       )}
       <span className={styles.cover}>
         <p>
-          {authors[0].given_name
-            .toLowerCase()
-            .replace(/\b(\w)/g, (x) => x.toUpperCase())}
-          {` `}
-          {authors[0].family_name
-            .toLowerCase()
-            .replace(/\b(\w)/g, (x) => x.toUpperCase())}
+          {[authors[0].given_name, authors[0].family_name]
+            .map((v) =>
+              v.toLowerCase().replace(/\b(\w)/g, (x) => x.toUpperCase())
+            )
+            .join(` `)}
         </p>
         <Image
           src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + picture}
@@ -75,7 +76,7 @@ export default function Event({
           priority
         />
       </span>
-      {params == _id ? (
+      {active ? (
         <div className={styles.full}>
           <div>
             <div className={styles.titleBox}>

@@ -9,11 +9,13 @@ const EventsContext = createContext<{
   error?: string | null;
   update: (_id: string) => any;
   participated: (_id: string) => any;
+  fetchData: () => any;
 }>({
   events: [],
   loading: true,
   update: () => {},
   participated: () => {},
+  fetchData: () => {},
 });
 
 export function EventsProvider({
@@ -23,7 +25,7 @@ export function EventsProvider({
 }>) {
   const [events, setEvents] = useState<Array<EventType>>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { data, error } = useAxios<Array<EventType>>({
+  const { data, error, fetchData } = useAxios<Array<EventType>>({
     url: `/event`,
     method: `get`,
   });
@@ -57,8 +59,10 @@ export function EventsProvider({
       MainButton.showProgress(true);
       MainButton.disable();
       const result = await registration({
-        _id,
-        ...(event.registration ? { registered: true } : {}),
+        params: {
+          _id,
+          ...(event.registration ? { registered: true } : {}),
+        },
       });
       if (result) {
         if (result.registration) {
@@ -84,7 +88,7 @@ export function EventsProvider({
   const participated = async (_id: string) => {
     const event = events.find((event) => event._id == _id);
     if (event) {
-      const result = await participate({ _id });
+      const result = await participate({ params: { _id } });
       if (result) {
         const { closeScanQrPopup, HapticFeedback } = window.Telegram.WebApp;
         closeScanQrPopup();
@@ -102,7 +106,7 @@ export function EventsProvider({
 
   return (
     <EventsContext.Provider
-      value={{ events, loading, error, update, participated }}
+      value={{ events, loading, error, update, participated, fetchData }}
     >
       {children}
     </EventsContext.Provider>

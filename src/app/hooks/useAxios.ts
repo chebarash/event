@@ -9,9 +9,12 @@ const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
 
-  const fetchData: (params?: {
-    [name: string]: any;
-  }) => Promise<T | null> = async (params = {}) => {
+  const fetchData: (props?: {
+    params?: { [name: string]: any };
+    data?: { [name: string]: any };
+  }) => Promise<T | null> = async (
+    { params = {}, data = {} } = { params: {}, data: {} }
+  ) => {
     setLoading(true);
     setError(null);
     try {
@@ -19,6 +22,7 @@ const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
         Authorization: window.Telegram.WebApp.initDataUnsafe.user?.id,
       };
       config.params = { ...config.params, ...params };
+      config.data = { ...config.data, ...data };
       const response: AxiosResponse<T> = await axiosInstance.request<T>(config);
       setData(response.data);
       return response.data;

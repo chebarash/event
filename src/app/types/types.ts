@@ -1,3 +1,5 @@
+export type ContentType = { type: `video` | `photo`; fileId: string };
+
 export type EventType = {
   _id: string;
   title: string;
@@ -8,6 +10,9 @@ export type EventType = {
   venue: string;
   duration: number;
   registration?: RegistrationType;
+  content?: ContentType;
+  template?: string;
+  button?: string;
 };
 
 export type UserType = {
@@ -17,6 +22,7 @@ export type UserType = {
   picture: string;
   email: string;
   id: number;
+  organizer: boolean;
 };
 
 export type RegistrationType = {
