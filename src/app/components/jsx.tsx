@@ -2,6 +2,7 @@
 import { useState } from "react";
 import useToast from "../hooks/useToast";
 import styles from "./jsx.module.css";
+import React from "react";
 
 const tags: Array<{
   regex: RegExp;

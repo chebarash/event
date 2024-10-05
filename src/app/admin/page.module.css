@@ -32,7 +32,8 @@
 }
 
 .form label input,
-.form label textarea {
+.form label textarea,
+.form label select {
   border: none;
   background: var(--subBg);
   color: var(--fg);
@@ -43,7 +44,8 @@
 }
 
 .form label input:invalid,
-.form label textarea:invalid {
+.form label textarea:invalid,
+.form label select:invalid {
   background: var(--accent);
   color: var(--bg);
 }

@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import useUser from "../hooks/useUser";
+import React from "react";
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -42,7 +43,7 @@ export default function Header() {
       <div className={styles.container}>
         <div className={styles.header}>
           <button
-            onClick={router.back}
+            onClick={() => router.push(`/?`)}
             disabled={isHome}
             className={styles.logo}
           >
@@ -109,16 +110,17 @@ export default function Header() {
             <>
               {user ? (
                 <span>
-                  {pathname != `/admin` && user.organizer && (
-                    <Link
-                      href={`/admin${params ? `?_id=${params}` : ``}`}
-                      className={styles.add}
-                    >
-                      Add
-                    </Link>
-                  )}
+                  {pathname != `/admin` &&
+                    (user.organizer || !!user.clubs.length) && (
+                      <Link
+                        href={`/admin${params ? `?_id=${params}` : ``}`}
+                        className={styles.add}
+                      >
+                        Add
+                      </Link>
+                    )}
                   <Image
-                    src={user.picture}
+                    src={user.picture || `/profile.png`}
                     width={36}
                     height={36}
                     alt="picture"

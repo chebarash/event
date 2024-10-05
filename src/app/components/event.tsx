@@ -11,7 +11,7 @@ export default function Event({
   title,
   picture,
   description,
-  authors,
+  author,
   date,
   venue,
   duration,
@@ -61,13 +61,7 @@ export default function Event({
         </svg>
       )}
       <span className={styles.cover}>
-        <p>
-          {[authors[0].given_name, authors[0].family_name]
-            .map((v) =>
-              v.toLowerCase().replace(/\b(\w)/g, (x) => x.toUpperCase())
-            )
-            .join(` `)}
-        </p>
+        <p>{author.name}</p>
         <Image
           src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + picture}
           alt="cover"

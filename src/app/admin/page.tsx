@@ -1,24 +1,19 @@
 "use client";
 import { TextareaHTMLAttributes, useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
-import { EventType, UserType } from "../types/types";
+import { ContentType, EventType, UserType } from "../types/types";
 import useUser from "../hooks/useUser";
 import { useRouter, useSearchParams } from "next/navigation";
 import Event from "../components/event";
 import useAxios from "../hooks/useAxios";
 import useEvents from "../hooks/useEvents";
+import React from "react";
 
-type EType = {
-  title: string;
-  picture: string;
-  description: string;
-  authors: Array<UserType>;
-  date: Date;
-  venue: string;
-  duration: number;
+type EType = EventType & {
+  _id: string | undefined;
+  content: ContentType;
   template: string;
   button: string;
-  content: { type: `video` | `photo`; fileId: string };
 };
 
 const TextArea = (props: TextareaHTMLAttributes<HTMLTextAreaElement>) => {
@@ -53,42 +48,46 @@ export default function AdminPage() {
   const [waiting, setWait] = useState<boolean>(false);
   const { user, loading } = useUser();
   const e = events.find(({ _id }) => _id == params);
-  const [event, setEvent] = useState<EType>({
-    title: e?.title || `Event Name`,
-    picture:
-      e?.picture ||
-      `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
-    description:
-      e?.description ||
-      `<b>bold</b>\n<i>italic</i>\n<u>underline</u>\n<s>strikethrough</s>\n<tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough </s> <u>underline italic bold</u></i> bold</b>\n<a href="http://chebarash.uz">inline URL</a>\n<a href="http://t.me/puevent">inline mention of a user</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n<blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>\n<blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>`,
-    authors: user ? [user] : [],
-    date: new Date(),
-    venue: e?.venue || `Conference Hall`,
-    duration: e?.duration || 1000 * 60 * 60 * 3,
-    template:
-      e?.template ||
-      `<b>{{title}}</b>\n\n{{description}}\n\n<b>Venue:</b> {{venue}}\n<b>Date:</b> {{date}}\n<b>Time:</b> {{time}}\n<b>Author:</b> {{author}}\n<b>Duration:</b> {{duration}}`,
-    button: e?.button || `Open in Event`,
-    content: e?.content || {
-      type: `photo`,
-      fileId: `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
-    },
-  });
+  const [event, setEvent] = useState<EType | undefined>();
   const { fetchData } = useAxios<EventType>({
     url: `/event`,
     method: `post`,
     manual: true,
   });
+  const isOrg = user?.organizer || user?.clubs.length;
+  const orgList = [...(user?.organizer ? [user] : []), ...(user?.clubs || [])];
   useEffect(() => {
     window.Telegram.WebApp.MainButton.setParams({
       is_active: false,
       is_visible: false,
     });
-    if (!loading && !user?.organizer) return router.push(`/?`);
-    else if (user?.organizer)
-      setEvent((event) => ({ ...event, authors: [user] }));
+    if (!loading && !isOrg) return router.push(`/?`);
+    else if (isOrg)
+      setEvent({
+        _id: ``,
+        title: e?.title || `Event Name`,
+        picture:
+          e?.picture ||
+          `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
+        description:
+          e?.description ||
+          `<b>bold</b>\n<i>italic</i>\n<u>underline</u>\n<s>strikethrough</s>\n<tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough </s> <u>underline italic bold</u></i> bold</b>\n<a href="http://chebarash.uz">inline URL</a>\n<a href="http://t.me/puevent">inline mention of a user</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n<blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>\n<blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>`,
+        author: orgList[0],
+        authorModel: user.organizer ? `users` : `clubs`,
+        date: new Date(),
+        venue: e?.venue || `Conference Hall`,
+        duration: e?.duration || 1000 * 60 * 60 * 3,
+        template:
+          e?.template ||
+          `<b>{{title}}</b>\n\n{{description}}\n\n<b>Venue:</b> {{venue}}\n<b>Date:</b> {{date}}\n<b>Time:</b> {{time}}\n<b>Author:</b> {{author}}\n<b>Duration:</b> {{duration}}`,
+        button: e?.button || `Open in Event`,
+        content: e?.content || {
+          type: `photo`,
+          fileId: `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
+        },
+      });
   }, [user, loading]);
-  if (loading || !user?.organizer || !event.authors.length) return <></>;
+  if (loading || !isOrg || !event) return <></>;
   return (
     <main className={styles.main}>
       <form
@@ -101,7 +100,9 @@ export default function AdminPage() {
             async (ok) => {
               if (ok) {
                 setWait(true);
-                const res = await fetchData({ data: event });
+                const res = await fetchData({
+                  data: { ...event, _id: undefined },
+                });
                 if (res) {
                   await upd();
                   return router.push(`/?_id=${res?._id}`);
@@ -112,6 +113,34 @@ export default function AdminPage() {
           );
         }}
       >
+        {orgList.length > 1 && (
+          <label>
+            <h3>Author</h3>
+            <p>Choose a club or yourself</p>
+            <select
+              name="author"
+              id="author"
+              onChange={(e) =>
+                setEvent(
+                  (event) =>
+                    ({
+                      ...event,
+                      author: orgList.filter((u) => u._id == e.target.value)[0],
+                      authorModel:
+                        e.target.value == user._id ? `users` : `clubs`,
+                    } as EType)
+                )
+              }
+              value={event.author._id}
+            >
+              {orgList.map((author) => (
+                <option key={author._id} value={author._id}>
+                  {author.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <label>
           <h3>Title</h3>
           <p>Name of the event max 100 symbols.</p>
@@ -123,7 +152,9 @@ export default function AdminPage() {
             id="title"
             value={event.title}
             onChange={(e) =>
-              setEvent((event) => ({ ...event, title: e.target.value }))
+              setEvent(
+                (event) => ({ ...event, title: e.target.value } as EType)
+              )
             }
           />
         </label>
@@ -140,7 +171,9 @@ export default function AdminPage() {
             id="picture"
             value={event.picture}
             onChange={(e) =>
-              setEvent((event) => ({ ...event, picture: e.target.value }))
+              setEvent(
+                (event) => ({ ...event, picture: e.target.value } as EType)
+              )
             }
           />
         </label>
@@ -155,7 +188,9 @@ export default function AdminPage() {
             name="description"
             value={event.description}
             onChange={(e) =>
-              setEvent((event) => ({ ...event, description: e.target.value }))
+              setEvent(
+                (event) => ({ ...event, description: e.target.value } as EType)
+              )
             }
           />
         </label>
@@ -173,10 +208,14 @@ export default function AdminPage() {
             id="date"
             value={event.date.toISOString().slice(0, 16)}
             onChange={(e) =>
-              setEvent((event) => ({
-                ...event,
-                date: new Date(e.target.value),
-              }))
+              setEvent((event) =>
+                e.target.value.length
+                  ? ({
+                      ...event,
+                      date: new Date(e.target.value),
+                    } as EType)
+                  : event
+              )
             }
           />
         </label>
@@ -190,7 +229,9 @@ export default function AdminPage() {
             id="venue"
             value={event.venue}
             onChange={(e) =>
-              setEvent((event) => ({ ...event, venue: e.target.value }))
+              setEvent(
+                (event) => ({ ...event, venue: e.target.value } as EType)
+              )
             }
           />
         </label>
@@ -205,10 +246,13 @@ export default function AdminPage() {
             id="duration"
             value={event.duration / (1000 * 60 * 60)}
             onChange={(e) =>
-              setEvent((event) => ({
-                ...event,
-                duration: parseInt(e.target.value) * 1000 * 60 * 60,
-              }))
+              setEvent(
+                (event) =>
+                  ({
+                    ...event,
+                    duration: parseInt(e.target.value) * 1000 * 60 * 60,
+                  } as EType)
+              )
             }
           />
         </label>
@@ -226,17 +270,20 @@ export default function AdminPage() {
             id="fileId"
             value={event.content.fileId}
             onChange={(e) =>
-              setEvent((event) => ({
-                ...event,
-                content: {
-                  type: /^AgACAgIAAxkBAAI[A-Za-z0-9_\-]{53,70}$/.test(
-                    e.target.value
-                  )
-                    ? `photo`
-                    : `video`,
-                  fileId: e.target.value,
-                },
-              }))
+              setEvent(
+                (event) =>
+                  ({
+                    ...event,
+                    content: {
+                      type: /^AgACAgIAAxkBAAI[A-Za-z0-9_\-]{53,70}$/.test(
+                        e.target.value
+                      )
+                        ? `photo`
+                        : `video`,
+                      fileId: e.target.value,
+                    },
+                  } as EType)
+              )
             }
           />
         </label>
@@ -252,7 +299,9 @@ export default function AdminPage() {
             name="template"
             value={event.template}
             onChange={(e) =>
-              setEvent((event) => ({ ...event, template: e.target.value }))
+              setEvent(
+                (event) => ({ ...event, template: e.target.value } as EType)
+              )
             }
           />
         </label>
@@ -267,13 +316,15 @@ export default function AdminPage() {
             id="button"
             value={event.button}
             onChange={(e) =>
-              setEvent((event) => ({ ...event, button: e.target.value }))
+              setEvent(
+                (event) => ({ ...event, button: e.target.value } as EType)
+              )
             }
           />
         </label>
         <button type="submit">Save</button>
       </form>
-      <Event {...event} _id="" open />
+      <Event {...event} open />
     </main>
   );
 }

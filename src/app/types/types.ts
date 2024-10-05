@@ -5,7 +5,8 @@ export type EventType = {
   title: string;
   picture: string;
   description: string;
-  authors: Array<UserType>;
+  author: UserType | ClubType;
+  authorModel: `users` | `clubs`;
   date: Date;
   venue: string;
   duration: number;
@@ -15,14 +16,25 @@ export type EventType = {
   button?: string;
 };
 
+export type ClubType = {
+  _id: string;
+  username: string;
+  name: string;
+  description: string;
+  links: Array<{ url: string; text: string }>;
+  cover: string;
+  coordinators: Array<UserType>;
+};
+
 export type UserType = {
   _id: string;
-  given_name: string;
-  family_name: string;
-  picture: string;
+  name: string;
+  picture?: string;
   email: string;
   id: number;
   organizer: boolean;
+  member: Array<ClubType>;
+  clubs: Array<ClubType>;
 };
 
 export type RegistrationType = {
