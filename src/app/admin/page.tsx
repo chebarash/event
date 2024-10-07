@@ -1,7 +1,7 @@
 "use client";
 import { TextareaHTMLAttributes, useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
-import { ContentType, EventType, UserType } from "../types/types";
+import { ContentType, EventType } from "../types/types";
 import useUser from "../hooks/useUser";
 import { useRouter, useSearchParams } from "next/navigation";
 import Event from "../components/event";
@@ -41,6 +41,51 @@ const TextArea = (props: TextareaHTMLAttributes<HTMLTextAreaElement>) => {
   );
 };
 
+const venues = [
+  `Conference Hall`,
+  `Library`,
+  `Canteen`,
+  `UCA Basement`,
+  `Media Lab`,
+  `Gym`,
+  `Parking`,
+  `Lobby`,
+  `Yard`,
+  `MATH 104`,
+  `MATH 105`,
+  `MATH 106`,
+  `MATH 107`,
+  `MATH 108`,
+  `MATH 109`,
+  `MATH 110`,
+  `MATH 201`,
+  `MATH 204`,
+  `MATH 205`,
+  `MATH 206`,
+  `MATH 207`,
+  `MATH 208`,
+  `MATH 209`,
+  `MATH 210`,
+  `MATH 301`,
+  `MATH 304`,
+  `MATH 305`,
+  `MATH 306`,
+  `MATH 307`,
+  `MATH 308`,
+  `MATH 309`,
+  `MATH 310`,
+  `MATH B07`,
+  `MATH B08`,
+  `MATH B09`,
+  `UCA 204`,
+  `UCA 205`,
+  `UCA 209`,
+  `UCA 214`,
+  `UCA 215`,
+  `UCA 219`,
+  `UCA B14`,
+];
+
 export default function AdminPage() {
   const router = useRouter();
   const params = useSearchParams().get(`_id`);
@@ -75,7 +120,7 @@ export default function AdminPage() {
         author: orgList[0],
         authorModel: user.organizer ? `users` : `clubs`,
         date: new Date(),
-        venue: e?.venue || `Conference Hall`,
+        venue: e?.venue || venues[0],
         duration: e?.duration || 1000 * 60 * 60 * 3,
         template:
           e?.template ||
@@ -227,6 +272,7 @@ export default function AdminPage() {
             type="text"
             name="venue"
             id="venue"
+            list="venues"
             value={event.venue}
             onChange={(e) =>
               setEvent(
@@ -234,6 +280,11 @@ export default function AdminPage() {
               )
             }
           />
+          <datalist id="venues">
+            {venues.map((venue) => (
+              <option key={venue} value={venue} />
+            ))}
+          </datalist>
         </label>
         <label>
           <h3>Duration</h3>
@@ -294,7 +345,7 @@ export default function AdminPage() {
             event, you can use variables like <code>{"{{title}}"}</code>.
           </p>
           <TextArea
-            minLength={100}
+            minLength={10}
             required
             name="template"
             value={event.template}
