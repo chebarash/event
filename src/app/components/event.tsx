@@ -16,6 +16,7 @@ export default function Event({
   venue,
   duration,
   registration,
+  participants,
   open,
 }: EventType & { open?: boolean }) {
   const [day, setDay] = useState<string>();
@@ -114,6 +115,22 @@ export default function Event({
               {hours} {hours == 1 ? `hour` : `hours`}
             </div>
           </section>
+          {participants && participants.length > 0 && (
+            <ol className={styles.perticipants}>
+              {participants.map(({ _id, user: { name, picture } }, i) => (
+                <li key={_id}>
+                  <p className={styles.index}>{i + 1}</p>
+                  <Image
+                    src={picture || `/profile.png`}
+                    width={36}
+                    height={36}
+                    alt="picture"
+                  />
+                  <p>{name}</p>
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
       ) : (
         <div className={styles.mini}>

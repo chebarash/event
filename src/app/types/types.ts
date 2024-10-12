@@ -10,10 +10,11 @@ export type EventType = {
   date: Date;
   venue: string;
   duration: number;
-  registration?: RegistrationType;
   content?: ContentType;
   template?: string;
   button?: string;
+  registration?: RegistrationType;
+  participants?: Array<RegistrationType>;
 };
 
 export type ClubType = {
@@ -39,8 +40,8 @@ export type UserType = {
 
 export type RegistrationType = {
   _id: string;
-  user: string;
-  event: string;
+  user: UserType;
+  event: EventType;
   date: Date;
   participated?: Date;
   rate?: number;
