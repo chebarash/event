@@ -131,7 +131,7 @@ export default function Header() {
                   className={styles.login}
                   onClick={() => {
                     window.Telegram.WebApp.openLink(
-                      `${process.env.NEXT_PUBLIC_BASE_URL}/auth`
+                      `${process.env.NEXT_PUBLIC_BASE_URL}/auth?id=${window.Telegram.WebApp.initDataUnsafe.user?.id}`
                     );
                     window.Telegram.WebApp.close();
                   }}
