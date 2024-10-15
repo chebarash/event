@@ -65,12 +65,11 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 999999;
   padding: calc(var(--paddingY) / 2) calc(var(--paddingX));
   background: #ffffff00;
   backdrop-filter: blur(10px);
   animation: bum 200ms ease;
-  z-index: 99;
+  z-index: 999;
 }
 
 .unvisible .header::before {

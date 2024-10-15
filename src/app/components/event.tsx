@@ -18,6 +18,7 @@ export default function Event({
   registration,
   participants,
   open,
+  shares,
 }: EventType & { open?: boolean }) {
   const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
@@ -95,6 +96,7 @@ export default function Event({
                     strokeLinecap="square"
                   />
                 </svg>
+                <p>{shares}</p>
               </button>
             </div>
             <ToJsx>{description}</ToJsx>

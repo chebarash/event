@@ -130,6 +130,7 @@ export default function AdminPage() {
           type: `photo`,
           fileId: `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
         },
+        shares: 0,
       });
   }, [user, loading]);
   if (loading || !isOrg || !event) return <></>;

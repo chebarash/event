@@ -10,6 +10,7 @@ export type EventType = {
   date: Date;
   venue: string;
   duration: number;
+  shares: number;
   content?: ContentType;
   template?: string;
   button?: string;
