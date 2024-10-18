@@ -43,7 +43,11 @@ export default function Header() {
       <div className={styles.container}>
         <div className={styles.header}>
           <button
-            onClick={() => router.push(`/?`)}
+            onClick={() =>
+              window.history?.length && window.history.length > 1
+                ? router.back()
+                : router.push(`/?`)
+            }
             disabled={isHome}
             className={styles.logo}
           >

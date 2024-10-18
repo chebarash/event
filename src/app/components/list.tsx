@@ -17,7 +17,11 @@ export default function List({ day }: { day: number }) {
   useEffect(() => {
     if (params) window.Telegram.WebApp.BackButton.show();
     else window.Telegram.WebApp.BackButton.hide();
-    window.Telegram.WebApp.BackButton.onClick(() => router.push(`/?`));
+    window.Telegram.WebApp.BackButton.onClick(() =>
+      window.history?.length && window.history.length > 1
+        ? router.back()
+        : router.push(`/?`)
+    );
   }, [params]);
 
   useEffect(() => {
