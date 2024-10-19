@@ -40,7 +40,9 @@ export default function Home() {
             text: `Ask the organizers`,
           });
       }
-      if (params) update(params);
+      if (params)
+        if (event?.external) window.Telegram.WebApp.openLink(event.external);
+        else update(params);
     };
     if (params) {
       const event = events.find(({ _id }) => _id == params);
@@ -67,7 +69,7 @@ export default function Home() {
                 text_color: themeParams.text_color,
               }
             : {
-                text: `Register`,
+                text: event.external ? `Register (Link)` : `Register`,
                 color: themeParams.button_color,
                 text_color: themeParams.button_text_color,
               }),

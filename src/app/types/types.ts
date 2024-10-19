@@ -16,6 +16,7 @@ export type EventType = {
   button?: string;
   registration?: RegistrationType;
   participants?: Array<RegistrationType>;
+  external?: string;
 };
 
 export type ClubType = {
