@@ -3,7 +3,6 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const _id = request.nextUrl.searchParams.get(`tgWebAppStartParam`);
-  console.log(request.nextUrl.searchParams.toString());
   if (_id)
     return NextResponse.redirect(
       new URL(`/?_id=${_id}`, request.nextUrl.origin)

@@ -1,5 +1,8 @@
 export type ContentType = { type: `video` | `photo`; fileId: string };
 
+export type EventsType = { [_id: string]: EventType };
+export type DailyType = { [day: string]: Array<EventType> };
+
 export type EventType = {
   _id: string;
   title: string;
@@ -14,8 +17,6 @@ export type EventType = {
   content?: ContentType;
   template?: string;
   button?: string;
-  registration?: RegistrationType;
-  participants?: Array<RegistrationType>;
   external?: string;
 };
 
@@ -40,12 +41,4 @@ export type UserType = {
   clubs: Array<ClubType>;
 };
 
-export type RegistrationType = {
-  _id: string;
-  user: UserType;
-  event: EventType;
-  date: Date;
-  participated?: Date;
-  rate?: number;
-  comment?: string;
-};
+export type RegistrationType = string;

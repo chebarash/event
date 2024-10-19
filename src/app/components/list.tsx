@@ -5,14 +5,15 @@ import { EventType } from "../types/types";
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import useEvents from "../hooks/useEvents";
+import Loading from "./loader";
 
 export default function List({ day }: { day: number }) {
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
   const [localDay, setLocalDay] = useState(0);
   const [direction, setDirection] = useState(``);
-  const [list, setList] = useState<Array<EventType>>([]);
-  const { events } = useEvents();
+  const [list, setList] = useState<Array<EventType>>();
+  const { daily, registrations } = useEvents();
 
   useEffect(() => {
     if (params) window.Telegram.WebApp.BackButton.show();
@@ -29,18 +30,23 @@ export default function List({ day }: { day: number }) {
     else setDirection(localDay < day ? styles.toLeft : styles.toRight);
     setTimeout(() => setLocalDay(day), 250);
     setList(
-      events.filter(
-        ({ date }) =>
-          new Date(Date.now() + 1000 * 60 * 60 * 24 * day).toDateString() ==
-          date.toDateString()
-      )
+      daily[new Date(Date.now() + 1000 * 60 * 60 * 24 * day).toDateString()] ||
+        []
     );
-  }, [day, localDay, events]);
+  }, [day, localDay, daily]);
+
+  if (!list) return <Loading />;
 
   return (
     <div className={[styles.list, direction].join(` `)}>
       {list.length ? (
-        list.map((event) => <Event {...event} key={event._id} />)
+        list.map((event) => (
+          <Event
+            {...event}
+            key={event._id}
+            registration={registrations.includes(event._id)}
+          />
+        ))
       ) : (
         <svg width="306" height="75" viewBox="0 0 306 75" fill="none">
           <path

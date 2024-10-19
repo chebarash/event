@@ -230,29 +230,3 @@
   font-weight: 700;
   color: var(--bg);
 }
-
-.perticipants {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 0 14px;
-}
-
-.perticipants li {
-  display: grid;
-  gap: 10px;
-  align-items: center;
-  grid-template-columns: 40px 36px 1fr;
-}
-
-.perticipants li img {
-  width: 36px;
-  height: 36px;
-  border-radius: 20%;
-}
-
-.index {
-  font-family: "Dela Gothic One", sans-serif;
-  font-size: 20px;
-  text-align: right;
-}

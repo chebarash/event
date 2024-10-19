@@ -22,7 +22,7 @@ export default function Calendar({
   const [list, setList] = useState<Array<JSX.Element>>([]);
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
-  const { events, loading } = useEvents();
+  const { events, daily } = useEvents();
   const scrollContainerRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -55,8 +55,8 @@ export default function Calendar({
   }, []);
 
   useEffect(() => {
-    if (!loading && params) {
-      const event = events.find(({ _id }) => _id == params);
+    if (params) {
+      const event = events[params];
       if (event) {
         const date = new Date();
         date.setHours(0, 0, 0, 0);
@@ -69,7 +69,7 @@ export default function Calendar({
         );
       } else router.push(`/?`);
     }
-  }, [params, events, loading]);
+  }, [params, events]);
 
   useEffect(() => {
     const date = new Date();
@@ -88,11 +88,7 @@ export default function Calendar({
           <button
             className={[styles.button, i == day ? styles.active : ``].join(` `)}
             onClick={() => setDay(i)}
-            disabled={
-              !events.filter(
-                ({ date }) => thisDay.toDateString() == date.toDateString()
-              ).length
-            }
+            disabled={!daily[thisDay.toDateString()]}
           >
             <p className={styles.day}>
               {thisDay
@@ -104,7 +100,7 @@ export default function Calendar({
         </li>,
       ]);
     }
-  }, [day, events]);
+  }, [day, daily]);
 
   return (
     <section

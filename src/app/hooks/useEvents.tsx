@@ -1,83 +1,54 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
-import { EventType, RegistrationType } from "../types/types";
+import { createContext, useContext } from "react";
+import { DailyType, EventsType, RegistrationType } from "../types/types";
 import useAxios from "./useAxios";
 
 const EventsContext = createContext<{
-  events: Array<EventType>;
+  events: EventsType;
+  daily: DailyType;
+  registrations: Array<RegistrationType>;
   loading: boolean;
-  error?: string | null;
   update: (_id: string) => any;
-  participated: (_id: string) => any;
-  fetchData: () => any;
 }>({
-  events: [],
+  events: {},
+  daily: {},
+  registrations: [],
   loading: true,
   update: () => {},
-  participated: () => {},
-  fetchData: () => {},
 });
 
 export function EventsProvider({
   children,
+  events,
+  daily,
 }: Readonly<{
   children: React.ReactNode;
+  events: EventsType;
+  daily: DailyType;
 }>) {
-  const [events, setEvents] = useState<Array<EventType>>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const { data, error, fetchData } = useAxios<Array<EventType>>({
-    url: `/event`,
-    method: `get`,
-  });
-
-  const { fetchData: registration } = useAxios<{
-    registration?: RegistrationType;
-  }>({
+  const { data, loading, fetchData } = useAxios<Array<RegistrationType>>({
     url: `/registration`,
     method: `get`,
-    manual: true,
   });
-  const { fetchData: participate } = useAxios<{
-    registration: RegistrationType;
-  }>({
-    url: `/participate`,
-    method: `get`,
-    manual: true,
-  });
-
-  useEffect(() => {
-    if (data) {
-      setEvents(data);
-      setLoading(false);
-    }
-  }, [data]);
 
   const update = async (_id: string) => {
-    const event = events.find((event) => event._id == _id);
-    if (event) {
+    if (events[_id]) {
       const { MainButton, HapticFeedback } = window.Telegram.WebApp;
       MainButton.showProgress(true);
       MainButton.disable();
-      const result = await registration({
+      const result = await fetchData({
         params: {
           _id,
-          ...(event.registration ? { registered: true } : {}),
+          ...(data?.includes(_id) ? { registered: true } : {}),
         },
       });
       if (result) {
-        if (result.registration) {
+        if (result.includes(_id)) {
           document.body.scrollTop = 0;
           document.documentElement.scrollTop = 0;
         }
-        setEvents(
-          events.map((event) => ({
-            ...event,
-            registration:
-              _id == event._id ? result.registration : event.registration,
-          }))
-        );
         HapticFeedback.notificationOccurred(
-          result.registration ? `success` : `warning`
+          result.includes(_id) ? `success` : `warning`
         );
       }
       MainButton.enable();
@@ -85,28 +56,15 @@ export function EventsProvider({
     }
   };
 
-  const participated = async (_id: string) => {
-    const event = events.find((event) => event._id == _id);
-    if (event) {
-      const result = await participate({ params: { _id } });
-      if (result) {
-        const { closeScanQrPopup, HapticFeedback } = window.Telegram.WebApp;
-        closeScanQrPopup();
-        setEvents(
-          events.map((event) => ({
-            ...event,
-            registration:
-              _id == event._id ? result.registration : event.registration,
-          }))
-        );
-        HapticFeedback.notificationOccurred(`success`);
-      }
-    }
-  };
-
   return (
     <EventsContext.Provider
-      value={{ events, loading, error, update, participated, fetchData }}
+      value={{
+        events,
+        daily,
+        registrations: data || [],
+        loading,
+        update,
+      }}
     >
       {children}
     </EventsContext.Provider>

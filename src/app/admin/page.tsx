@@ -89,10 +89,10 @@ const venues = [
 export default function AdminPage() {
   const router = useRouter();
   const params = useSearchParams().get(`_id`);
-  const { events, fetchData: upd } = useEvents();
+  const { events } = useEvents();
   const [waiting, setWait] = useState<boolean>(false);
   const { user, loading } = useUser();
-  const e = events.find(({ _id }) => _id == params);
+  const e = events[params || ``];
   const [event, setEvent] = useState<EType | undefined>();
   const { fetchData } = useAxios<EventType>({
     url: `/event`,
@@ -150,8 +150,7 @@ export default function AdminPage() {
                   data: { ...event, _id: undefined },
                 });
                 if (res) {
-                  await upd();
-                  return router.push(`/?_id=${res?._id}`);
+                  window.location.replace(`/?_id=${res?._id}`);
                 }
                 setWait(false);
               }
