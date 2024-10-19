@@ -41,7 +41,10 @@ export default function Home() {
           });
       }
       if (params)
-        if (event?.external) window.Telegram.WebApp.openLink(event.external);
+        if (event?.external)
+          if (event.external.startsWith(`https://t.me/`))
+            window.Telegram.WebApp.openTelegramLink(event.external);
+          else window.Telegram.WebApp.openLink(event.external);
         else update(params);
     };
     if (params) {
