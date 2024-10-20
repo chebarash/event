@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import useEvents from "../hooks/useEvents";
 import Loading from "./loader";
+import useUser from "../hooks/useUser";
 
 export default function List({ day }: { day: number }) {
   const params = useSearchParams().get(`_id`);
@@ -13,7 +14,8 @@ export default function List({ day }: { day: number }) {
   const [localDay, setLocalDay] = useState(0);
   const [direction, setDirection] = useState(``);
   const [list, setList] = useState<Array<EventType>>();
-  const { daily, registrations } = useEvents();
+  const { daily } = useEvents();
+  const { user } = useUser();
 
   useEffect(() => {
     if (params) window.Telegram.WebApp.BackButton.show();
@@ -44,7 +46,7 @@ export default function List({ day }: { day: number }) {
           <Event
             {...event}
             key={event._id}
-            registration={registrations.includes(event._id)}
+            registration={event.participants.includes(user?._id || ``)}
           />
         ))
       ) : (

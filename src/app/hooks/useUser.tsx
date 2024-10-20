@@ -13,7 +13,7 @@ export function UserProvider({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { data, error, loading } = useAxios<UserType>({
+  const { data, loading } = useAxios<UserType>({
     url: `/user`,
     method: `get`,
   });

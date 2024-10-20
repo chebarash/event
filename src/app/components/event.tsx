@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { EventType } from "../types/types";
 import Image from "next/image";
 import ToJsx from "./jsx";
-import Participants from "./participants";
+import useUser from "../hooks/useUser";
 
 export default function Event({
   _id,
@@ -19,11 +19,13 @@ export default function Event({
   registration,
   open,
   shares,
+  participants,
 }: EventType & { open?: boolean; registration?: boolean }) {
   const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
+  const { user } = useUser();
 
   const hours = duration / (1000 * 60 * 60);
 
@@ -117,7 +119,26 @@ export default function Event({
               {hours} {hours == 1 ? `hour` : `hours`}
             </div>
           </section>
-          {_id && <Participants _id={_id} />}
+          {_id &&
+            (author._id == user?._id ||
+              user?.organizer ||
+              user?.clubs.some((c) => c._id == _id)) && (
+              <button
+                className={styles.button}
+                onClick={() =>
+                  fetch(
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/participants?_id=${_id}`,
+                    {
+                      headers: {
+                        Authorization: `${window.Telegram.WebApp.initDataUnsafe.user?.id}`,
+                      },
+                    }
+                  )
+                }
+              >
+                {`Get Participants - ${participants.length}`}
+              </button>
+            )}
         </div>
       ) : (
         <div className={styles.mini}>

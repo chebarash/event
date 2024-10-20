@@ -11,8 +11,8 @@ export default function Home() {
   const [day, setDay] = useState<number>(0);
   const p = useSearchParams();
   const params = useSearchParams().get(`_id`);
-  const { events, registrations, update, loading } = useEvents();
-  const { user } = useUser();
+  const { events, update, loading } = useEvents();
+  const { user, loading: l } = useUser();
 
   useEffect(() => {
     const { themeParams, MainButton } = window.Telegram.WebApp;
@@ -21,13 +21,6 @@ export default function Home() {
       if (!params) return;
       const event = events[params];
       if (!event) return;
-      if (registrations.includes(params)) {
-        const timeGap = new Date().getTime() - event.date.getTime();
-        if (timeGap > 0)
-          return window.Telegram.WebApp.showScanQrPopup({
-            text: `Ask the organizers`,
-          });
-      }
       if (event.external)
         if (event.external.startsWith(`https://t.me/`))
           window.Telegram.WebApp.openTelegramLink(event.external);
@@ -42,7 +35,7 @@ export default function Home() {
         MainButton.setParams({
           is_active: active,
           is_visible: active,
-          ...(registrations.includes(params)
+          ...(events[params].participants?.includes(user?._id || ``)
             ? {
                 text: `Unregister`,
                 color: themeParams.section_bg_color,
@@ -67,11 +60,11 @@ export default function Home() {
     return () => {
       MainButton.offClick(fn);
     };
-  }, [params, registrations, events]);
+  }, [params, events]);
 
   return (
     <main className={styles.main}>
-      {loading && <div className={styles.loading}></div>}
+      {(loading || l) && <div className={styles.loading}></div>}
       <Calendar day={day} setDay={setDay} />
       <List day={day} />
     </main>

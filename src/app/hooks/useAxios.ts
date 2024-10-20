@@ -6,7 +6,7 @@ import useToast from "./useToast";
 const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
   const fetchData: (props?: {
@@ -42,6 +42,8 @@ const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
   };
 
   useEffect(() => {
+    if (config.url == `/user` && !window.Telegram.WebApp.initDataUnsafe.user)
+      return;
     if (!config.manual) fetchData();
   }, []);
 

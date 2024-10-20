@@ -18,6 +18,7 @@ export type EventType = {
   template?: string;
   button?: string;
   external?: string;
+  participants: Array<string>;
 };
 
 export type ClubType = {
@@ -40,5 +41,3 @@ export type UserType = {
   member: Array<ClubType>;
   clubs: Array<ClubType>;
 };
-
-export type RegistrationType = string;

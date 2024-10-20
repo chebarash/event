@@ -1,34 +1,46 @@
 "use client";
-import { createContext, useContext } from "react";
-import { DailyType, EventsType, RegistrationType } from "../types/types";
+import { createContext, useContext, useState } from "react";
+import { DailyType, EventsType, EventType } from "../types/types";
 import useAxios from "./useAxios";
+import useUser from "./useUser";
 
 const EventsContext = createContext<{
   events: EventsType;
   daily: DailyType;
-  registrations: Array<RegistrationType>;
   loading: boolean;
   update: (_id: string) => any;
 }>({
   events: {},
   daily: {},
-  registrations: [],
   loading: true,
   update: () => {},
 });
 
 export function EventsProvider({
   children,
-  events,
-  daily,
+  event: e,
 }: Readonly<{
   children: React.ReactNode;
-  events: EventsType;
-  daily: DailyType;
+  event: Array<EventType>;
 }>) {
-  const { data, loading, fetchData } = useAxios<Array<RegistrationType>>({
+  const ev: EventsType = {};
+  const da: DailyType = {};
+
+  e.forEach((event) => {
+    ev[event._id] = event;
+    const day = event.date.toDateString();
+    if (!da[day]) da[day] = [];
+    da[day].push(event);
+  });
+
+  const [events, setEvents] = useState<EventsType>(ev);
+  const [daily, setDaily] = useState<DailyType>(da);
+
+  const { user } = useUser();
+  const { loading, fetchData } = useAxios<EventType>({
     url: `/registration`,
     method: `get`,
+    manual: true,
   });
 
   const update = async (_id: string) => {
@@ -36,20 +48,34 @@ export function EventsProvider({
       const { MainButton, HapticFeedback } = window.Telegram.WebApp;
       MainButton.showProgress(true);
       MainButton.disable();
+      const registered = events[_id].participants.includes(user?._id || ``);
       const result = await fetchData({
         params: {
           _id,
-          ...(data?.includes(_id) ? { registered: true } : {}),
+          ...(registered ? { registered: true } : {}),
         },
       });
       if (result) {
-        if (result.includes(_id)) {
+        if (!registered) {
           document.body.scrollTop = 0;
           document.documentElement.scrollTop = 0;
         }
-        HapticFeedback.notificationOccurred(
-          result.includes(_id) ? `success` : `warning`
-        );
+        setEvents((e) => {
+          const res = { ...e, [_id]: result };
+          setDaily((d) => {
+            const daily: DailyType = {};
+
+            Object.values(res).forEach((event) => {
+              const day = event.date.toDateString();
+              if (!daily[day]) daily[day] = [];
+              daily[day].push(event);
+            });
+
+            return daily;
+          });
+          return res;
+        });
+        HapticFeedback.notificationOccurred(registered ? `success` : `warning`);
       }
       MainButton.enable();
       MainButton.hideProgress();
@@ -61,7 +87,6 @@ export function EventsProvider({
       value={{
         events,
         daily,
-        registrations: data || [],
         loading,
         update,
       }}
