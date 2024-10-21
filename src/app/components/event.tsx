@@ -69,8 +69,10 @@ export default function Event({
         <Image
           src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + picture}
           alt="cover"
-          width={800}
-          height={450}
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "100%", height: "auto" }}
           priority
         />
       </span>

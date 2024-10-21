@@ -14,11 +14,13 @@ export type EventType = {
   venue: string;
   duration: number;
   shares: number;
+  participants: Array<string>;
+  spots?: number;
+  deadline?: Date;
+  external?: string;
   content?: ContentType;
   template?: string;
   button?: string;
-  external?: string;
-  participants: Array<string>;
 };
 
 export type ClubType = {

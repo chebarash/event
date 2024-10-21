@@ -10,30 +10,30 @@
   gap: 12px;
 }
 
-.form label {
+.form .div {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.form label h3 {
+.form .div h3 {
   font-family: "Dela Gothic One", sans-serif;
   font-size: 18px;
 }
 
-.form label p {
+.form .div p {
   font-size: 14px;
 }
 
-.form label code {
+.form .div code {
   font-family: "Sometype Mono", monospace;
   font-weight: 500;
   font-style: normal;
 }
 
-.form label input,
-.form label textarea,
-.form label select {
+.form .div input,
+.form .div textarea,
+.form .div select {
   border: none;
   background: var(--subBg);
   color: var(--fg);
@@ -43,20 +43,25 @@
   line-height: 1.5;
 }
 
-.form label input:invalid,
-.form label textarea:invalid,
-.form label select:invalid {
+.form .div input:invalid,
+.form .div textarea:invalid,
+.form .div select:invalid {
   background: var(--accent);
   color: var(--bg);
 }
 
-.form:invalid button {
+.form .button {
+  border: 2px solid var(--fg);
   background: var(--bg);
   color: var(--fg);
-  opacity: 0.6;
+  font-family: "Dela Gothic One", sans-serif;
+  font-size: 18px;
+  padding: 16px;
+  border-radius: 10px;
+  text-transform: uppercase;
 }
 
-.form button {
+.form .button[type="submit"] {
   border: 2px solid var(--fg);
   background: var(--fg);
   color: var(--bg);
@@ -65,4 +70,17 @@
   padding: 16px;
   border-radius: 10px;
   text-transform: uppercase;
+}
+
+.form:invalid .button[type="submit"] {
+  background: var(--bg);
+  color: var(--fg);
+  opacity: 0.6;
+}
+
+.preview {
+  display: flex;
+  padding: 16px;
+  border: 2px solid var(--fg);
+  border-radius: 10px;
 }

@@ -42,8 +42,6 @@ const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
   };
 
   useEffect(() => {
-    if (config.url == `/user` && !window.Telegram.WebApp.initDataUnsafe.user)
-      return;
     if (!config.manual) fetchData();
   }, []);
 

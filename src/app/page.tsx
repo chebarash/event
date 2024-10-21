@@ -60,7 +60,7 @@ export default function Home() {
     return () => {
       MainButton.offClick(fn);
     };
-  }, [params, events]);
+  }, [params, events, user]);
 
   return (
     <main className={styles.main}>

@@ -37,7 +37,7 @@
   padding: 6px 12px;
   border-left: var(--subFg) 4px solid;
   border-radius: 5px 10px 10px 5px;
-  margin-left: -4px;
+  margin: 4px 0 -16px -4px;
   position: relative;
 }
 
@@ -59,7 +59,7 @@
   position: relative;
   border-left: var(--accent) 4px solid;
   border-radius: 5px 10px 10px 5px;
-  margin-left: -4px;
+  margin: 4px 0 -16px -4px;
 }
 
 .jsx blockquote * {

@@ -1,20 +1,15 @@
 "use client";
 import { TextareaHTMLAttributes, useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
-import { ContentType, EventType } from "../types/types";
+import { EventType } from "../types/types";
 import useUser from "../hooks/useUser";
 import { useRouter, useSearchParams } from "next/navigation";
 import Event from "../components/event";
 import useAxios from "../hooks/useAxios";
 import useEvents from "../hooks/useEvents";
 import React from "react";
-
-type EType = EventType & {
-  _id: string | undefined;
-  content: ContentType;
-  template: string;
-  button: string;
-};
+import ToJsx from "../components/jsx";
+import Image from "next/image";
 
 const TextArea = (props: TextareaHTMLAttributes<HTMLTextAreaElement>) => {
   const ref = useRef<HTMLTextAreaElement>(null);
@@ -93,7 +88,34 @@ export default function AdminPage() {
   const [waiting, setWait] = useState<boolean>(false);
   const { user, loading } = useUser();
   const e = events[params || ``];
-  const [event, setEvent] = useState<EType | undefined>();
+  const [event, setEvent] = useState<EventType>({
+    _id: ``,
+    title: e?.title || `Event Name`,
+    picture:
+      e?.picture ||
+      `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
+    description:
+      e?.description ||
+      `<b>bold</b>\n<i>italic</i>\n<u>underline</u>\n<s>strikethrough</s>\n<tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough </s> <u>underline italic bold</u></i> bold</b>\n<a href="http://chebarash.uz">inline URL</a>\n<a href="http://t.me/puevent">inline mention of a user</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n<blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>\n<blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>`,
+    author: {
+      _id: ``,
+      name: ``,
+      description: ``,
+      cover: ``,
+      username: ``,
+      links: [],
+      coordinators: [],
+    },
+    authorModel: `clubs`,
+    date: new Date(),
+    venue: e?.venue || venues[0],
+    duration: e?.duration || 1000 * 60 * 60 * 3,
+    template: e?.template,
+    button: e?.button,
+    content: e?.content,
+    shares: 0,
+    participants: [],
+  });
   const { fetchData } = useAxios<EventType>({
     url: `/event`,
     method: `post`,
@@ -108,31 +130,11 @@ export default function AdminPage() {
     });
     if (!loading && !isOrg) return router.push(`/?`);
     else if (isOrg)
-      setEvent({
-        _id: ``,
-        title: e?.title || `Event Name`,
-        picture:
-          e?.picture ||
-          `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
-        description:
-          e?.description ||
-          `<b>bold</b>\n<i>italic</i>\n<u>underline</u>\n<s>strikethrough</s>\n<tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough </s> <u>underline italic bold</u></i> bold</b>\n<a href="http://chebarash.uz">inline URL</a>\n<a href="http://t.me/puevent">inline mention of a user</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n<blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>\n<blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>`,
+      setEvent((event) => ({
+        ...event,
         author: orgList[0],
         authorModel: user.organizer ? `users` : `clubs`,
-        date: new Date(),
-        venue: e?.venue || venues[0],
-        duration: e?.duration || 1000 * 60 * 60 * 3,
-        template:
-          e?.template ||
-          `<b>{{title}}</b>\n\n{{description}}\n\n<b>Venue:</b> {{venue}}\n<b>Date:</b> {{date}}\n<b>Time:</b> {{time}}\n<b>Author:</b> {{author}}\n<b>Duration:</b> {{duration}}`,
-        button: e?.button || `Open in Event`,
-        content: e?.content || {
-          type: `photo`,
-          fileId: `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
-        },
-        shares: 0,
-        participants: [],
-      });
+      }));
   }, [user, loading]);
   if (loading || !isOrg || !event) return <></>;
   return (
@@ -160,22 +162,18 @@ export default function AdminPage() {
         }}
       >
         {orgList.length > 1 && (
-          <label>
+          <div className={styles.div}>
             <h3>Author</h3>
             <p>Choose a club or yourself</p>
             <select
               name="author"
               id="author"
               onChange={(e) =>
-                setEvent(
-                  (event) =>
-                    ({
-                      ...event,
-                      author: orgList.filter((u) => u._id == e.target.value)[0],
-                      authorModel:
-                        e.target.value == user._id ? `users` : `clubs`,
-                    } as EType)
-                )
+                setEvent((event) => ({
+                  ...event,
+                  author: orgList.filter((u) => u._id == e.target.value)[0],
+                  authorModel: e.target.value == user._id ? `users` : `clubs`,
+                }))
               }
               value={event.author._id}
             >
@@ -185,9 +183,9 @@ export default function AdminPage() {
                 </option>
               ))}
             </select>
-          </label>
+          </div>
         )}
-        <label>
+        <div className={styles.div}>
           <h3>Title</h3>
           <p>Name of the event max 100 symbols.</p>
           <input
@@ -198,13 +196,11 @@ export default function AdminPage() {
             id="title"
             value={event.title}
             onChange={(e) =>
-              setEvent(
-                (event) => ({ ...event, title: e.target.value } as EType)
-              )
+              setEvent((event) => ({ ...event, title: e.target.value }))
             }
           />
-        </label>
-        <label>
+        </div>
+        <div className={styles.div}>
           <h3>Picture</h3>
           <p>
             Just send a 16x9 photo to the bot and copy and paste his answer.
@@ -217,13 +213,11 @@ export default function AdminPage() {
             id="picture"
             value={event.picture}
             onChange={(e) =>
-              setEvent(
-                (event) => ({ ...event, picture: e.target.value } as EType)
-              )
+              setEvent((event) => ({ ...event, picture: e.target.value }))
             }
           />
-        </label>
-        <label>
+        </div>
+        <div className={styles.div}>
           <h3>Description</h3>
           <p>
             Describe the event in detail, you can use formatting that is
@@ -234,13 +228,11 @@ export default function AdminPage() {
             name="description"
             value={event.description}
             onChange={(e) =>
-              setEvent(
-                (event) => ({ ...event, description: e.target.value } as EType)
-              )
+              setEvent((event) => ({ ...event, description: e.target.value }))
             }
           />
-        </label>
-        <label>
+        </div>
+        <div className={styles.div}>
           <h3>Date</h3>
           <p>
             Enter the time in GMT+0, which means the time in Tashkent minus five
@@ -256,16 +248,16 @@ export default function AdminPage() {
             onChange={(e) =>
               setEvent((event) =>
                 e.target.value.length
-                  ? ({
+                  ? {
                       ...event,
                       date: new Date(e.target.value),
-                    } as EType)
+                    }
                   : event
               )
             }
           />
-        </label>
-        <label>
+        </div>
+        <div className={styles.div}>
           <h3>Venue</h3>
           <input
             minLength={2}
@@ -276,9 +268,7 @@ export default function AdminPage() {
             list="venues"
             value={event.venue}
             onChange={(e) =>
-              setEvent(
-                (event) => ({ ...event, venue: e.target.value } as EType)
-              )
+              setEvent((event) => ({ ...event, venue: e.target.value }))
             }
           />
           <datalist id="venues">
@@ -286,8 +276,8 @@ export default function AdminPage() {
               <option key={venue} value={venue} />
             ))}
           </datalist>
-        </label>
-        <label>
+        </div>
+        <div className={styles.div}>
           <h3>Duration</h3>
           <p>Event duration in hours.</p>
           <input
@@ -298,83 +288,182 @@ export default function AdminPage() {
             id="duration"
             value={event.duration / (1000 * 60 * 60)}
             onChange={(e) =>
-              setEvent(
-                (event) =>
-                  ({
-                    ...event,
-                    duration: parseInt(e.target.value) * 1000 * 60 * 60,
-                  } as EType)
-              )
+              setEvent((event) => ({
+                ...event,
+                duration: parseInt(e.target.value) * 1000 * 60 * 60,
+              }))
             }
           />
-        </label>
-        <label>
+        </div>
+        <div className={styles.div}>
           <h3>Content</h3>
           <p>
             The message media that the user will see when you share the event.
             Just send a photo or video to the bot and copy-paste its response.
           </p>
-          <input
-            required
-            pattern="^(AgACAgIAAxkBAAI|BAACAgIAAxkBAAI)[A-Za-z0-9_\-]{53,70}$"
-            type="text"
-            name="fileId"
-            id="fileId"
-            value={event.content.fileId}
-            onChange={(e) =>
-              setEvent(
-                (event) =>
-                  ({
-                    ...event,
-                    content: {
-                      type: /^AgACAgIAAxkBAAI[A-Za-z0-9_\-]{53,70}$/.test(
-                        e.target.value
-                      )
-                        ? `photo`
-                        : `video`,
-                      fileId: e.target.value,
-                    },
-                  } as EType)
-              )
-            }
-          />
-        </label>
-        <label>
+          {event.content ? (
+            <input
+              required
+              pattern="^(AgACAgIAAxkBAAI|BAACAgIAAxkBAAI)[A-Za-z0-9_\-]{53,70}$"
+              type="text"
+              name="fileId"
+              id="fileId"
+              value={event.content.fileId}
+              onChange={(e) =>
+                setEvent((event) => ({
+                  ...event,
+                  content: e.target.value.length
+                    ? {
+                        type: /^AgACAgIAAxkBAAI[A-Za-z0-9_\-]{53,70}$/.test(
+                          e.target.value
+                        )
+                          ? `photo`
+                          : `video`,
+                        fileId: e.target.value,
+                      }
+                    : undefined,
+                }))
+              }
+            />
+          ) : (
+            <button
+              className={styles.button}
+              onClick={() =>
+                setEvent((event) => ({
+                  ...event,
+                  content: {
+                    type: `photo`,
+                    fileId: event?.picture,
+                  },
+                }))
+              }
+            >
+              Add
+            </button>
+          )}
+          {event.content && (
+            <section className={styles.preview}>
+              {event.content.type == `photo` ? (
+                <Image
+                  src={
+                    process.env.NEXT_PUBLIC_BASE_URL +
+                    `/photo/` +
+                    event.content.fileId
+                  }
+                  alt="cover"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  style={{ width: "100%", height: "auto" }}
+                  priority
+                />
+              ) : (
+                <p>Video preview is not available</p>
+              )}
+            </section>
+          )}
+        </div>
+        <div className={styles.div}>
           <h3>Template</h3>
           <p>
             The message template that the user will see when you share the
             event, you can use variables like <code>{"{{title}}"}</code>.
           </p>
-          <TextArea
-            minLength={10}
-            required
-            name="template"
-            value={event.template}
-            onChange={(e) =>
-              setEvent(
-                (event) => ({ ...event, template: e.target.value } as EType)
-              )
-            }
-          />
-        </label>
-        <label>
+          {event.template ? (
+            <TextArea
+              minLength={10}
+              required
+              name="template"
+              value={event.template}
+              onChange={(e) => {
+                setEvent((event) => ({
+                  ...event,
+                  template: e.target.value.length ? e.target.value : undefined,
+                }));
+              }}
+            />
+          ) : (
+            <button
+              className={styles.button}
+              onClick={() =>
+                setEvent((event) => ({
+                  ...event,
+                  template: `<b>{{title}}</b>\n\n{{description}}\n\n<b>Venue:</b> {{venue}}\n<b>Date:</b> {{date}}\n<b>Time:</b> {{time}}\n<b>Author:</b> {{author}}\n<b>Duration:</b> {{duration}}`,
+                }))
+              }
+            >
+              Add
+            </button>
+          )}
+
+          {event.template && (
+            <section className={styles.preview}>
+              <ToJsx>
+                {event.template &&
+                  Object.entries({
+                    ...event,
+                    date:
+                      new Date(event.date).toLocaleDateString(`en`, {
+                        month: `long`,
+                        timeZone: `Asia/Tashkent`,
+                      }) +
+                      ` ` +
+                      new Date(event.date).toLocaleDateString(`en`, {
+                        day: `numeric`,
+                        timeZone: `Asia/Tashkent`,
+                      }),
+                    time: new Date(event.date).toLocaleString(`en`, {
+                      timeStyle: `short`,
+                      timeZone: `Asia/Tashkent`,
+                    }),
+                    duration: `${event.duration / (1000 * 60 * 60)} ${
+                      event.duration / (1000 * 60 * 60) == 1 ? `hour` : `hours`
+                    }`,
+                    author: event.author.name,
+                  }).reduce((template, [name, value]) => {
+                    return template.replace(
+                      new RegExp(`{{${name}}}`, `g`),
+                      String(value)
+                    );
+                  }, event.template)}
+              </ToJsx>
+            </section>
+          )}
+        </div>
+        <div className={styles.div}>
           <h3>Button</h3>
           <p>Custom button text under message</p>
-          <input
-            minLength={2}
-            required
-            type="text"
-            name="button"
-            id="button"
-            value={event.button}
-            onChange={(e) =>
-              setEvent(
-                (event) => ({ ...event, button: e.target.value } as EType)
-              )
-            }
-          />
-        </label>
-        <button type="submit">Save</button>
+          {event.button ? (
+            <input
+              required
+              type="text"
+              name="button"
+              id="button"
+              value={event.button}
+              onChange={(e) =>
+                setEvent((event) => ({
+                  ...event,
+                  button: e.target.value.length ? e.target.value : undefined,
+                }))
+              }
+            />
+          ) : (
+            <button
+              className={styles.button}
+              onClick={() =>
+                setEvent((event) => ({
+                  ...event,
+                  button: `Open in Event`,
+                }))
+              }
+            >
+              Add
+            </button>
+          )}
+        </div>
+        <button className={styles.button} type="submit">
+          Save
+        </button>
       </form>
       <Event {...event} open />
     </main>
