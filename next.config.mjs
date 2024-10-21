@@ -8,9 +8,6 @@ const nextConfig = {
       {
         hostname: "event-api.chebarash.uz",
       },
-      {
-        hostname: "localhost",
-      },
     ],
   },
 };

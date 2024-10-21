@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap");
-
 :root {
   --bg: var(--tg-theme-bg-color, #ffffff);
   --subBg: var(--tg-theme-secondary-bg-color, #e6e6e6);
