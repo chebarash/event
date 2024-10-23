@@ -15,6 +15,7 @@ export type EventType = {
   duration: number;
   shares: number;
   participants: Array<string>;
+  hashtags: Array<string>;
   spots?: number;
   deadline?: Date;
   external?: string;
@@ -30,7 +31,6 @@ export type ClubType = {
   description: string;
   links: Array<{ url: string; text: string }>;
   cover: string;
-  coordinators: Array<UserType>;
 };
 
 export type UserType = {
