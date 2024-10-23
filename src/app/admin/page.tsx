@@ -104,7 +104,6 @@ export default function AdminPage() {
       cover: ``,
       username: ``,
       links: [],
-      coordinators: [],
     },
     authorModel: `clubs`,
     date: new Date(),
@@ -115,6 +114,7 @@ export default function AdminPage() {
     content: e?.content,
     shares: 0,
     participants: [],
+    hashtags: [],
   });
   const { fetchData } = useAxios<EventType>({
     url: `/event`,

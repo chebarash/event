@@ -20,6 +20,7 @@ export default function Event({
   open,
   shares,
   participants,
+  external,
 }: EventType & { open?: boolean; registration?: boolean }) {
   const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
@@ -121,6 +122,14 @@ export default function Event({
               {hours} {hours == 1 ? `hour` : `hours`}
             </div>
           </section>
+          {!external && (
+            <p className={styles.calendar}>
+              <b>*</b>
+              {registration
+                ? ` the event is already in your google calendar`
+                : ` the event will be automatically added to your google calendar when you register`}
+            </p>
+          )}
           {_id &&
             (author._id == user?._id ||
               user?.organizer ||

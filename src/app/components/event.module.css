@@ -241,3 +241,17 @@
   border-radius: 10px;
   text-transform: uppercase;
 }
+
+.calendar {
+  font-size: 14px;
+  color: var(--subFg);
+  padding: 0 16px;
+  line-height: 1.2;
+  opacity: 0.8;
+  margin-top: -6px 0;
+}
+
+.calendar b {
+  color: var(--accent);
+  font-weight: 800;
+}
