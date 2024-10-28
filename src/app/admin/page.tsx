@@ -244,7 +244,6 @@ export default function AdminPage() {
             type="datetime-local"
             name="date"
             id="date"
-            value={event.date.toISOString().slice(0, 16)}
             onChange={(e) =>
               setEvent((event) =>
                 e.target.value.length
@@ -327,6 +326,7 @@ export default function AdminPage() {
             />
           ) : (
             <button
+              type="button"
               className={styles.button}
               onClick={() =>
                 setEvent((event) => ({
@@ -384,6 +384,7 @@ export default function AdminPage() {
             />
           ) : (
             <button
+              type="button"
               className={styles.button}
               onClick={() =>
                 setEvent((event) => ({
@@ -449,6 +450,7 @@ export default function AdminPage() {
             />
           ) : (
             <button
+              type="button"
               className={styles.button}
               onClick={() =>
                 setEvent((event) => ({
@@ -460,6 +462,123 @@ export default function AdminPage() {
               Add
             </button>
           )}
+        </div>
+        <div className={styles.div}>
+          <h3>External</h3>
+          <p>Custom registration link</p>
+          {event.external ? (
+            <input
+              required
+              type="url"
+              name="external"
+              id="external"
+              value={event.external}
+              onChange={(e) =>
+                setEvent((event) => ({
+                  ...event,
+                  external: e.target.value.length ? e.target.value : undefined,
+                }))
+              }
+            />
+          ) : (
+            <button
+              type="button"
+              className={styles.button}
+              onClick={() =>
+                setEvent((event) => ({
+                  ...event,
+                  external: `https://t.me/puevent`,
+                }))
+              }
+            >
+              Add
+            </button>
+          )}
+        </div>
+        <div className={styles.div}>
+          <h3>Spots</h3>
+          <p>Limit number of registrations</p>
+          {event.spots ? (
+            <input
+              required
+              type="number"
+              name="spots"
+              id="spots"
+              min={1}
+              value={event.spots}
+              onChange={(e) =>
+                setEvent((event) => ({
+                  ...event,
+                  spots: e.target.value.length
+                    ? parseInt(e.target.value)
+                    : undefined,
+                }))
+              }
+            />
+          ) : (
+            <button
+              type="button"
+              className={styles.button}
+              onClick={() =>
+                setEvent((event) => ({
+                  ...event,
+                  spots: 1,
+                }))
+              }
+            >
+              Add
+            </button>
+          )}
+        </div>
+        <div className={styles.div}>
+          <h3>Deadline</h3>
+          <p>Registration deadline</p>
+          {event.deadline ? (
+            <input
+              min={new Date().toISOString().slice(0, 16)}
+              required
+              type="datetime-local"
+              name="deadline"
+              id="deadline"
+              onChange={(e) =>
+                setEvent((event) => ({
+                  ...event,
+                  deadline: e.target.value.length
+                    ? new Date(e.target.value)
+                    : undefined,
+                }))
+              }
+            />
+          ) : (
+            <button
+              type="button"
+              className={styles.button}
+              onClick={() =>
+                setEvent((event) => ({
+                  ...event,
+                  deadline: new Date(),
+                }))
+              }
+            >
+              Add
+            </button>
+          )}
+        </div>
+        <div className={styles.div}>
+          <h3>Privacy</h3>
+          <p>Event visibility</p>
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() =>
+              setEvent((event) => ({
+                ...event,
+                private: !event.private,
+              }))
+            }
+          >
+            {event.private ? `Only for club members` : `Public`}
+          </button>
         </div>
         <button className={styles.button} type="submit">
           Save

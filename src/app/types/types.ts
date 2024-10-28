@@ -22,6 +22,7 @@ export type EventType = {
   content?: ContentType;
   template?: string;
   button?: string;
+  private?: boolean;
 };
 
 export type ClubType = {

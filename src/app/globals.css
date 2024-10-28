@@ -36,8 +36,6 @@ button:disabled {
 
   line-height: 100%;
 
-  transition: color 100ms ease, background 100ms ease;
-
   -ms-overflow-style: none;
   scrollbar-width: none;
 

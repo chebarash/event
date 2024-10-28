@@ -6,6 +6,7 @@ import { EventType } from "../types/types";
 import Image from "next/image";
 import ToJsx from "./jsx";
 import useUser from "../hooks/useUser";
+import useAxios from "../hooks/useAxios";
 
 export default function Event({
   _id,
@@ -27,6 +28,11 @@ export default function Event({
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
   const { user } = useUser();
+  const { fetchData } = useAxios({
+    url: `/participants?_id=${_id}`,
+    method: `get`,
+    manual: true,
+  });
 
   const hours = duration / (1000 * 60 * 60);
 
@@ -134,19 +140,7 @@ export default function Event({
             (author._id == user?._id ||
               user?.organizer ||
               user?.clubs.some((c) => c._id == _id)) && (
-              <button
-                className={styles.button}
-                onClick={() =>
-                  fetch(
-                    `${process.env.NEXT_PUBLIC_BASE_URL}/participants?_id=${_id}`,
-                    {
-                      headers: {
-                        Authorization: `${window.Telegram.WebApp.initDataUnsafe.user?.id}`,
-                      },
-                    }
-                  )
-                }
-              >
+              <button className={styles.button} onClick={() => fetchData()}>
                 {`Get Participants - ${participants.length}`}
               </button>
             )}
