@@ -66,7 +66,7 @@ export default function Home() {
     <main className={styles.main}>
       {(loading || l) && <div className={styles.loading}></div>}
       <Calendar day={day} setDay={setDay} />
-      <List day={day} />
+      <List day={day} setDay={setDay} />
     </main>
   );
 }

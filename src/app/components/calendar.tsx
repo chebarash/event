@@ -84,6 +84,10 @@ export default function Calendar({
           className={
             [6, 0].includes(thisDay.getDay()) ? styles.weekend : styles.li
           }
+          ref={(ref) => {
+            if (i == day)
+              ref?.scrollIntoView({ inline: `center`, block: `center` });
+          }}
         >
           <button
             className={[styles.button, i == day ? styles.active : ``].join(` `)}

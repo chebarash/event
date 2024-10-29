@@ -2,13 +2,25 @@
 import styles from "./list.module.css";
 import Event from "./event";
 import { EventType } from "../types/types";
-import { useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  TouchEvent,
+  useEffect,
+  useState,
+} from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import useEvents from "../hooks/useEvents";
 import Loading from "./loader";
 import useUser from "../hooks/useUser";
 
-export default function List({ day }: { day: number }) {
+export default function List({
+  day,
+  setDay,
+}: {
+  day: number;
+  setDay: Dispatch<SetStateAction<number>>;
+}) {
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
   const [localDay, setLocalDay] = useState(0);
@@ -16,6 +28,29 @@ export default function List({ day }: { day: number }) {
   const [list, setList] = useState<Array<EventType>>();
   const { daily } = useEvents();
   const { user } = useUser();
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: TouchEvent<HTMLDivElement>) =>
+    setTouchEnd(e.targetTouches[0].clientX);
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    if (isLeftSwipe || isRightSwipe)
+      setDay(
+        (prev) => prev + (isLeftSwipe ? (prev < 39 ? 1 : 0) : prev > 0 ? -1 : 0)
+      );
+  };
 
   useEffect(() => {
     if (params) window.Telegram.WebApp.BackButton.show();
@@ -40,7 +75,12 @@ export default function List({ day }: { day: number }) {
   if (!list) return <Loading />;
 
   return (
-    <div className={[styles.list, direction].join(` `)}>
+    <div
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      className={[styles.list, direction].join(` `)}
+    >
       {list.length ? (
         list.map((event) => (
           <Event
