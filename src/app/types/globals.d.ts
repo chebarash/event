@@ -1,8 +1,8 @@
-import { TelegramWebApps } from "./telegram";
+import { Telegram } from "./telegram";
 
 declare global {
   interface Window {
-    Telegram: { WebApp: TelegramWebApps.WebApp };
+    Telegram: Telegram;
   }
 
   namespace NodeJS {

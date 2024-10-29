@@ -16,6 +16,7 @@ export default function Home() {
 
   useEffect(() => {
     const { themeParams, MainButton } = window.Telegram.WebApp;
+    window.Telegram.WebApp.disableVerticalSwipes();
     const fn = () => {
       const params = p.get(`_id`);
       if (!params) return;
