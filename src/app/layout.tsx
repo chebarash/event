@@ -15,16 +15,18 @@ export const metadata: Metadata = {
   description: `The ultimate hub for students`,
 };
 
-export const revalidate = 60;
+export const revalidate = 15;
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const date = new Date();
+  date.setDate(date.getDate() - 1);
   const result = (
     await axios.get<Array<EventType>>(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/event`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/event?gte=${date.toISOString()}`
     )
   ).data.map(({ date, ...extra }) => ({ date: new Date(date), ...extra }));
   return (

@@ -86,7 +86,7 @@ export default function Calendar({
           }
           ref={(ref) => {
             if (i == day)
-              ref?.scrollIntoView({ inline: `center`, block: `center` });
+              ref?.scrollIntoView({ inline: `nearest`, block: `nearest` });
           }}
         >
           <button

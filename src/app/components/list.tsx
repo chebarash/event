@@ -42,7 +42,7 @@ export default function List({
     setTouchEnd(e.targetTouches[0].clientX);
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+    if (!touchStart || !touchEnd || params) return;
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
