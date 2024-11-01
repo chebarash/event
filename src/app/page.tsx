@@ -23,11 +23,12 @@ export default function Home() {
       if (!params) return;
       const event = events[params];
       if (!event) return;
-      if (event.external)
+      if (event.external) {
+        if (!event.participants?.includes(user?._id || ``)) update(params);
         if (event.external.startsWith(`https://t.me/`))
           window.Telegram.WebApp.openTelegramLink(event.external);
         else window.Telegram.WebApp.openLink(event.external);
-      else update(params);
+      } else update(params);
     };
     if (params) {
       const event = events[params];
@@ -37,7 +38,8 @@ export default function Home() {
         MainButton.setParams({
           is_active: active,
           is_visible: active,
-          ...(events[params].participants?.includes(user?._id || ``)
+          ...(events[params].participants?.includes(user?._id || ``) &&
+          !event.external
             ? {
                 text: `Unregister`,
                 color: themeParams.section_bg_color,
