@@ -15,7 +15,7 @@ export default function Home() {
   const { user, loading: l } = useUser();
 
   useEffect(() => {
-    const { themeParams, MainButton } = window.Telegram.WebApp;
+    const { themeParams, MainButton, SecondaryButton } = window.Telegram.WebApp;
     window.Telegram.WebApp.disableVerticalSwipes();
     window.Telegram.WebApp.expand();
     const fn = () => {
@@ -30,16 +30,30 @@ export default function Home() {
         else window.Telegram.WebApp.openLink(event.external);
       } else update(params);
     };
+    const fnScnd = () => {
+      const params = p.get(`_id`);
+      if (!params) return;
+      const event = events[params];
+      if (!event) return;
+      if (event.participants?.includes(user?._id || ``)) update(params);
+    };
     if (params) {
       const event = events[params];
       if (event) {
         const timeGap = new Date().getTime() - event.date.getTime();
         const active = !!user && timeGap < 0;
+        const registered = event.participants?.includes(user?._id || ``);
+        SecondaryButton.setParams({
+          is_active: active && registered,
+          is_visible: active && registered,
+          text: `Unregister`,
+          color: themeParams.section_bg_color,
+          text_color: themeParams.text_color,
+        });
         MainButton.setParams({
           is_active: active,
           is_visible: active,
-          ...(events[params].participants?.includes(user?._id || ``) &&
-          !event.external
+          ...(registered && !event.external
             ? {
                 text: `Unregister`,
                 color: themeParams.section_bg_color,
@@ -54,14 +68,22 @@ export default function Home() {
       }
       MainButton.offClick(fn);
       MainButton.onClick(fn);
+      SecondaryButton.offClick(fnScnd);
+      SecondaryButton.onClick(fnScnd);
     } else {
       MainButton.setParams({
         is_active: false,
         is_visible: false,
       });
+      SecondaryButton.setParams({
+        is_active: false,
+        is_visible: false,
+      });
+      SecondaryButton.offClick(fnScnd);
       MainButton.offClick(fn);
     }
     return () => {
+      SecondaryButton.offClick(fnScnd);
       MainButton.offClick(fn);
     };
   }, [params, events, user]);

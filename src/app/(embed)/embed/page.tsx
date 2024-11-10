@@ -2,6 +2,8 @@ import { EventType } from "@/app/types/types";
 import axios from "axios";
 import Image from "next/image";
 
+export const revalidate = 15;
+
 export default async function Embed() {
   const result = (
     await axios.get<Array<EventType>>(
