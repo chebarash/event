@@ -44,8 +44,8 @@ export default function Home() {
         const active = !!user && timeGap < 0;
         const registered = event.participants?.includes(user?._id || ``);
         SecondaryButton.setParams({
-          is_active: active && registered,
-          is_visible: active && registered,
+          is_active: !!event.external && active && registered,
+          is_visible: !!event.external && active && registered,
           text: `Unregister`,
           color: themeParams.section_bg_color,
           text_color: themeParams.text_color,

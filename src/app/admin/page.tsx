@@ -79,6 +79,7 @@ const venues = [
   `UCA 215`,
   `UCA 219`,
   `UCA B14`,
+  `UCA 2nd Floor`,
 ];
 
 export default function AdminPage() {
@@ -123,6 +124,7 @@ export default function AdminPage() {
   });
   const isOrg = user?.organizer || user?.clubs.length;
   const orgList = [...(user?.organizer ? [user] : []), ...(user?.clubs || [])];
+
   useEffect(() => {
     window.Telegram.WebApp.MainButton.setParams({
       is_active: false,
@@ -136,6 +138,7 @@ export default function AdminPage() {
         authorModel: user.organizer ? `users` : `clubs`,
       }));
   }, [user, loading]);
+
   if (loading || !isOrg || !event) return <></>;
   return (
     <main className={styles.main}>
@@ -244,6 +247,7 @@ export default function AdminPage() {
             type="datetime-local"
             name="date"
             id="date"
+            defaultValue={event.date.toISOString().slice(0, 16)}
             onChange={(e) =>
               setEvent((event) =>
                 e.target.value.length

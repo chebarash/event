@@ -130,7 +130,7 @@ const tags: Array<{
       let elements = [];
       return (html, i) => {
         elements.push(html);
-        const step = i % 4;
+        const step = i % 3;
         switch (step) {
           case 0:
             return next(html, i);
@@ -145,8 +145,6 @@ const tags: Array<{
                 {html}
               </button>
             );
-          case 3:
-            return next(html, i);
         }
       };
     },

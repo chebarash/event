@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: `The ultimate hub for students`,
 };
 
-export const revalidate = 15;
+export const dynamic = "force-dynamic";
 
 export default async function RootLayout({
   children,
