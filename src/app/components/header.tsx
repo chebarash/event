@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import useUser from "../hooks/useUser";
 import React from "react";
+import useEvents from "../hooks/useEvents";
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -13,6 +14,8 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading } = useUser();
+  const { events } = useEvents();
+  const e = events[params || ``];
 
   useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
@@ -120,7 +123,13 @@ export default function Header() {
                         href={`/admin${params ? `?_id=${params}` : ``}`}
                         className={styles.add}
                       >
-                        Add
+                        {(e &&
+                          user.clubs
+                            .map(({ _id }) => _id)
+                            .includes(e.author._id)) ||
+                        user._id == e?.author._id
+                          ? `Edit`
+                          : `Add`}
                       </Link>
                     )}
                   <Image

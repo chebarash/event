@@ -89,37 +89,33 @@ export default function AdminPage() {
   const [waiting, setWait] = useState<boolean>(false);
   const { user, loading } = useUser();
   const e = events[params || ``];
-  const [event, setEvent] = useState<EventType>({
-    _id: ``,
-    title: e?.title || `Event Name`,
-    picture:
-      e?.picture ||
-      `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
-    description:
-      e?.description ||
-      `<b>bold</b>\n<i>italic</i>\n<u>underline</u>\n<s>strikethrough</s>\n<tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough </s> <u>underline italic bold</u></i> bold</b>\n<a href="http://chebarash.uz">inline URL</a>\n<a href="http://t.me/puevent">inline mention of a user</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n<blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>\n<blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>`,
-    author: {
+  const isEditing = !!e;
+  const [event, setEvent] = useState<EventType>(
+    e || {
       _id: ``,
-      name: ``,
-      description: ``,
-      cover: ``,
-      username: ``,
-      links: [],
-    },
-    authorModel: `clubs`,
-    date: new Date(),
-    venue: e?.venue || venues[0],
-    duration: e?.duration || 1000 * 60 * 60 * 3,
-    template: e?.template,
-    button: e?.button,
-    content: e?.content,
-    shares: 0,
-    participants: [],
-    hashtags: [],
-  });
+      title: `Event Name`,
+      picture: `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
+      description: `<b>bold</b>\n<i>italic</i>\n<u>underline</u>\n<s>strikethrough</s>\n<tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough </s> <u>underline italic bold</u></i> bold</b>\n<a href="http://chebarash.uz">inline URL</a>\n<a href="http://t.me/puevent">inline mention of a user</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n<blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>\n<blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>`,
+      author: {
+        _id: ``,
+        name: ``,
+        description: ``,
+        cover: ``,
+        username: ``,
+        links: [],
+      },
+      authorModel: `clubs`,
+      date: new Date(),
+      venue: venues[0],
+      duration: 1000 * 60 * 60 * 3,
+      shares: 0,
+      participants: [],
+      hashtags: [],
+    }
+  );
   const { fetchData } = useAxios<EventType>({
     url: `/event`,
-    method: `post`,
+    method: isEditing ? `put` : `post`,
     manual: true,
   });
   const isOrg = user?.organizer || user?.clubs.length;
@@ -131,13 +127,13 @@ export default function AdminPage() {
       is_visible: false,
     });
     if (!loading && !isOrg) return router.push(`/?`);
-    else if (isOrg)
+    else if (isOrg && !isEditing)
       setEvent((event) => ({
         ...event,
         author: orgList[0],
         authorModel: user.organizer ? `users` : `clubs`,
       }));
-  }, [user, loading]);
+  }, [user, loading, isEditing]);
 
   if (loading || !isOrg || !event) return <></>;
   return (
@@ -148,12 +144,14 @@ export default function AdminPage() {
           e.preventDefault();
           if (waiting) return;
           window.Telegram.WebApp.showConfirm(
-            `Are you sure you want to organize ${event.title}?`,
+            `Are you sure you want to ${isEditing ? `edit` : `organize`} "${
+              event.title
+            }"?`,
             async (ok) => {
               if (ok) {
                 setWait(true);
                 const res = await fetchData({
-                  data: { ...event, _id: undefined },
+                  data: { ...event, _id: isEditing ? event._id : undefined },
                 });
                 if (res) {
                   window.location.replace(`/?_id=${res?._id}`);
@@ -164,7 +162,7 @@ export default function AdminPage() {
           );
         }}
       >
-        {orgList.length > 1 && (
+        {orgList.length > 1 && !isEditing && (
           <div className={styles.div}>
             <h3>Author</h3>
             <p>Choose a club or yourself</p>
@@ -186,6 +184,24 @@ export default function AdminPage() {
                 </option>
               ))}
             </select>
+          </div>
+        )}
+        {isEditing && (
+          <div className={styles.div}>
+            <h3>Event status</h3>
+            <p>If you can not organize an event, you can cancel it.</p>
+            <button
+              type="button"
+              className={styles.button}
+              onClick={() =>
+                setEvent((event) => ({
+                  ...event,
+                  cancelled: !event.cancelled,
+                }))
+              }
+            >
+              {event.cancelled ? `Cancelled` : `Confirmed`}
+            </button>
           </div>
         )}
         <div className={styles.div}>

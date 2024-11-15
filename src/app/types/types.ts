@@ -23,6 +23,7 @@ export type EventType = {
   template?: string;
   button?: string;
   private?: boolean;
+  cancelled?: boolean;
 };
 
 export type ClubType = {

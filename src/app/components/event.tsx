@@ -22,6 +22,7 @@ export default function Event({
   shares,
   participants,
   external,
+  cancelled,
 }: EventType & { open?: boolean; registration?: boolean }) {
   const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
@@ -53,6 +54,7 @@ export default function Event({
       className={[
         styles.event,
         params || open ? (active ? styles.active : styles.inactive) : ``,
+        cancelled ? styles.cancelled : ``,
       ].join(` `)}
     >
       {registration && (
@@ -138,8 +140,7 @@ export default function Event({
           )}
           {_id &&
             (author._id == user?._id ||
-              user?.organizer ||
-              user?.clubs.some((c) => c._id == _id)) && (
+              user?.clubs.some((c) => c._id == author._id)) && (
               <button className={styles.button} onClick={() => fetchData()}>
                 {`Get Participants - ${participants.length}`}
               </button>
