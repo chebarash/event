@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { DailyType, EventsType, EventType } from "../types/types";
 import useAxios from "./useAxios";
 import useUser from "./useUser";
@@ -43,6 +43,30 @@ export function EventsProvider({
     manual: true,
   });
 
+  useEffect(() => {
+    setEvents((_) => {
+      const res: EventsType = {};
+      const daily: DailyType = {};
+      e.filter(
+        ({ author: { _id }, private: p }) =>
+          (user &&
+            [
+              ...(user.clubs?.map(({ _id }) => _id) || []),
+              ...(user.member || []),
+              user._id,
+            ].includes(_id)) ||
+          !p
+      ).forEach((event) => {
+        res[event._id] = event;
+        const day = event.date.toDateString();
+        if (!daily[day]) daily[day] = [];
+        daily[day].push(event);
+      });
+      setDaily(daily);
+      return res;
+    });
+  }, [user]);
+
   const update = async (_id: string) => {
     if (events[_id]) {
       const { MainButton, HapticFeedback } = window.Telegram.WebApp;
@@ -62,7 +86,7 @@ export function EventsProvider({
         }
         setEvents((e) => {
           const res = { ...e, [_id]: result };
-          setDaily((d) => {
+          setDaily(() => {
             const daily: DailyType = {};
 
             Object.values(res).forEach((event) => {

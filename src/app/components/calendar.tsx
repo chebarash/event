@@ -10,6 +10,7 @@ import {
 import styles from "./calendar.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import useEvents from "../hooks/useEvents";
+import useUser from "../hooks/useUser";
 
 export default function Calendar({
   day,
@@ -23,6 +24,7 @@ export default function Calendar({
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
   const { events, daily } = useEvents();
+  const { loading } = useUser();
   const scrollContainerRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ export default function Calendar({
             (eventDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
           )
         );
-      } else router.push(`/?`);
+      } else if (!loading) router.push(`/?`);
     }
   }, [params, events]);
 

@@ -118,7 +118,7 @@ export default function Header() {
               {user ? (
                 <span>
                   {pathname != `/admin` &&
-                    (user.organizer || !!user.clubs.length) && (
+                    (user.organizer || !!user.clubs?.length) && (
                       <Link
                         href={`/admin${params ? `?_id=${params}` : ``}`}
                         className={styles.add}

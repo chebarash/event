@@ -23,6 +23,7 @@ export default function Event({
   participants,
   external,
   cancelled,
+  private: prvt,
 }: EventType & { open?: boolean; registration?: boolean }) {
   const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
@@ -55,6 +56,7 @@ export default function Event({
         styles.event,
         params || open ? (active ? styles.active : styles.inactive) : ``,
         cancelled ? styles.cancelled : ``,
+        prvt ? styles.private : ``,
       ].join(` `)}
     >
       {registration && (
