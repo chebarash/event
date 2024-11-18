@@ -132,14 +132,12 @@ export default function Event({
               {hours} {hours == 1 ? `hour` : `hours`}
             </div>
           </section>
-          {!external && (
-            <p className={styles.calendar}>
-              <b>*</b>
-              {registration
-                ? ` the event is already in your google calendar`
-                : ` the event will be automatically added to your google calendar when you register`}
-            </p>
-          )}
+          <p className={styles.calendar}>
+            <b>*</b>
+            {registration
+              ? ` the event is already in your google calendar`
+              : ` the event will be automatically added to your google calendar when you register`}
+          </p>
           {_id &&
             (author._id == user?._id ||
               user?.clubs.some((c) => c._id == author._id)) && (
