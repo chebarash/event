@@ -258,7 +258,9 @@ export default function AdminPage() {
             hours.
           </p>
           <input
-            min={new Date().toISOString().slice(0, 16)}
+            min={new Date(Date.now() - 60 * 60 * 1000)
+              .toISOString()
+              .slice(0, 16)}
             required
             type="datetime-local"
             name="date"
@@ -600,11 +602,15 @@ export default function AdminPage() {
             {event.private ? `Only for club members` : `Public`}
           </button>
         </div>
+        <div className={styles.div}>
+          <h3>Preview</h3>
+          <p>Check if everything is correct</p>
+          <Event {...event} open />
+        </div>
         <button className={styles.button} type="submit">
           Save
         </button>
       </form>
-      <Event {...event} open />
     </main>
   );
 }
