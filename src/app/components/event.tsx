@@ -141,9 +141,28 @@ export default function Event({
           {_id &&
             (author._id == user?._id ||
               user?.clubs.some((c) => c._id == author._id)) && (
-              <button className={styles.button} onClick={() => fetchData()}>
-                {`Get Participants - ${participants.length}`}
-              </button>
+              <>
+                <ul className={styles.participants}>
+                  {participants.map(({ name, picture, email, id }) => (
+                    <li key={id}>
+                      <Image
+                        src={picture || `/profile.png`}
+                        width={40}
+                        height={40}
+                        alt="profile"
+                      />
+                      <div>
+                        <h3>{name}</h3>
+                        <pre>{id}</pre>
+                        <p>{email}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <button className={styles.button} onClick={() => fetchData()}>
+                  {`Get Participants - ${participants.length}`}
+                </button>
+              </>
             )}
         </div>
       ) : (

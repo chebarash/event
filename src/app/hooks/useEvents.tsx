@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-import { DailyType, EventsType, EventType } from "../types/types";
+import { DailyType, EventsType, EventType, UserType } from "../types/types";
 import useAxios from "./useAxios";
 import useUser from "./useUser";
 
@@ -9,11 +9,14 @@ const EventsContext = createContext<{
   daily: DailyType;
   loading: boolean;
   update: (_id: string) => any;
+  isParticipant: (event: EventType, _id?: string) => boolean;
 }>({
   events: {},
   daily: {},
   loading: true,
   update: () => {},
+  isParticipant: (event: EventType, _id?: string) =>
+    event.participants.some((p) => _id === p._id),
 });
 
 export function EventsProvider({
@@ -42,6 +45,9 @@ export function EventsProvider({
     method: `get`,
     manual: true,
   });
+
+  const isParticipant = (event: EventType, _id?: string) =>
+    event.participants.some((p) => _id === p._id);
 
   useEffect(() => {
     setEvents((_) => {
@@ -72,7 +78,7 @@ export function EventsProvider({
       const { MainButton, HapticFeedback } = window.Telegram.WebApp;
       MainButton.showProgress(true);
       MainButton.disable();
-      const registered = events[_id].participants.includes(user?._id || ``);
+      const registered = isParticipant(events[_id], user?._id);
       const result = await fetchData({
         params: {
           _id,
@@ -113,6 +119,7 @@ export function EventsProvider({
         daily,
         loading,
         update,
+        isParticipant,
       }}
     >
       {children}

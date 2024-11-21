@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: `The ultimate hub for students`,
 };
 
-export const revalidate = 60;
+export const revalidate = 5;
 
 export default async function RootLayout({
   children,

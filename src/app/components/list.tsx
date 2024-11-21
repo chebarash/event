@@ -86,7 +86,7 @@ export default function List({
           <Event
             {...event}
             key={event._id}
-            registration={event.participants.includes(user?._id || ``)}
+            registration={event.participants.some((p) => p._id == user?._id)}
           />
         ))
       ) : (
