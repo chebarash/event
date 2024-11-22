@@ -41,7 +41,7 @@ export default function Home() {
       const event = events[params];
       if (event) {
         const timeGap = new Date().getTime() - event.date.getTime();
-        const active = !!user && timeGap < 0;
+        const active = !!user && timeGap < 0 && !event.cancelled;
         const registered = isParticipant(event, user?._id);
         SecondaryButton.setParams({
           is_active: !!event.external && active && registered,
