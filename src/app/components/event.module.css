@@ -298,6 +298,7 @@
 }
 
 .participants pre {
+  cursor: pointer;
   font-family: "Sometype Mono", monospace;
   font-weight: 500;
   font-style: normal;

@@ -7,6 +7,7 @@ import Image from "next/image";
 import ToJsx from "./jsx";
 import useUser from "../hooks/useUser";
 import useAxios from "../hooks/useAxios";
+import useToast from "../hooks/useToast";
 
 export default function Event({
   _id,
@@ -30,6 +31,7 @@ export default function Event({
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
   const { user } = useUser();
+  const { toast } = useToast();
   const { fetchData } = useAxios({
     url: `/participants?_id=${_id}`,
     method: `get`,
@@ -153,7 +155,14 @@ export default function Event({
                       />
                       <div>
                         <h3>{name}</h3>
-                        <pre>{id}</pre>
+                        <pre
+                          onClick={() => {
+                            toast(`Copied to clipboard`);
+                            navigator.clipboard.writeText(`${id}`);
+                          }}
+                        >
+                          {id}
+                        </pre>
                         <p>{email}</p>
                       </div>
                     </li>
