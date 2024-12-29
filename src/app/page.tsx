@@ -11,7 +11,7 @@ export default function Home() {
   const [day, setDay] = useState<number>(0);
   const p = useSearchParams();
   const params = useSearchParams().get(`_id`);
-  const { events, update, loading, isParticipant } = useEvents();
+  const { events, update, loading, isRegistered } = useEvents();
   const { user, loading: l } = useUser();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function Home() {
       const event = events[params];
       if (!event) return;
       if (event.external) {
-        if (!isParticipant(event, user?._id)) update(params);
+        if (!isRegistered(event, user?._id)) update(params);
         if (event.external.startsWith(`https://t.me/`))
           window.Telegram.WebApp.openTelegramLink(event.external);
         else window.Telegram.WebApp.openLink(event.external);
@@ -35,14 +35,24 @@ export default function Home() {
       if (!params) return;
       const event = events[params];
       if (!event) return;
-      if (isParticipant(event, user?._id)) update(params);
+      if (isRegistered(event, user?._id)) update(params);
     };
     if (params) {
       const event = events[params];
       if (event) {
         const timeGap = new Date().getTime() - event.date.getTime();
-        const active = !!user && timeGap < 0 && !event.cancelled;
-        const registered = isParticipant(event, user?._id);
+        const deadlineGap = event.deadline
+          ? new Date().getTime() - event.deadline.getTime()
+          : -1;
+        const registered = isRegistered(event, user?._id);
+        const active =
+          !!user &&
+          timeGap < 0 &&
+          deadlineGap < 0 &&
+          !event.cancelled &&
+          (!event.spots ||
+            registered ||
+            event.spots - event.registered.length > 0);
         SecondaryButton.setParams({
           is_active: !!event.external && active && registered,
           is_visible: !!event.external && active && registered,

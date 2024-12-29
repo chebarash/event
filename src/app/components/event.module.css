@@ -8,7 +8,7 @@
   position: relative;
 }
 
-.registered {
+.star {
   position: absolute;
   top: -10px;
   right: -10px;
@@ -154,36 +154,41 @@
   align-items: flex-end;
 }
 
-.full > section > div:nth-child(1) {
+.day,
+.spots {
   background: var(--fg);
   color: var(--subBg);
 }
 
-.full > section > div:nth-child(2) {
+.time,
+.deadline {
   background: var(--subBg);
   color: var(--fg);
 }
 
-.full > section > div:nth-child(3) {
+.venue {
   background: var(--accent);
   color: var(--bg);
-  border-radius: 100px;
   font-size: 16px;
   font-weight: 500;
   padding: 12px 16px;
 }
 
-.full > section > div:nth-child(4) {
+.time,
+.spots {
+  border-radius: 100px !important;
+}
+
+.duration {
   background: var(--bg);
   color: var(--accent);
-  border-radius: 100px;
   font-size: 16px;
   font-weight: 500;
   position: relative;
   padding: 12px 16px;
 }
 
-.full > section > div:nth-child(4)::after {
+.duration::after {
   content: "";
   position: absolute;
   top: 0;
@@ -195,15 +200,20 @@
   opacity: 0.2;
 }
 
-.full > section > div:nth-child(1) p:first-of-type,
-.full > section > div:nth-child(2) p:last-of-type {
+.day p:first-of-type,
+.time p:last-of-type,
+.deadline p:last-of-type,
+.spots p:last-of-type,
+.duration p:last-of-type {
   font-size: 16px;
   font-weight: 500;
-  text-transform: uppercase;
 }
 
-.full > section > div:nth-child(2) p:first-of-type,
-.full > section > div:nth-child(1) p:last-of-type {
+.time p:first-of-type,
+.deadline p:first-of-type,
+.day p:last-of-type,
+.spots p:first-of-type,
+.duration p:first-of-type {
   font-family: "Dela Gothic One", sans-serif;
   font-size: 20px;
 }
@@ -271,40 +281,40 @@
   color: var(--bg);
 }
 
-.participants {
+.registered {
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding: 0 14px;
 }
 
-.participants li {
+.registered li {
   display: flex;
   gap: 16px;
 }
 
-.participants img {
+.registered img {
   border-radius: 20%;
 }
 
-.participants span {
+.registered span {
   display: flex;
   gap: 8px;
 }
 
-.participants h3 {
+.registered h3 {
   font-size: 16px;
   font-weight: 600;
 }
 
-.participants pre {
+.registered pre {
   cursor: pointer;
   font-family: "Sometype Mono", monospace;
   font-weight: 500;
   font-style: normal;
 }
 
-.participants div {
+.registered div {
   display: flex;
   flex-direction: column;
   gap: 4px;

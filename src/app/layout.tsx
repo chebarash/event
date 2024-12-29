@@ -28,7 +28,11 @@ export default async function RootLayout({
     await axios.get<Array<EventType>>(
       `${process.env.NEXT_PUBLIC_BASE_URL}/event?gte=${date.toISOString()}`
     )
-  ).data.map(({ date, ...extra }) => ({ date: new Date(date), ...extra }));
+  ).data.map(({ date, deadline, ...extra }) => ({
+    date: new Date(date),
+    deadline: deadline ? new Date(deadline) : undefined,
+    ...extra,
+  }));
   return (
     <html lang="en">
       <head>

@@ -109,7 +109,7 @@ export default function AdminPage() {
       venue: venues[0],
       duration: 1000 * 60 * 60 * 3,
       shares: 0,
-      participants: [],
+      registered: [],
       hashtags: [],
     }
   );
@@ -258,9 +258,6 @@ export default function AdminPage() {
             hours.
           </p>
           <input
-            min={new Date(Date.now() - 60 * 60 * 1000)
-              .toISOString()
-              .slice(0, 16)}
             required
             type="datetime-local"
             name="date"
@@ -557,11 +554,11 @@ export default function AdminPage() {
           <p>Registration deadline</p>
           {event.deadline ? (
             <input
-              min={new Date().toISOString().slice(0, 16)}
               required
               type="datetime-local"
               name="deadline"
               id="deadline"
+              defaultValue={event.deadline.toISOString().slice(0, 16)}
               onChange={(e) =>
                 setEvent((event) => ({
                   ...event,

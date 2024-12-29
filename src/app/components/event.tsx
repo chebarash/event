@@ -9,6 +9,19 @@ import useUser from "../hooks/useUser";
 import useAxios from "../hooks/useAxios";
 import useToast from "../hooks/useToast";
 
+const getTimeRemaining = (endtime: Date) => {
+  const total = endtime.getTime() - Date.now();
+  const minutes = Math.floor((total / 1000 / 60) % 60);
+  const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+  const days = Math.floor(total / (1000 * 60 * 60 * 24));
+  const list: Array<[number, string]> = [
+    [days, days > 1 ? `days` : `day`],
+    [hours, hours > 1 ? `hours` : `hour`],
+    [minutes > 0 ? minutes : 1, minutes > 1 ? `minutes` : `minute`],
+  ];
+  return list.filter(([t]) => t > 0)[0];
+};
+
 export default function Event({
   _id,
   title,
@@ -18,22 +31,28 @@ export default function Event({
   date,
   venue,
   duration,
+  shares,
+  registered,
+  participated,
+  hashtags,
+  spots,
+  deadline,
+  external,
+  private: prvt,
+  cancelled,
   registration,
   open,
-  shares,
-  participants,
-  external,
-  cancelled,
-  private: prvt,
 }: EventType & { open?: boolean; registration?: boolean }) {
   const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
+  const timeLeft = deadline ? getTimeRemaining(deadline) : undefined;
+  const spotsLeft = spots ? spots - registered.length : undefined;
   const params = useSearchParams().get(`_id`);
   const router = useRouter();
   const { user } = useUser();
   const { toast } = useToast();
   const { fetchData } = useAxios({
-    url: `/participants?_id=${_id}`,
+    url: `/registered?_id=${_id}`,
     method: `get`,
     manual: true,
   });
@@ -63,7 +82,7 @@ export default function Event({
     >
       {registration && (
         <svg
-          className={styles.registered}
+          className={styles.star}
           width="52"
           height="48"
           viewBox="0 0 52 48"
@@ -119,20 +138,33 @@ export default function Event({
             <ToJsx>{description}</ToJsx>
           </div>
           <section>
-            <div>
+            <div className={styles.day}>
               {day?.split(` `).map((t, i) => (
                 <p key={i}>{t}</p>
               ))}
             </div>
-            <div>
+            <div className={styles.time}>
               {time?.split(` `).map((t, i) => (
                 <p key={i}>{t}</p>
               ))}
             </div>
-            <div>{venue}</div>
-            <div>
-              {hours} {hours == 1 ? `hour` : `hours`}
+            <div className={styles.venue}>{venue}</div>
+            <div className={styles.duration}>
+              <p>{hours}</p> <p>{hours == 1 ? `hour` : `hours`}</p>
             </div>
+            {timeLeft && (
+              <div className={styles.deadline}>
+                <p>{timeLeft[0]}</p> <p>{timeLeft[1]} left</p>
+              </div>
+            )}
+            {spotsLeft != undefined && (
+              <div className={styles.spots}>
+                <p>
+                  {spotsLeft > 1 ? spotsLeft : spotsLeft < 1 ? `NO` : `LAST`}
+                </p>{" "}
+                <p>{spotsLeft == 1 ? `spot` : `spots`} left</p>
+              </div>
+            )}
           </section>
           <p className={styles.calendar}>
             <b>*</b>
@@ -144,8 +176,8 @@ export default function Event({
             (author._id == user?._id ||
               user?.clubs.some((c) => c._id == author._id)) && (
               <>
-                <ul className={styles.participants}>
-                  {participants.map(({ name, picture, email, id }) => (
+                <ul className={styles.registered}>
+                  {registered.map(({ name, picture, email, id }) => (
                     <li key={id}>
                       <Image
                         src={picture || `/profile.png`}
@@ -169,7 +201,7 @@ export default function Event({
                   ))}
                 </ul>
                 <button className={styles.button} onClick={() => fetchData()}>
-                  {`Get Participants - ${participants.length}`}
+                  {`Get registered - ${registered.length}`}
                 </button>
               </>
             )}

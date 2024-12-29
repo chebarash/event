@@ -14,7 +14,8 @@ export type EventType = {
   venue: string;
   duration: number;
   shares: number;
-  participants: Array<UserType>;
+  registered: Array<UserType>;
+  participated: Array<UserType>;
   hashtags: Array<string>;
   spots?: number;
   deadline?: Date;

@@ -9,14 +9,14 @@ const EventsContext = createContext<{
   daily: DailyType;
   loading: boolean;
   update: (_id: string) => any;
-  isParticipant: (event: EventType, _id?: string) => boolean;
+  isRegistered: (event: EventType, _id?: string) => boolean;
 }>({
   events: {},
   daily: {},
   loading: true,
   update: () => {},
-  isParticipant: (event: EventType, _id?: string) =>
-    event.participants.some((p) => _id === p._id),
+  isRegistered: (event: EventType, _id?: string) =>
+    event.registered.some((p) => _id === p._id),
 });
 
 export function EventsProvider({
@@ -41,13 +41,13 @@ export function EventsProvider({
 
   const { user } = useUser();
   const { loading, fetchData } = useAxios<EventType>({
-    url: `/registration`,
-    method: `get`,
+    url: `/registered`,
+    method: `post`,
     manual: true,
   });
 
-  const isParticipant = (event: EventType, _id?: string) =>
-    event.participants.some((p) => _id === p._id);
+  const isRegistered = (event: EventType, _id?: string) =>
+    event.registered.some((p) => _id === p._id);
 
   useEffect(() => {
     setEvents((_) => {
@@ -78,9 +78,9 @@ export function EventsProvider({
       const { MainButton, HapticFeedback } = window.Telegram.WebApp;
       MainButton.showProgress(true);
       MainButton.disable();
-      const registered = isParticipant(events[_id], user?._id);
+      const registered = isRegistered(events[_id], user?._id);
       const result = await fetchData({
-        params: {
+        data: {
           _id,
           ...(registered ? { registered: true } : {}),
         },
@@ -119,7 +119,7 @@ export function EventsProvider({
         daily,
         loading,
         update,
-        isParticipant,
+        isRegistered,
       }}
     >
       {children}

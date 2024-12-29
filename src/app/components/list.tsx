@@ -26,7 +26,7 @@ export default function List({
   const [localDay, setLocalDay] = useState(0);
   const [direction, setDirection] = useState(``);
   const [list, setList] = useState<Array<EventType>>();
-  const { daily } = useEvents();
+  const { daily, isRegistered } = useEvents();
   const { user } = useUser();
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -86,7 +86,7 @@ export default function List({
           <Event
             {...event}
             key={event._id}
-            registration={event.participants.some((p) => p._id == user?._id)}
+            registration={isRegistered(event, user?._id)}
           />
         ))
       ) : (
