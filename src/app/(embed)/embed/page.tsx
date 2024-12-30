@@ -1,4 +1,4 @@
-import { EventType } from "@/app/types/types";
+import { EventType } from "@/types/types";
 import axios from "axios";
 import Image from "next/image";
 

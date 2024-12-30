@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useState } from "react";
-import Toast from "../components/toast";
+import Toast from "../app/components/toast";
 
 type MessagesType = Array<{ message: string; date: number; error: boolean }>;
 type ToastType = {

@@ -1,27 +1,15 @@
 "use client";
+import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./list.module.css";
-import { EventType } from "../../types/types";
-import {
-  Dispatch,
-  SetStateAction,
-  TouchEvent,
-  useEffect,
-  useState,
-} from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import useEvents from "../../hooks/useEvents";
-import Loading from "./loader";
-import useUser from "../../hooks/useUser";
-import EventCard from "./eventCard";
+import { TouchEvent, useEffect, useState } from "react";
+import useEvents from "@/hooks/useEvents";
+import useUser from "@/hooks/useUser";
+import { EventType } from "@/types/types";
+import Card from "../card/card";
 
-export default function List({
-  day,
-  setDay,
-}: {
-  day: number;
-  setDay: Dispatch<SetStateAction<number>>;
-}) {
-  const params = useSearchParams().get(`_id`);
+export default function List() {
+  const [day, setDay] = useState<number>(0);
+  const params = useSearchParams().get(`day`);
   const router = useRouter();
   const [localDay, setLocalDay] = useState(0);
   const [direction, setDirection] = useState(``);
@@ -42,24 +30,18 @@ export default function List({
     setTouchEnd(e.targetTouches[0].clientX);
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd || params) return;
+    if (!touchStart || !touchEnd || !day) return;
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
     if (isLeftSwipe || isRightSwipe)
-      setDay(
-        (prev) => prev + (isLeftSwipe ? (prev < 39 ? 1 : 0) : prev > 0 ? -1 : 0)
+      router.push(
+        `/?day=${day + (isLeftSwipe ? (day < 39 ? 1 : 0) : day > 0 ? -1 : 0)}`
       );
   };
 
   useEffect(() => {
-    if (params) window.Telegram.WebApp.BackButton.show();
-    else window.Telegram.WebApp.BackButton.hide();
-    window.Telegram.WebApp.BackButton.onClick(() =>
-      window.history?.length && window.history.length > 1
-        ? router.back()
-        : router.push(`/?`)
-    );
+    if (params) setDay(parseInt(params));
   }, [params]);
 
   useEffect(() => {
@@ -72,7 +54,7 @@ export default function List({
     );
   }, [day, localDay, daily]);
 
-  if (!list) return <Loading />;
+  if (!list) return <></>;
 
   return (
     <div
@@ -83,7 +65,7 @@ export default function List({
     >
       {list.length ? (
         list.map((event) => (
-          <EventCard
+          <Card
             {...event}
             key={event._id}
             registration={isRegistered(event, user?._id)}

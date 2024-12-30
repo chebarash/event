@@ -1,21 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
 import styles from "./header.module.css";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import useUser from "../hooks/useUser";
+import useUser from "../../hooks/useUser";
 import React from "react";
-import useEvents from "../hooks/useEvents";
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
-  const params = useSearchParams().get(`_id`);
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading } = useUser();
-  const { events } = useEvents();
-  const e = events[params || ``];
 
   useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
@@ -34,7 +30,7 @@ export default function Header() {
     }
   };
 
-  const isHome = !params && pathname != `/admin`;
+  const isHome = pathname == `/`;
 
   return (
     <header
@@ -119,17 +115,8 @@ export default function Header() {
                 <span>
                   {pathname != `/admin` &&
                     (user.organizer || !!user.clubs?.length) && (
-                      <Link
-                        href={`/admin${params ? `?_id=${params}` : ``}`}
-                        className={styles.add}
-                      >
-                        {(e &&
-                          user.clubs
-                            .map(({ _id }) => _id)
-                            .includes(e.author._id)) ||
-                        user._id == e?.author._id
-                          ? `Edit`
-                          : `Add`}
+                      <Link href={`/admin`} className={styles.add}>
+                        Add
                       </Link>
                     )}
                   <Image

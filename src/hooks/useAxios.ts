@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import axiosInstance from "./axiosInstance";
 import useToast from "./useToast";
+
+const axiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  headers: {
+    "Content-Type": `application/json`,
+  },
+});
 
 const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
   const [data, setData] = useState<T | null>(null);

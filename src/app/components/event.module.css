@@ -1,7 +1,7 @@
 .event {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 24px;
   align-items: center;
   transition: transform ease 200ms, opacity ease 100ms, height ease 200ms,
     margin-top ease 200ms;
@@ -60,40 +60,6 @@
   color: var(--subFg);
 }
 
-.mini {
-  display: grid;
-  gap: 15px;
-  grid-template-columns: 1fr 40px;
-  align-items: center;
-  padding: 0 14px;
-}
-
-.box {
-  display: flex;
-  padding: 2px;
-  background: var(--fg);
-  border-radius: 20px;
-  align-items: center;
-}
-
-.title,
-.date {
-  display: flex;
-  padding: 10px 16px;
-  background: var(--bg);
-  border-radius: 18px;
-  height: 100%;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.date {
-  text-transform: lowercase;
-  background: none;
-  color: var(--bg);
-  white-space: nowrap;
-}
-
 .arrow {
   width: 40px;
   height: 40px;
@@ -104,49 +70,31 @@
   justify-content: center;
 }
 
-.active {
-  gap: 24px;
-}
-
-.inactive {
-  opacity: 0;
-  height: 0;
-  margin-top: -30px;
-}
-
-.full {
-  display: none;
-}
-
-.active .mini {
-  display: none;
-}
-
-.active .full {
+.section {
   display: flex;
   gap: 24px;
   flex-direction: column;
 }
 
-.full h1 {
+.section h1 {
   font-weight: 700;
   font-size: 24px;
 }
 
-.full > div {
+.section > div {
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 0 14px;
 }
 
-.full > section {
+.section > section {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.full > section > div {
+.section > section > div {
   display: flex;
   padding: 12px;
   border-radius: 10px;

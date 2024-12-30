@@ -1,30 +1,18 @@
 "use client";
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-  JSX,
-  useRef,
-} from "react";
-import styles from "./calendar.module.css";
-import { useRouter, useSearchParams } from "next/navigation";
-import useEvents from "../../hooks/useEvents";
-import useUser from "../../hooks/useUser";
 
-export default function Calendar({
-  day,
-  setDay,
-}: {
-  day: number;
-  setDay: Dispatch<SetStateAction<number>>;
-}) {
+import useEvents from "@/hooks/useEvents";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+
+import styles from "./calendar.module.css";
+
+export default function Calendar() {
   const [month, setMonth] = useState<string>();
   const [list, setList] = useState<Array<JSX.Element>>([]);
-  const params = useSearchParams().get(`_id`);
+  const day = useSearchParams().get(`day`);
   const router = useRouter();
-  const { events, daily } = useEvents();
-  const { loading } = useUser();
+  const { daily } = useEvents();
   const scrollContainerRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -57,21 +45,8 @@ export default function Calendar({
   }, []);
 
   useEffect(() => {
-    if (params) {
-      const event = events[params];
-      if (event) {
-        const date = new Date();
-        date.setHours(0, 0, 0, 0);
-        const eventDate = new Date(event.date);
-        eventDate.setHours(0, 0, 0, 0);
-        setDay(
-          Math.round(
-            (eventDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
-          )
-        );
-      } else if (!loading) router.push(`/?`);
-    }
-  }, [params, events]);
+    if (!day) router.push(`/?day=0`);
+  }, [day]);
 
   useEffect(() => {
     const date = new Date();
@@ -83,36 +58,33 @@ export default function Calendar({
         ...list,
         <li
           key={i}
-          className={
-            [6, 0].includes(thisDay.getDay()) ? styles.weekend : styles.li
-          }
+          className={[
+            styles.li,
+            [6, 0].includes(thisDay.getDay()) ? styles.weekend : ``,
+            daily[thisDay.toDateString()] ? `` : styles.disabled,
+            `${i}` == day ? styles.active : ``,
+          ].join(` `)}
           ref={(ref) => {
-            if (i == day)
+            if (`${i}` == day)
               ref?.scrollIntoView({ inline: `nearest`, block: `nearest` });
           }}
         >
-          <button
-            className={[styles.button, i == day ? styles.active : ``].join(` `)}
-            onClick={() => setDay(i)}
-            disabled={!daily[thisDay.toDateString()]}
-          >
+          <Link href={`/?day=${i}`} className={styles.button}>
             <p className={styles.day}>
-              {thisDay
-                .toLocaleDateString(`en`, { weekday: `short` })
-                .slice(0, 2)}
+              {thisDay.toLocaleDateString(`en`, { weekday: `short` })}
             </p>
-            <p className={styles.date}>{thisDay.getDate()}</p>
-          </button>
+            <p className={styles.date}>
+              {String(thisDay.getDate()).padStart(2, "0")}
+            </p>
+          </Link>
         </li>,
       ]);
     }
   }, [day, daily]);
 
   return (
-    <section
-      className={[styles.section, !params ? `` : styles.nothome].join(` `)}
-    >
-      <p className={styles.title}>{month}</p>
+    <section>
+      <h2>{month}</h2>
       <ul className={styles.list} ref={scrollContainerRef}>
         {list}
       </ul>

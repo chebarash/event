@@ -1,13 +1,13 @@
 "use client";
 import styles from "./event.module.css";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { EventType } from "../types/types";
+import { EventType } from "../../types/types";
 import Image from "next/image";
+import useAxios from "../../hooks/useAxios";
+import useToast from "../../hooks/useToast";
 import ToJsx from "./jsx";
-import useUser from "../hooks/useUser";
-import useAxios from "../hooks/useAxios";
-import useToast from "../hooks/useToast";
+import useUser from "../../hooks/useUser";
+import QRCode from "react-qr-code";
 
 const getTimeRemaining = (endtime: Date) => {
   const total = endtime.getTime() - Date.now();
@@ -41,15 +41,10 @@ export default function Event({
   private: prvt,
   cancelled,
   registration,
-  open,
-}: EventType & { open?: boolean; registration?: boolean }) {
+}: EventType & { registration?: boolean }) {
+  const { user } = useUser();
   const [day, setDay] = useState<string>();
   const [time, setTime] = useState<string>();
-  const timeLeft = deadline ? getTimeRemaining(deadline) : undefined;
-  const spotsLeft = spots ? spots - registered.length : undefined;
-  const params = useSearchParams().get(`_id`);
-  const router = useRouter();
-  const { user } = useUser();
   const { toast } = useToast();
   const { fetchData } = useAxios({
     url: `/registered?_id=${_id}`,
@@ -57,6 +52,8 @@ export default function Event({
     manual: true,
   });
 
+  const timeLeft = deadline ? getTimeRemaining(deadline) : undefined;
+  const spotsLeft = spots ? spots - registered.length : undefined;
   const hours = duration / (1000 * 60 * 60);
 
   useEffect(() => {
@@ -66,16 +63,11 @@ export default function Event({
     );
   }, [date]);
 
-  const active = params == _id || open;
-
   return (
     <div
       id={_id}
-      style={{ cursor: !active ? `pointer` : `default` }}
-      onClick={!active ? () => router.push(`/?_id=${_id}`) : undefined}
       className={[
         styles.event,
-        params || open ? (active ? styles.active : styles.inactive) : ``,
         cancelled ? styles.cancelled : ``,
         prvt ? styles.private : ``,
       ].join(` `)}
@@ -108,122 +100,102 @@ export default function Event({
           priority
         />
       </span>
-      {active ? (
-        <div className={styles.full}>
-          <div>
-            <div className={styles.titleBox}>
-              <h1>{title}</h1>
-              <button
-                className={styles.arrow}
-                onClick={() =>
-                  window.Telegram.WebApp.switchInlineQuery(title, [
-                    `bots`,
-                    `channels`,
-                    `groups`,
-                    `users`,
-                  ])
-                }
-              >
-                <svg width="14" height="14" viewBox="0 0 19 19" fill="none">
-                  <path
-                    d="M3 16L17 2M17 2V16M17 2H3"
-                    stroke="var(--bg)"
-                    strokeWidth="4"
-                    strokeLinecap="square"
-                  />
-                </svg>
-                <p>{shares}</p>
+      <div className={styles.section}>
+        <div>
+          <div className={styles.titleBox}>
+            <h1>{title}</h1>
+            <button
+              className={styles.arrow}
+              onClick={() =>
+                window.Telegram.WebApp.switchInlineQuery(title, [
+                  `bots`,
+                  `channels`,
+                  `groups`,
+                  `users`,
+                ])
+              }
+            >
+              <svg width="14" height="14" viewBox="0 0 19 19" fill="none">
+                <path
+                  d="M3 16L17 2M17 2V16M17 2H3"
+                  stroke="var(--bg)"
+                  strokeWidth="4"
+                  strokeLinecap="square"
+                />
+              </svg>
+              <p>{shares}</p>
+            </button>
+          </div>
+          <ToJsx>{description}</ToJsx>
+        </div>
+        <section>
+          <div className={styles.day}>
+            {day?.split(` `).map((t, i) => (
+              <p key={i}>{t}</p>
+            ))}
+          </div>
+          <div className={styles.time}>
+            {time?.split(` `).map((t, i) => (
+              <p key={i}>{t}</p>
+            ))}
+          </div>
+          <div className={styles.venue}>{venue}</div>
+          <div className={styles.duration}>
+            <p>{hours}</p> <p>{hours == 1 ? `hour` : `hours`}</p>
+          </div>
+          {timeLeft && (
+            <div className={styles.deadline}>
+              <p>{timeLeft[0]}</p> <p>{timeLeft[1]} left</p>
+            </div>
+          )}
+          {spotsLeft != undefined && (
+            <div className={styles.spots}>
+              <p>{spotsLeft > 1 ? spotsLeft : spotsLeft < 1 ? `NO` : `LAST`}</p>{" "}
+              <p>{spotsLeft == 1 ? `spot` : `spots`} left</p>
+            </div>
+          )}
+        </section>
+        <p className={styles.calendar}>
+          <b>*</b>
+          {registration
+            ? ` the event is already in your google calendar`
+            : ` the event will be automatically added to your google calendar when you register`}
+        </p>
+        {_id &&
+          (author._id == user?._id ||
+            user?.clubs.some((c) => c._id == author._id)) && (
+            <>
+              <ul className={styles.registered}>
+                {registered.map(({ name, picture, email, id }) => (
+                  <li key={id}>
+                    <Image
+                      src={picture || `/profile.png`}
+                      width={40}
+                      height={40}
+                      alt="profile"
+                    />
+                    <div>
+                      <h3>{name}</h3>
+                      <pre
+                        onClick={() => {
+                          toast(`Copied to clipboard`);
+                          navigator.clipboard.writeText(`${id}`);
+                        }}
+                      >
+                        {id}
+                      </pre>
+                      <p>{email}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <button className={styles.button} onClick={() => fetchData()}>
+                {`Get registered - ${registered.length}`}
               </button>
-            </div>
-            <ToJsx>{description}</ToJsx>
-          </div>
-          <section>
-            <div className={styles.day}>
-              {day?.split(` `).map((t, i) => (
-                <p key={i}>{t}</p>
-              ))}
-            </div>
-            <div className={styles.time}>
-              {time?.split(` `).map((t, i) => (
-                <p key={i}>{t}</p>
-              ))}
-            </div>
-            <div className={styles.venue}>{venue}</div>
-            <div className={styles.duration}>
-              <p>{hours}</p> <p>{hours == 1 ? `hour` : `hours`}</p>
-            </div>
-            {timeLeft && (
-              <div className={styles.deadline}>
-                <p>{timeLeft[0]}</p> <p>{timeLeft[1]} left</p>
-              </div>
-            )}
-            {spotsLeft != undefined && (
-              <div className={styles.spots}>
-                <p>
-                  {spotsLeft > 1 ? spotsLeft : spotsLeft < 1 ? `NO` : `LAST`}
-                </p>{" "}
-                <p>{spotsLeft == 1 ? `spot` : `spots`} left</p>
-              </div>
-            )}
-          </section>
-          <p className={styles.calendar}>
-            <b>*</b>
-            {registration
-              ? ` the event is already in your google calendar`
-              : ` the event will be automatically added to your google calendar when you register`}
-          </p>
-          {_id &&
-            (author._id == user?._id ||
-              user?.clubs.some((c) => c._id == author._id)) && (
-              <>
-                <ul className={styles.registered}>
-                  {registered.map(({ name, picture, email, id }) => (
-                    <li key={id}>
-                      <Image
-                        src={picture || `/profile.png`}
-                        width={40}
-                        height={40}
-                        alt="profile"
-                      />
-                      <div>
-                        <h3>{name}</h3>
-                        <pre
-                          onClick={() => {
-                            toast(`Copied to clipboard`);
-                            navigator.clipboard.writeText(`${id}`);
-                          }}
-                        >
-                          {id}
-                        </pre>
-                        <p>{email}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                <button className={styles.button} onClick={() => fetchData()}>
-                  {`Get registered - ${registered.length}`}
-                </button>
-              </>
-            )}
-        </div>
-      ) : (
-        <div className={styles.mini}>
-          <div className={styles.box}>
-            <p className={styles.title}>{title}</p>
-            <p className={styles.date}>{time}</p>
-          </div>
-          <div className={styles.arrow}>
-            <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
-              <path
-                d="M3 16L17 2M17 2V16M17 2H3"
-                stroke="var(--bg)"
-                strokeWidth="4"
-                strokeLinecap="square"
-              />
-            </svg>
-          </div>
-        </div>
-      )}
+              <QRCode value={_id} bgColor="var(--bg)" fgColor="var(--accent)" />
+            </>
+          )}
+      </div>
     </div>
   );
 }

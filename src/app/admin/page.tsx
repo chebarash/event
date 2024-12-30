@@ -1,12 +1,12 @@
 "use client";
 import { TextareaHTMLAttributes, useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
-import { EventType } from "../types/types";
-import useUser from "../hooks/useUser";
+import { EventType } from "../../types/types";
+import useUser from "../../hooks/useUser";
 import { useRouter, useSearchParams } from "next/navigation";
 import Event from "../components/event";
-import useAxios from "../hooks/useAxios";
-import useEvents from "../hooks/useEvents";
+import useAxios from "../../hooks/useAxios";
+import useEvents from "../../hooks/useEvents";
 import React from "react";
 import ToJsx from "../components/jsx";
 import Image from "next/image";
@@ -95,6 +95,7 @@ export default function AdminPage() {
       _id: ``,
       title: `Event Name`,
       picture: `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
+      color: `#000000`,
       description: `<b>bold</b>\n<i>italic</i>\n<u>underline</u>\n<s>strikethrough</s>\n<tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough </s> <u>underline italic bold</u></i> bold</b>\n<a href="http://chebarash.uz">inline URL</a>\n<a href="http://t.me/puevent">inline mention of a user</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n<blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>\n<blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>`,
       author: {
         _id: ``,
@@ -119,7 +120,6 @@ export default function AdminPage() {
     manual: true,
   });
   const isOrg = user?.organizer || user?.clubs.length;
-  const orgList = [...(user?.organizer ? [user] : []), ...(user?.clubs || [])];
 
   useEffect(() => {
     window.Telegram.WebApp.MainButton.setParams({
@@ -130,7 +130,7 @@ export default function AdminPage() {
     else if (isOrg && !isEditing)
       setEvent((event) => ({
         ...event,
-        author: orgList[0],
+        author: user?.clubs[0],
         authorModel: user.organizer ? `users` : `clubs`,
       }));
   }, [user, loading, isEditing]);
@@ -162,7 +162,7 @@ export default function AdminPage() {
           );
         }}
       >
-        {orgList.length > 1 && !isEditing && (
+        {user?.clubs.length > 1 && !isEditing && (
           <div className={styles.div}>
             <h3>Author</h3>
             <p>Choose a club or yourself</p>
@@ -172,13 +172,13 @@ export default function AdminPage() {
               onChange={(e) =>
                 setEvent((event) => ({
                   ...event,
-                  author: orgList.filter((u) => u._id == e.target.value)[0],
+                  author: user?.clubs.filter((u) => u._id == e.target.value)[0],
                   authorModel: e.target.value == user._id ? `users` : `clubs`,
                 }))
               }
               value={event.author._id}
             >
-              {orgList.map((author) => (
+              {user?.clubs.map((author) => (
                 <option key={author._id} value={author._id}>
                   {author.name}
                 </option>
@@ -602,7 +602,7 @@ export default function AdminPage() {
         <div className={styles.div}>
           <h3>Preview</h3>
           <p>Check if everything is correct</p>
-          <Event {...event} open />
+          <Event {...event} />
         </div>
         <button className={styles.button} type="submit">
           Save

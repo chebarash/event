@@ -7,8 +7,9 @@ export type EventType = {
   _id: string;
   title: string;
   picture: string;
+  color: string;
   description: string;
-  author: UserType | ClubType;
+  author: ClubType;
   authorModel: `users` | `clubs`;
   date: Date;
   venue: string;

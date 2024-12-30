@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import useToast from "../../hooks/useToast";
 import styles from "./jsx.module.css";
 import React from "react";
+import useToast from "@/hooks/useToast";
 
 const tags: Array<{
   regex: RegExp;

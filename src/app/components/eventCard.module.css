@@ -1,0 +1,124 @@
+.event {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  transition: transform ease 200ms, opacity ease 100ms, height ease 200ms,
+    margin-top ease 200ms;
+  position: relative;
+}
+
+.star {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  z-index: 99;
+  animation: reg 1s ease;
+  -webkit-animation: reg 1s ease;
+}
+
+@keyframes reg {
+  0% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.cover {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border-radius: 32px;
+}
+
+.cover img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.cover p {
+  position: absolute;
+  top: 19px;
+  left: 19px;
+  border-radius: 13px;
+  padding: 0 12px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--subFg);
+}
+
+.mini {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: 1fr 40px;
+  align-items: center;
+  padding: 0 14px;
+}
+
+.box {
+  display: flex;
+  padding: 2px;
+  background: var(--fg);
+  border-radius: 20px;
+  align-items: center;
+}
+
+.title,
+.date {
+  display: flex;
+  padding: 10px 16px;
+  background: var(--bg);
+  border-radius: 18px;
+  height: 100%;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.date {
+  text-transform: lowercase;
+  background: none;
+  color: var(--bg);
+  white-space: nowrap;
+}
+
+.arrow {
+  width: 40px;
+  height: 40px;
+  background: var(--accent);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.arrow p {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--bg);
+}
+
+.cancelled img {
+  filter: grayscale(100%);
+  opacity: 0.3;
+}
+
+.cancelled .title {
+  text-decoration: line-through;
+}
+
+.private .cover p {
+  background: var(--accent);
+  color: var(--bg);
+}
