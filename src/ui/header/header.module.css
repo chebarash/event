@@ -42,7 +42,7 @@
   top: 0;
   left: 0;
   right: 0;
-  background: #ffffff00;
+  background: #ffffff10;
   backdrop-filter: blur(10px);
   z-index: 999;
   padding: calc(var(--paddingY) / 2) calc(var(--paddingX) + 10px);

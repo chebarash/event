@@ -1,0 +1,49 @@
+.foryou {
+  display: flex;
+  flex-direction: column;
+  border-radius: 40px;
+  padding: 20px;
+  background-size: cover;
+  color: #ffffff;
+  gap: var(--gapBox);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 40px;
+  gap: var(--gapText);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapText);
+  padding: var(--gapNarrow);
+}
+
+.text p {
+  font-weight: 500;
+}
+
+.share {
+  background: var(--accent);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--fontTitle);
+  font-size: 20px;
+  text-transform: uppercase;
+  height: 40px;
+  border-radius: 20px;
+  background: var(--bg);
+  color: var(--fg);
+}

@@ -45,6 +45,7 @@ button:disabled {
   font-optical-sizing: auto;
   font-style: normal;
   font-weight: 400;
+  font-size: var(--fontSize);
 
   line-height: 100%;
 
@@ -101,7 +102,7 @@ section > h2 {
 section {
   display: flex;
   flex-direction: column;
-  gap: var(--gapBox);
+  gap: 15px;
 }
 
 .toast {

@@ -38,6 +38,7 @@
 .cover {
   position: relative;
   display: flex;
+  min-height: 100px;
 }
 
 .cover img {

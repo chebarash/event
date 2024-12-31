@@ -1,70 +1,31 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import styles from "./list.module.css";
-import { TouchEvent, useEffect, useState } from "react";
+import { useEffect } from "react";
 import useEvents from "@/hooks/useEvents";
 import useUser from "@/hooks/useUser";
-import { EventType } from "@/types/types";
 import Card from "../card/card";
 
 export default function List() {
-  const [day, setDay] = useState<number>(0);
-  const params = useSearchParams().get(`day`);
-  const router = useRouter();
-  const [localDay, setLocalDay] = useState(0);
-  const [direction, setDirection] = useState(``);
-  const [list, setList] = useState<Array<EventType>>();
+  const day = useSearchParams().get(`day`);
   const { daily, isRegistered } = useEvents();
   const { user } = useUser();
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: TouchEvent<HTMLDivElement>) =>
-    setTouchEnd(e.targetTouches[0].clientX);
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd || !day) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    if (isLeftSwipe || isRightSwipe)
-      router.push(
-        `/?day=${day + (isLeftSwipe ? (day < 39 ? 1 : 0) : day > 0 ? -1 : 0)}`
-      );
-  };
+  const date = day
+    ? new Date(Date.now() + 1000 * 60 * 60 * 24 * parseInt(day)).toDateString()
+    : 0;
 
   useEffect(() => {
-    if (params) setDay(parseInt(params));
-  }, [params]);
-
-  useEffect(() => {
-    if (localDay == day) setDirection(``);
-    else setDirection(localDay < day ? styles.toLeft : styles.toRight);
-    setTimeout(() => setLocalDay(day), 250);
-    setList(
-      daily[new Date(Date.now() + 1000 * 60 * 60 * 24 * day).toDateString()] ||
-        []
-    );
-  }, [day, localDay, daily]);
-
-  if (!list) return <></>;
+    const { MainButton } = window.Telegram.WebApp;
+    MainButton.setParams({
+      is_active: false,
+      is_visible: false,
+    });
+  }, []);
 
   return (
-    <div
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-      className={[styles.list, direction].join(` `)}
-    >
-      {list.length ? (
-        list.map((event) => (
+    <div className={styles.list}>
+      {daily[date]?.length ? (
+        daily[date].map((event) => (
           <Card
             {...event}
             key={event._id}

@@ -1,0 +1,11 @@
+.greeting {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapText);
+  padding: 0 10px;
+}
+
+.name {
+  font-weight: 600;
+  font-size: var(--fontSizeLarge);
+}

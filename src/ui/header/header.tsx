@@ -12,21 +12,28 @@ export default function Header() {
   const router = useRouter();
   const { user, loading } = useUser();
 
+  const isHome = pathname == `/`;
+
   useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
     return () => window.removeEventListener("scroll", listenToScroll);
   }, []);
 
+  useEffect(() => {
+    const { BackButton } = window.Telegram.WebApp;
+    if (isHome || window.history.length <= 1) BackButton.hide();
+    else BackButton.show();
+    BackButton.onClick(() => router.back());
+  }, [isHome]);
+
   const listenToScroll = () => {
-    let heightToHideFrom = 150;
+    let heightToHideFrom = 100;
     const winScroll =
       document.body.scrollTop || document.documentElement.scrollTop;
 
     if (winScroll > heightToHideFrom) setIsVisible(false);
     else setIsVisible(true);
   };
-
-  const isHome = pathname == `/`;
 
   return (
     <header
@@ -110,8 +117,8 @@ export default function Header() {
             {user ? (
               <Image
                 src={user.picture || `/profile.png`}
-                width={40}
-                height={40}
+                width={46}
+                height={46}
                 alt="picture"
               />
             ) : (
