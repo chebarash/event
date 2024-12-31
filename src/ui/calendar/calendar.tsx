@@ -37,16 +37,17 @@ export default function Calendar() {
       }
     };
 
-    scrollContainerRef.current?.addEventListener("scroll", handleScroll);
+    const scrollContainer = scrollContainerRef.current;
+    scrollContainer?.addEventListener("scroll", handleScroll);
 
     return () => {
-      scrollContainerRef.current?.removeEventListener("scroll", handleScroll);
+      scrollContainer?.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   useEffect(() => {
     if (!day) router.push(`/?day=0`);
-  }, [day]);
+  }, [day, router]);
 
   useEffect(() => {
     const date = new Date();
@@ -64,10 +65,6 @@ export default function Calendar() {
             daily[thisDay.toDateString()] ? `` : styles.disabled,
             `${i}` == day ? styles.active : ``,
           ].join(` `)}
-          ref={(ref) => {
-            if (`${i}` == day)
-              ref?.scrollIntoView({ inline: `nearest`, block: `nearest` });
-          }}
         >
           <Link href={`/?day=${i}`} className={styles.button}>
             <p className={styles.day}>

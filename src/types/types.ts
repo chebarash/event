@@ -47,3 +47,11 @@ export type UserType = {
   member: Array<ClubType>;
   clubs: Array<ClubType>;
 };
+
+export type ForYouType = {
+  title: string;
+  subtitle: string;
+  button: string;
+  image: string;
+  link: string;
+};

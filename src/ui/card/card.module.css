@@ -1,9 +1,9 @@
 .event {
   display: flex;
+  border-radius: 20px;
   flex-direction: column;
   color: #ffffff;
   gap: var(--gapText);
-  border-radius: 20px;
   position: relative;
 }
 
@@ -38,7 +38,6 @@
 .cover {
   position: relative;
   display: flex;
-  min-height: 100px;
 }
 
 .cover img {

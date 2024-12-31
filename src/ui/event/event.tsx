@@ -77,7 +77,7 @@ export default function Event({
     return () => {
       MainButton.offClick(fn);
     };
-  }, [registration]);
+  }, [registration, _id, external, update]);
 
   useEffect(() => {
     setTime(date.toLocaleString(`en`, { timeStyle: `short` }).split(` `));
@@ -107,7 +107,6 @@ export default function Event({
         </svg>
       )}
       <Image
-        className={styles.cover}
         src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + picture}
         alt="cover"
         width={0}
@@ -115,6 +114,7 @@ export default function Event({
         sizes="100vw"
         style={{ width: "100%", height: "auto" }}
         priority
+        className={styles.cover}
       />
       <div className={styles.box}>
         <div className={styles.header}>

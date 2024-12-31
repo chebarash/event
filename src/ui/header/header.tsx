@@ -24,7 +24,7 @@ export default function Header() {
     if (isHome || window.history.length <= 1) BackButton.hide();
     else BackButton.show();
     BackButton.onClick(() => router.back());
-  }, [isHome]);
+  }, [isHome, router]);
 
   const listenToScroll = () => {
     let heightToHideFrom = 100;

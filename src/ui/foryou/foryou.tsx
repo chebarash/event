@@ -2,27 +2,26 @@
 
 import Link from "next/link";
 import styles from "./foryou.module.css";
+import { ForYouType } from "@/types/types";
 
-const data = {
-  title: `Samarkand trip`,
-  subtitle: `by Travel Club`,
-  button: `Get Ticket`,
-  image: `http://event-api.chebarash.uz/photo/AgACAgIAAxkBAAI_-GdztNRpEgO5GCL6lJ0UhYbnO8_2AAJl4TEb2MmgSzZvX5SXKTE-AQADAgADdwADNgQ`,
-  link: `/events/6763c2141438c4cd016b4c60`,
-};
-
-export default function ForYou() {
+export default function ForYou({
+  title,
+  subtitle,
+  button,
+  image,
+  link,
+}: ForYouType) {
   return (
     <section>
       <h2>For You</h2>
       <div
         className={styles.foryou}
-        style={{ backgroundImage: `url(${data.image})` }}
+        style={{ backgroundImage: `url(${image})` }}
       >
         <div className={styles.content}>
           <div className={styles.text}>
-            <h3>{data.title}</h3>
-            <p>{data.subtitle}</p>
+            <h3>{title}</h3>
+            <p>{subtitle}</p>
           </div>
           <div className={styles.share}>
             <svg width="18" viewBox="0 0 19 19" fill="none">
@@ -35,8 +34,8 @@ export default function ForYou() {
             </svg>
           </div>
         </div>
-        <Link className={styles.link} href={data.link}>
-          {data.button}
+        <Link className={styles.link} href={link}>
+          {button}
         </Link>
       </div>
     </section>

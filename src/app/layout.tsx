@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: `The ultimate hub for students`,
 };
 
-export const revalidate = 1;
+export const revalidate = 30;
 
 export default async function RootLayout({
   children,
@@ -23,7 +23,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const date = new Date();
-  date.setDate(date.getDate() - 100);
+  date.setDate(date.getDate() - 1);
   const result = await axiosInstance.get<Array<EventType>>(
     `/event?gte=${date.toISOString()}`
   );
