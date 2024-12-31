@@ -65,12 +65,15 @@
   gap: var(--gapText);
   background: var(--accent);
   border-radius: 100px;
+  align-items: center;
+  justify-content: center;
 }
 
 .share p {
   font-size: var(--fontSizeLarge);
   font-weight: 600;
   color: var(--bg);
+  line-height: 1;
 }
 
 .info {
@@ -87,6 +90,10 @@
   border-radius: 10px;
   gap: var(--gapNarrow);
   align-items: flex-end;
+}
+
+.info h3 {
+  line-height: 1;
 }
 
 .info p {
@@ -141,8 +148,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--gapText);
-  padding: 12px 20px;
+  gap: var(--gapNarrow);
+  padding: 10px 0;
   border-radius: 25px 25px 0 0;
   color: var(--fg);
 }
@@ -151,4 +158,8 @@
   display: flex;
   gap: var(--gapNarrow);
   align-items: flex-end;
+}
+
+.footer h3 {
+  line-height: 1;
 }

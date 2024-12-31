@@ -15,11 +15,26 @@ export default function List() {
     : 0;
 
   useEffect(() => {
-    const { MainButton } = window.Telegram.WebApp;
+    const { MainButton, SecondaryButton, themeParams } = window.Telegram.WebApp;
     MainButton.setParams({
       is_active: false,
       is_visible: false,
     });
+    if (user?.organizer || user?.clubs.length) {
+      SecondaryButton.setParams({
+        is_active: true,
+        is_visible: true,
+        text: `Create`,
+        color: themeParams.section_bg_color,
+        text_color: themeParams.text_color,
+      });
+    }
+    return () => {
+      SecondaryButton.setParams({
+        is_active: false,
+        is_visible: false,
+      });
+    };
   }, []);
 
   return (

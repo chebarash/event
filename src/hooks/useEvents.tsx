@@ -31,7 +31,7 @@ export function EventsProvider({
 
   e.forEach((event) => {
     ev[event._id] = event;
-    const day = event.date.toDateString();
+    const day = new Date().toDateString();
     if (!da[day]) da[day] = [];
     da[day].push(event);
   });
@@ -64,7 +64,7 @@ export function EventsProvider({
           !p
       ).forEach((event) => {
         res[event._id] = event;
-        const day = event.date.toDateString();
+        const day = new Date().toDateString();
         if (!daily[day]) daily[day] = [];
         daily[day].push(event);
       });
@@ -96,7 +96,7 @@ export function EventsProvider({
             const daily: DailyType = {};
 
             Object.values(res).forEach((event) => {
-              const day = event.date.toDateString();
+              const day = new Date().toDateString();
               if (!daily[day]) daily[day] = [];
               daily[day].push(event);
             });

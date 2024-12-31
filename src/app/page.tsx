@@ -4,10 +4,10 @@ import Greeting from "@/ui/greeting/greeting";
 import List from "@/ui/list/list";
 
 const data = {
-  title: `Samarkand trip`,
+  title: `Chimgan Winter Trip`,
   subtitle: `by Travel Club`,
   button: `Get Ticket`,
-  image: `http://event-api.chebarash.uz/photo/AgACAgIAAxkBAAI_-GdztNRpEgO5GCL6lJ0UhYbnO8_2AAJl4TEb2MmgSzZvX5SXKTE-AQADAgADdwADNgQ`,
+  image: `http://event-api.chebarash.uz/photo/AgACAgIAAxkBAAJAAmd0MXNLcZKhUzOELJz-YHhCvqlpAALS5TEb2MmgS46omyRRxvrEAQADAgADeQADNgQ`,
   link: `/events/6763c2141438c4cd016b4c60`,
 };
 

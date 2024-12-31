@@ -23,7 +23,12 @@ export default function Header() {
     const { BackButton } = window.Telegram.WebApp;
     if (isHome || window.history.length <= 1) BackButton.hide();
     else BackButton.show();
-    BackButton.onClick(() => router.back());
+    const fn = () => router.back();
+    BackButton.onClick(fn);
+    return () => {
+      BackButton.offClick(fn);
+      BackButton.hide();
+    };
   }, [isHome, router]);
 
   const listenToScroll = () => {

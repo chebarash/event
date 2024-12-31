@@ -8,7 +8,7 @@ import ToJsx from "../jsx/jsx";
 import useEvents from "@/hooks/useEvents";
 import useUser from "@/hooks/useUser";
 
-const getTimeRemaining = (endtime: Date) => {
+const getTimeRemaining = (endtime: Date): [number | string, string] => {
   const total = endtime.getTime() - Date.now();
   const minutes = Math.floor((total / 1000 / 60) % 60);
   const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
@@ -16,9 +16,9 @@ const getTimeRemaining = (endtime: Date) => {
   const list: Array<[number, string]> = [
     [days, days > 1 ? `days` : `day`],
     [hours, hours > 1 ? `hours` : `hour`],
-    [minutes > 0 ? minutes : 1, minutes > 1 ? `minutes` : `minute`],
+    [minutes, minutes > 1 ? `minutes` : `minute`],
   ];
-  return list.filter(([t]) => t > 0)[0];
+  return list.filter(([t]) => t > 0)[0] || [`deadline`, `has passed`];
 };
 
 export default function Event({
@@ -53,14 +53,38 @@ export default function Event({
   useEffect(() => {
     const {
       MainButton,
+      SecondaryButton,
       themeParams,
       requestWriteAccess,
-      initDataUnsafe: { user },
+      initDataUnsafe,
     } = window.Telegram.WebApp;
-    if (user && !user.allows_write_to_pm) requestWriteAccess();
+    if (initDataUnsafe.user && !initDataUnsafe.user.allows_write_to_pm)
+      requestWriteAccess();
+    if (
+      user &&
+      (user.clubs.map(({ _id }) => _id).includes(author._id) ||
+        user._id == author._id)
+    ) {
+      SecondaryButton.setParams({
+        is_active: true,
+        is_visible: true,
+        text: `Edit`,
+        color: themeParams.section_bg_color,
+        text_color: themeParams.text_color,
+      });
+    }
+    const timeGap = new Date().getTime() - date.getTime();
+    const deadlineGap = deadline
+      ? new Date().getTime() - deadline.getTime()
+      : -1;
+    const active =
+      timeGap < 0 &&
+      deadlineGap < 0 &&
+      !cancelled &&
+      (!spots || registration || spots - registered.length > 0);
     MainButton.setParams({
-      is_active: true,
-      is_visible: true,
+      is_active: active,
+      is_visible: active,
       ...(registration
         ? {
             text: `Unregister`,
@@ -84,16 +108,23 @@ export default function Event({
         );
         return window.Telegram.WebApp.close();
       }
-      if (external) {
-        if (!registration) update(_id);
+      update(_id);
+      if (external && !registration)
         if (external.startsWith(`https://t.me/`))
           window.Telegram.WebApp.openTelegramLink(external);
         else window.Telegram.WebApp.openLink(external);
-      } else update(_id);
     };
     MainButton.onClick(fn);
     return () => {
+      MainButton.setParams({
+        is_active: false,
+        is_visible: false,
+      });
       MainButton.offClick(fn);
+      SecondaryButton.setParams({
+        is_active: false,
+        is_visible: false,
+      });
     };
   }, [registration, _id, external, update, user]);
 
@@ -142,7 +173,11 @@ export default function Event({
               <p>by</p>
               <Image
                 src={
-                  process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + author.cover
+                  "picture" in author
+                    ? author.picture || `/profile.png`
+                    : `${process.env.NEXT_PUBLIC_BASE_URL}/photo/${
+                        (author as any).cover
+                      }`
                 }
                 width={40}
                 height={40}
@@ -162,12 +197,12 @@ export default function Event({
             }
           >
             <p>{shares}</p>
-            <svg width="18" viewBox="0 0 19 19" fill="none">
+            <svg width="20" height="21" viewBox="0 0 20 21">
               <path
-                d="M3 16L17 2M17 2V16M17 2H3"
-                stroke="var(--bg)"
-                strokeWidth="4"
-                strokeLinecap="square"
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M1.0003 0.5H20.0003V19.5H16.0003V7.32843L3.0003 20.3284L0.171875 17.5L13.1719 4.5H1.0003V0.5Z"
+                fill="var(--bg)"
               />
             </svg>
           </button>
@@ -190,24 +225,28 @@ export default function Event({
           <h3>{hours}</h3> <p>{hours == 1 ? `hour` : `hours`}</p>
         </div>
       </div>
-      <div className={styles.footer}>
-        {!timeLeft && spotsLeft == undefined && (
-          <p>do not forget to register</p>
-        )}
-        {spotsLeft != undefined && (
-          <div>
-            <h3>{spotsLeft > 1 ? spotsLeft : spotsLeft < 1 ? `NO` : `LAST`}</h3>
-            <p>{spotsLeft == 1 ? `spot left` : `spots left`}</p>
-          </div>
-        )}
-        {timeLeft && (
-          <div>
-            <p>deadline in</p>
-            <h3>{timeLeft[0]}</h3>
-            <p>{timeLeft[1]}</p>
-          </div>
-        )}
-      </div>
+      {(timeLeft || spotsLeft != undefined || registration) && (
+        <div className={styles.footer}>
+          {!timeLeft && spotsLeft == undefined && registration && (
+            <p>event added to your calendar</p>
+          )}
+          {spotsLeft != undefined && (
+            <div>
+              <h3>
+                {spotsLeft > 1 ? spotsLeft : spotsLeft < 1 ? `NO` : `LAST`}
+              </h3>
+              <p>{spotsLeft == 1 ? `spot left` : `spots left`}</p>
+            </div>
+          )}
+          {timeLeft && (
+            <div>
+              {typeof timeLeft[0] == `number` && <p>deadline in</p>}
+              <h3>{timeLeft[0]}</h3>
+              <p>{timeLeft[1]}</p>
+            </div>
+          )}
+        </div>
+      )}
     </main>
   );
 }

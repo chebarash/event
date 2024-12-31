@@ -19,6 +19,7 @@
   flex-direction: column;
   gap: var(--gapText);
   padding: var(--gapNarrow);
+  text-shadow: 0 0 10px#00000080;
 }
 
 .text p {

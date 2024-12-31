@@ -28,16 +28,14 @@ export default function Greeting() {
   const date = new Date();
   const month = monthNames[date.getMonth()];
   const day = getDayWithSuffix(date.getDate());
-  const { user, loading } = useUser();
+  const { user } = useUser();
   return (
     <div className={styles.greeting}>
       <p className={styles.today}>
         Today’s {month} {day}
       </p>
       <p className={styles.name}>
-        {user || loading
-          ? `Welcome${user ? `, ${user.name.split(` `)[0]}` : ``}!`
-          : `Login to use`}
+        {`Welcome${user ? `, ${user.name.split(` `)[0]}` : ``}!`}
       </p>
     </div>
   );

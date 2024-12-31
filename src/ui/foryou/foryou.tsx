@@ -14,9 +14,10 @@ export default function ForYou({
   return (
     <section>
       <h2>For You</h2>
-      <div
+      <Link
         className={styles.foryou}
         style={{ backgroundImage: `url(${image})` }}
+        href={link}
       >
         <div className={styles.content}>
           <div className={styles.text}>
@@ -24,20 +25,18 @@ export default function ForYou({
             <p>{subtitle}</p>
           </div>
           <div className={styles.share}>
-            <svg width="18" viewBox="0 0 19 19" fill="none">
+            <svg width="20" height="21" viewBox="0 0 20 21">
               <path
-                d="M3 16L17 2M17 2V16M17 2H3"
-                stroke="var(--bg)"
-                strokeWidth="4"
-                strokeLinecap="square"
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M1.0003 0.5H20.0003V19.5H16.0003V7.32843L3.0003 20.3284L0.171875 17.5L13.1719 4.5H1.0003V0.5Z"
+                fill="var(--bg)"
               />
             </svg>
           </div>
         </div>
-        <Link className={styles.link} href={link}>
-          {button}
-        </Link>
-      </div>
+        <div className={styles.link}>{button}</div>
+      </Link>
     </section>
   );
 }
