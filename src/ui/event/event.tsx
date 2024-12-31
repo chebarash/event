@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import ToJsx from "../jsx/jsx";
 import useEvents from "@/hooks/useEvents";
+import useUser from "@/hooks/useUser";
 
 const getTimeRemaining = (endtime: Date) => {
   const total = endtime.getTime() - Date.now();
@@ -43,13 +44,20 @@ export default function Event({
   const [day, setDay] = useState<Array<string>>([``, ``]);
   const [time, setTime] = useState<Array<string>>([``, ``]);
   const { update } = useEvents();
+  const { user } = useUser();
 
   const timeLeft = deadline ? getTimeRemaining(deadline) : undefined;
   const spotsLeft = spots ? spots - registered.length : undefined;
   const hours = duration / (1000 * 60 * 60);
 
   useEffect(() => {
-    const { MainButton, themeParams } = window.Telegram.WebApp;
+    const {
+      MainButton,
+      themeParams,
+      requestWriteAccess,
+      initDataUnsafe: { user },
+    } = window.Telegram.WebApp;
+    if (user && !user.allows_write_to_pm) requestWriteAccess();
     MainButton.setParams({
       is_active: true,
       is_visible: true,
@@ -66,6 +74,16 @@ export default function Event({
           }),
     });
     const fn = () => {
+      if (!user) {
+        window.Telegram.WebApp.openLink(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/auth?id=${
+            window.Telegram.WebApp.initDataUnsafe.user?.id
+          }&from=${encodeURIComponent(
+            `${process.env.NEXT_PUBLIC_APP_URL}?startapp=${_id}`
+          )}`
+        );
+        return window.Telegram.WebApp.close();
+      }
       if (external) {
         if (!registration) update(_id);
         if (external.startsWith(`https://t.me/`))
@@ -77,7 +95,7 @@ export default function Event({
     return () => {
       MainButton.offClick(fn);
     };
-  }, [registration, _id, external, update]);
+  }, [registration, _id, external, update, user]);
 
   useEffect(() => {
     setTime(date.toLocaleString(`en`, { timeStyle: `short` }).split(` `));
