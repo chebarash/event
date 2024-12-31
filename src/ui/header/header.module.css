@@ -44,7 +44,7 @@
   right: 0;
   background: #ffffff10;
   backdrop-filter: blur(10px);
-  z-index: 999;
+  z-index: 99;
   padding: calc(var(--paddingY) / 2) calc(var(--paddingX) + 10px);
   animation: bum 200ms ease;
 }

@@ -3,10 +3,11 @@
 import styles from "./event.module.css";
 import { EventType } from "@/types/types";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ToJsx from "../jsx/jsx";
 import useEvents from "@/hooks/useEvents";
 import useUser from "@/hooks/useUser";
+import { useRouter } from "next/navigation";
 
 const getTimeRemaining = (endtime: Date): [number | string, string] => {
   const total = endtime.getTime() - Date.now();
@@ -41,14 +42,49 @@ export default function Event({
   cancelled,
   registration,
 }: EventType & { registration?: boolean }) {
-  const [day, setDay] = useState<Array<string>>([``, ``]);
-  const [time, setTime] = useState<Array<string>>([``, ``]);
+  const router = useRouter();
   const { update } = useEvents();
   const { user } = useUser();
 
+  const day = [
+    date.toLocaleDateString(`en`, { month: `long` }),
+    date.getDate().toString(),
+  ];
+  const time = date.toLocaleString(`en`, { timeStyle: `short` }).split(` `);
+  const hours = duration / (1000 * 60 * 60);
+
   const timeLeft = deadline ? getTimeRemaining(deadline) : undefined;
   const spotsLeft = spots ? spots - registered.length : undefined;
-  const hours = duration / (1000 * 60 * 60);
+
+  const timeTillEvent = date.getTime() - new Date().getTime();
+  const timeTillDeadline = deadline
+    ? deadline.getTime() - new Date().getTime()
+    : 1;
+
+  const canRegister =
+    timeTillEvent > 0 &&
+    timeTillDeadline > 0 &&
+    !cancelled &&
+    (!spots || registration || spots - registered.length > 0);
+
+  const fn = () => {
+    if (!canRegister && user) return router.push(`/tickets/${_id}`);
+    if (!user) {
+      window.Telegram.WebApp.openLink(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth?id=${
+          window.Telegram.WebApp.initDataUnsafe.user?.id
+        }&from=${encodeURIComponent(
+          `${process.env.NEXT_PUBLIC_APP_URL}?startapp=${_id}`
+        )}`
+      );
+      return window.Telegram.WebApp.close();
+    }
+    update(_id);
+    if (external && !registration)
+      if (external.startsWith(`https://t.me/`))
+        window.Telegram.WebApp.openTelegramLink(external);
+      else window.Telegram.WebApp.openLink(external);
+  };
 
   useEffect(() => {
     const {
@@ -73,48 +109,28 @@ export default function Event({
         text_color: themeParams.text_color,
       });
     }
-    const timeGap = new Date().getTime() - date.getTime();
-    const deadlineGap = deadline
-      ? new Date().getTime() - deadline.getTime()
-      : -1;
-    const active =
-      timeGap < 0 &&
-      deadlineGap < 0 &&
-      !cancelled &&
-      (!spots || registration || spots - registered.length > 0);
+    MainButton.onClick(fn);
     MainButton.setParams({
-      is_active: active,
-      is_visible: active,
-      ...(registration
-        ? {
-            text: `Unregister`,
-            color: themeParams.section_bg_color,
-            text_color: themeParams.text_color,
-          }
+      is_active: true,
+      is_visible: true,
+      ...(canRegister
+        ? registration
+          ? {
+              text: `Unregister`,
+              color: themeParams.section_bg_color,
+              text_color: themeParams.text_color,
+            }
+          : {
+              text: `Register`,
+              color: themeParams.button_color,
+              text_color: themeParams.button_text_color,
+            }
         : {
-            text: `Register`,
+            text: `Get Ticket`,
             color: themeParams.button_color,
             text_color: themeParams.button_text_color,
           }),
     });
-    const fn = () => {
-      if (!user) {
-        window.Telegram.WebApp.openLink(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/auth?id=${
-            window.Telegram.WebApp.initDataUnsafe.user?.id
-          }&from=${encodeURIComponent(
-            `${process.env.NEXT_PUBLIC_APP_URL}?startapp=${_id}`
-          )}`
-        );
-        return window.Telegram.WebApp.close();
-      }
-      update(_id);
-      if (external && !registration)
-        if (external.startsWith(`https://t.me/`))
-          window.Telegram.WebApp.openTelegramLink(external);
-        else window.Telegram.WebApp.openLink(external);
-    };
-    MainButton.onClick(fn);
     return () => {
       MainButton.setParams({
         is_active: false,
@@ -127,14 +143,6 @@ export default function Event({
       });
     };
   }, [registration, _id, external, update, user]);
-
-  useEffect(() => {
-    setTime(date.toLocaleString(`en`, { timeStyle: `short` }).split(` `));
-    setDay([
-      date.toLocaleDateString(`en`, { month: `long` }),
-      date.getDate().toString(),
-    ]);
-  }, [date]);
 
   return (
     <main
@@ -225,28 +233,27 @@ export default function Event({
           <h3>{hours}</h3> <p>{hours == 1 ? `hour` : `hours`}</p>
         </div>
       </div>
-      {(timeLeft || spotsLeft != undefined || registration) && (
-        <div className={styles.footer}>
-          {!timeLeft && spotsLeft == undefined && registration && (
-            <p>event added to your calendar</p>
-          )}
-          {spotsLeft != undefined && (
-            <div>
-              <h3>
-                {spotsLeft > 1 ? spotsLeft : spotsLeft < 1 ? `NO` : `LAST`}
-              </h3>
-              <p>{spotsLeft == 1 ? `spot left` : `spots left`}</p>
-            </div>
-          )}
-          {timeLeft && (
-            <div>
-              {typeof timeLeft[0] == `number` && <p>deadline in</p>}
-              <h3>{timeLeft[0]}</h3>
-              <p>{timeLeft[1]}</p>
-            </div>
-          )}
-        </div>
-      )}
+      {timeTillEvent > 0 &&
+        (timeLeft || spotsLeft != undefined || registration) && (
+          <div className={styles.footer}>
+            {registration && <p>event added to your calendar</p>}
+            {spotsLeft != undefined && !registration && (
+              <div>
+                <h3>
+                  {spotsLeft > 1 ? spotsLeft : spotsLeft < 1 ? `NO` : `LAST`}
+                </h3>
+                <p>{spotsLeft == 1 ? `spot left` : `spots left`}</p>
+              </div>
+            )}
+            {timeLeft && !registration && (
+              <div>
+                {typeof timeLeft[0] == `number` && <p>deadline in</p>}
+                <h3>{timeLeft[0]}</h3>
+                <p>{timeLeft[1]}</p>
+              </div>
+            )}
+          </div>
+        )}
     </main>
   );
 }
