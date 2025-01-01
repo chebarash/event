@@ -68,7 +68,14 @@ export default function Event({
     (!spots || registration || spots - registered.length > 0);
 
   const fn = () => {
-    if (!canRegister && user) return router.push(`/tickets/${_id}`);
+    if (!canRegister && user) {
+      if (
+        user.clubs.map(({ _id }) => _id).includes(author._id) ||
+        user._id == author._id
+      )
+        return router.push(`/scan/${_id}`);
+      return router.push(`/tickets/${_id}`);
+    }
     if (!user) {
       window.Telegram.WebApp.openLink(
         `${process.env.NEXT_PUBLIC_BASE_URL}/auth?id=${
@@ -129,7 +136,12 @@ export default function Event({
               text_color: themeParams.button_text_color,
             }
         : {
-            text: `Get Ticket`,
+            text:
+              user &&
+              (user.clubs.map(({ _id }) => _id).includes(author._id) ||
+                user._id == author._id)
+                ? `Scan Ticket`
+                : `Get Ticket`,
             color: themeParams.button_color,
             text_color: themeParams.button_text_color,
           }),
@@ -147,7 +159,6 @@ export default function Event({
       SecondaryButton.offClick(fnSc);
     };
   }, [registration, _id, external, update, user]);
-
   return (
     <main
       id={_id}
@@ -239,23 +250,25 @@ export default function Event({
       </div>
       {timeTillEvent > 0 &&
         (timeLeft || spotsLeft != undefined || registration) && (
-          <div className={styles.footer}>
-            {registration && <p>event added to your calendar</p>}
-            {spotsLeft != undefined && !registration && (
-              <div>
-                <h3>
-                  {spotsLeft > 1 ? spotsLeft : spotsLeft < 1 ? `NO` : `LAST`}
-                </h3>
-                <p>{spotsLeft == 1 ? `spot left` : `spots left`}</p>
-              </div>
-            )}
-            {timeLeft && !registration && (
-              <div>
-                {typeof timeLeft[0] == `number` && <p>deadline in</p>}
-                <h3>{timeLeft[0]}</h3>
-                <p>{timeLeft[1]}</p>
-              </div>
-            )}
+          <div className={styles.container}>
+            <div className={styles.footer}>
+              {registration && <p>event added to your calendar</p>}
+              {spotsLeft != undefined && !registration && (
+                <div>
+                  <h3>
+                    {spotsLeft > 1 ? spotsLeft : spotsLeft < 1 ? `NO` : `LAST`}
+                  </h3>
+                  <p>{spotsLeft == 1 ? `spot left` : `spots left`}</p>
+                </div>
+              )}
+              {timeLeft && !registration && (
+                <div>
+                  {typeof timeLeft[0] == `number` && <p>deadline in</p>}
+                  <h3>{timeLeft[0]}</h3>
+                  <p>{timeLeft[1]}</p>
+                </div>
+              )}
+            </div>
           </div>
         )}
     </main>

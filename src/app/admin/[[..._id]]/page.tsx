@@ -363,7 +363,7 @@ export default function AdminPage({
             update={update}
           />
         </Section>
-        <Section title="Color" description="Choose event cart color.">
+        <Section title="Color" description="Choose event card color.">
           <select
             required
             name="author"

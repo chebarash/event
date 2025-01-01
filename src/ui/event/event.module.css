@@ -80,7 +80,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--gapText);
-  margin-bottom: 80px;
 }
 
 .info > div {
@@ -136,6 +135,11 @@
   background: var(--accent);
   border-radius: 100px;
   opacity: 0.2;
+}
+
+.container {
+  display: flex;
+  height: 30px;
 }
 
 .footer {

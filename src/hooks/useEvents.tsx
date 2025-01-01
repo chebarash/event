@@ -31,10 +31,11 @@ export function EventsProvider({
   children: React.ReactNode;
   event: Array<EventType>;
 }>) {
+  let initial: Array<EventType> = e;
   const ev: EventsType = {};
   const da: DailyType = {};
 
-  e.forEach((event) => {
+  initial.forEach((event) => {
     ev[event._id] = event;
     const day = event.date.toDateString();
     if (!da[day]) da[day] = [];
@@ -69,25 +70,27 @@ export function EventsProvider({
     setEvents((_) => {
       const res: EventsType = {};
       const daily: DailyType = {};
-      e.filter(
-        ({ author: { _id }, private: p }) =>
-          (user &&
-            [
-              ...(user.clubs?.map(({ _id }) => _id) || []),
-              ...(user.member || []),
-              user._id,
-            ].includes(_id)) ||
-          !p
-      ).forEach((event) => {
-        res[event._id] = event;
-        const day = event.date.toDateString();
-        if (!daily[day]) daily[day] = [];
-        daily[day].push(event);
-      });
+      initial
+        .filter(
+          ({ author: { _id }, private: p }) =>
+            (user &&
+              [
+                ...(user.clubs?.map(({ _id }) => _id) || []),
+                ...(user.member || []),
+                user._id,
+              ].includes(_id)) ||
+            !p
+        )
+        .forEach((event) => {
+          res[event._id] = event;
+          const day = event.date.toDateString();
+          if (!daily[day]) daily[day] = [];
+          daily[day].push(event);
+        });
       setDaily(daily);
       return res;
     });
-  }, [user, e]);
+  }, [user, initial]);
 
   const upd = async (fn: () => Promise<EventType | null>) => {
     const { MainButton } = window.Telegram.WebApp;
@@ -95,6 +98,7 @@ export function EventsProvider({
     MainButton.disable();
     const result = await fn();
     if (result) {
+      initial.push(result);
       setEvents((e) => {
         const res = { ...e, [result._id]: result };
         setDaily(() => {

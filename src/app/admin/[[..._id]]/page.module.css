@@ -50,7 +50,7 @@
   margin-bottom: -105px;
   z-index: 9;
   mask: linear-gradient(black, black, transparent);
-  border-radius: 20px 20px 0;
+  border-radius: 20px 20px 0 0;
 }
 
 .colors button {
