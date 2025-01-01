@@ -68,14 +68,6 @@ export default function Event({
     (!spots || registration || spots - registered.length > 0);
 
   const fn = () => {
-    if (!canRegister && user) {
-      if (
-        user.clubs.map(({ _id }) => _id).includes(author._id) ||
-        user._id == author._id
-      )
-        return router.push(`/scan/${_id}`);
-      return router.push(`/tickets/${_id}`);
-    }
     if (!user) {
       window.Telegram.WebApp.openLink(
         `${process.env.NEXT_PUBLIC_BASE_URL}/auth?id=${
@@ -85,6 +77,14 @@ export default function Event({
         )}`
       );
       return window.Telegram.WebApp.close();
+    }
+    if (
+      user.clubs.map(({ _id }) => _id).includes(author._id) ||
+      user._id == author._id
+    )
+      return router.push(`/registration/${_id}`);
+    if (!canRegister) {
+      return router.push(`/tickets/${_id}`);
     }
     update(_id);
     if (external && !registration)
@@ -119,11 +119,20 @@ export default function Event({
       });
       SecondaryButton.onClick(fnSc);
     }
+
     MainButton.onClick(fn);
     MainButton.setParams({
       is_active: true,
       is_visible: true,
-      ...(canRegister
+      ...(user &&
+      (user.clubs.map(({ _id }) => _id).includes(author._id) ||
+        user._id == author._id)
+        ? {
+            text: canRegister ? `Get Registered` : `Scan Ticket`,
+            color: themeParams.button_color,
+            text_color: themeParams.button_text_color,
+          }
+        : canRegister
         ? registration
           ? {
               text: `Unregister`,
@@ -136,12 +145,7 @@ export default function Event({
               text_color: themeParams.button_text_color,
             }
         : {
-            text:
-              user &&
-              (user.clubs.map(({ _id }) => _id).includes(author._id) ||
-                user._id == author._id)
-                ? `Scan Ticket`
-                : `Get Ticket`,
+            text: `Get Ticket`,
             color: themeParams.button_color,
             text_color: themeParams.button_text_color,
           }),
@@ -158,7 +162,7 @@ export default function Event({
       });
       SecondaryButton.offClick(fnSc);
     };
-  }, [registration, _id, external, update, user]);
+  }, [registration, user]);
   return (
     <main
       id={_id}

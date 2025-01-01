@@ -148,7 +148,7 @@ export function EventsProvider({
         });
         if (result) {
           window.Telegram.WebApp.HapticFeedback.notificationOccurred(`success`);
-          router.push(`/events/${result._id}`);
+          router.replace(`/events/${result._id}`);
         }
         return result;
       });
@@ -162,7 +162,7 @@ export function EventsProvider({
       });
       if (result) {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred(`success`);
-        router.push(`/events/${result._id}`);
+        router.replace(`/events/${result._id}`);
       }
       return result;
     });

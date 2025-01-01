@@ -1,0 +1,34 @@
+.registered {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapBox);
+  margin: 0 10px;
+}
+
+.registered li {
+  display: flex;
+  gap: var(--gapText);
+}
+
+.registered img {
+  border-radius: 100%;
+  margin: 10px 0;
+}
+
+.registered span {
+  display: flex;
+  gap: 8px;
+}
+
+.registered pre {
+  cursor: pointer;
+  font-family: var(--fontMono);
+  font-weight: 500;
+  font-style: normal;
+}
+
+.registered div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapNarrow);
+}
