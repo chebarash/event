@@ -1,5 +1,5 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./list.module.css";
 import { useEffect } from "react";
 import useEvents from "@/hooks/useEvents";
@@ -7,12 +7,15 @@ import useUser from "@/hooks/useUser";
 import Card from "../card/card";
 
 export default function List() {
+  const router = useRouter();
   const day = useSearchParams().get(`day`);
   const { daily, isRegistered } = useEvents();
   const { user } = useUser();
   const date = day
     ? new Date(Date.now() + 1000 * 60 * 60 * 24 * parseInt(day)).toDateString()
     : 0;
+
+  const fnSc = () => router.push(`/admin`);
 
   useEffect(() => {
     const { MainButton, SecondaryButton, themeParams } = window.Telegram.WebApp;
@@ -28,14 +31,16 @@ export default function List() {
         color: themeParams.section_bg_color,
         text_color: themeParams.text_color,
       });
+      SecondaryButton.onClick(fnSc);
     }
     return () => {
       SecondaryButton.setParams({
         is_active: false,
         is_visible: false,
       });
+      SecondaryButton.offClick(fnSc);
     };
-  }, []);
+  }, [user]);
 
   return (
     <div className={styles.list}>

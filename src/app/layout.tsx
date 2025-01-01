@@ -23,7 +23,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const date = new Date();
-  date.setDate(date.getDate() - 100);
+  date.setDate(date.getDate() - 1);
   const result = await axiosInstance.get<Array<EventType>>(
     `/event?gte=${date.toISOString()}`
   );

@@ -86,6 +86,8 @@ export default function Event({
       else window.Telegram.WebApp.openLink(external);
   };
 
+  const fnSc = () => router.push(`/admin/${_id}`);
+
   useEffect(() => {
     const {
       MainButton,
@@ -108,6 +110,7 @@ export default function Event({
         color: themeParams.section_bg_color,
         text_color: themeParams.text_color,
       });
+      SecondaryButton.onClick(fnSc);
     }
     MainButton.onClick(fn);
     MainButton.setParams({
@@ -141,6 +144,7 @@ export default function Event({
         is_active: false,
         is_visible: false,
       });
+      SecondaryButton.offClick(fnSc);
     };
   }, [registration, _id, external, update, user]);
 
