@@ -3,6 +3,7 @@
 import Link from "next/link";
 import styles from "./foryou.module.css";
 import { ForYouType } from "@/types/types";
+import Image from "next/image";
 
 export default function ForYou({
   title,
@@ -14,11 +15,7 @@ export default function ForYou({
   return (
     <section>
       <h2>For You</h2>
-      <Link
-        className={styles.foryou}
-        style={{ backgroundImage: `url(${image})` }}
-        href={link}
-      >
+      <Link className={styles.foryou} href={link}>
         <div className={styles.content}>
           <div className={styles.text}>
             <h3>{title}</h3>
@@ -36,6 +33,7 @@ export default function ForYou({
           </div>
         </div>
         <div className={styles.link}>{button}</div>
+        <Image alt="background" priority src={image} fill objectFit="cover" />
       </Link>
     </section>
   );

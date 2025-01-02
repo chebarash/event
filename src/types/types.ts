@@ -9,8 +9,7 @@ export type EventType = {
   picture: string;
   color: string;
   description: string;
-  author: ClubType | UserType;
-  authorModel: `users` | `clubs`;
+  author: ClubType;
   date: Date;
   venue: string;
   duration: number;
@@ -43,7 +42,6 @@ export type UserType = {
   picture?: string;
   email: string;
   id: number;
-  organizer: boolean;
   member: Array<ClubType>;
   clubs: Array<ClubType>;
 };

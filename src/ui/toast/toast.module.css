@@ -2,14 +2,13 @@
   display: flex;
   padding: 10px 20px;
   border-radius: 10px;
-  font-size: 16px;
   font-weight: 500;
   position: relative;
   animation: ap 0.1s ease, hi 2s ease forwards;
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(5px);
-  background: #ffffff00;
+  background: #ffffff10;
 }
 
 .error {

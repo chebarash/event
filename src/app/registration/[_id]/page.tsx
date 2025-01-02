@@ -43,8 +43,7 @@ export default function EventPage({
     const { MainButton, themeParams } = window.Telegram.WebApp;
     if (
       user &&
-      (user.clubs.map(({ _id }) => _id).includes(event.author._id) ||
-        user._id == event.author._id) &&
+      user.clubs.some(({ _id }) => _id == event.author._id) &&
       !canRegister
     ) {
       fn();
@@ -67,13 +66,7 @@ export default function EventPage({
   }, []);
 
   if (!event) return notFound();
-  if (
-    !loading &&
-    !(
-      user?.clubs.map(({ _id }) => _id).includes(event.author._id) ||
-      user?._id == event.author._id
-    )
-  )
+  if (!loading && !user?.clubs.some(({ _id }) => _id == event.author._id))
     return notFound();
 
   return (

@@ -9,8 +9,7 @@ import useEvents from "@/hooks/useEvents";
 import useUser from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
 
-const getTimeRemaining = (endtime: Date): [number | string, string] => {
-  const total = endtime.getTime() - Date.now();
+const getTimeRemaining = (total: number): [number | string, string] => {
   const minutes = Math.floor((total / 1000 / 60) % 60);
   const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
   const days = Math.floor(total / (1000 * 60 * 60 * 24));
@@ -51,9 +50,11 @@ export default function Event({
     date.getDate().toString(),
   ];
   const time = date.toLocaleString(`en`, { timeStyle: `short` }).split(` `);
-  const hours = duration / (1000 * 60 * 60);
+  const durationArr = getTimeRemaining(duration);
 
-  const timeLeft = deadline ? getTimeRemaining(deadline) : undefined;
+  const timeLeft = deadline
+    ? getTimeRemaining(deadline.getTime() - Date.now())
+    : undefined;
   const spotsLeft = spots ? spots - registered.length : undefined;
 
   const timeTillEvent = date.getTime() - new Date().getTime();
@@ -78,10 +79,7 @@ export default function Event({
       );
       return window.Telegram.WebApp.close();
     }
-    if (
-      user.clubs.map(({ _id }) => _id).includes(author._id) ||
-      user._id == author._id
-    )
+    if (user.clubs.some(({ _id }) => _id == author._id))
       return router.push(`/registration/${_id}`);
     if (!canRegister) {
       return router.push(`/tickets/${_id}`);
@@ -105,11 +103,7 @@ export default function Event({
     } = window.Telegram.WebApp;
     if (initDataUnsafe.user && !initDataUnsafe.user.allows_write_to_pm)
       requestWriteAccess();
-    if (
-      user &&
-      (user.clubs.map(({ _id }) => _id).includes(author._id) ||
-        user._id == author._id)
-    ) {
+    if (user?.clubs.some(({ _id }) => _id == author._id)) {
       SecondaryButton.setParams({
         is_active: true,
         is_visible: true,
@@ -124,9 +118,7 @@ export default function Event({
     MainButton.setParams({
       is_active: true,
       is_visible: true,
-      ...(user &&
-      (user.clubs.map(({ _id }) => _id).includes(author._id) ||
-        user._id == author._id)
+      ...(user?.clubs.some(({ _id }) => _id == author._id)
         ? {
             text: canRegister ? `Get Registered` : `Scan Ticket`,
             color: themeParams.button_color,
@@ -199,13 +191,7 @@ export default function Event({
             <div className={styles.author}>
               <p>by</p>
               <Image
-                src={
-                  "picture" in author
-                    ? author.picture || `/profile.png`
-                    : `${process.env.NEXT_PUBLIC_BASE_URL}/photo/${
-                        (author as any).cover
-                      }`
-                }
+                src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${author.cover}`}
                 width={40}
                 height={40}
                 alt="picture"
@@ -249,7 +235,7 @@ export default function Event({
           <p>{venue}</p>
         </div>
         <div className={styles.duration}>
-          <h3>{hours}</h3> <p>{hours == 1 ? `hour` : `hours`}</p>
+          <h3>{durationArr[0]}</h3> <p>{durationArr[1]}</p>
         </div>
       </div>
       {timeTillEvent > 0 &&

@@ -26,12 +26,11 @@ const EventsContext = createContext<{
 
 export function EventsProvider({
   children,
-  event: e,
+  event: initial,
 }: Readonly<{
   children: React.ReactNode;
   event: Array<EventType>;
 }>) {
-  let initial: Array<EventType> = e;
   const ev: EventsType = {};
   const da: DailyType = {};
 
@@ -98,7 +97,6 @@ export function EventsProvider({
     MainButton.disable();
     const result = await fn();
     if (result) {
-      initial.push(result);
       setEvents((e) => {
         const res = { ...e, [result._id]: result };
         setDaily(() => {
@@ -148,7 +146,7 @@ export function EventsProvider({
         });
         if (result) {
           window.Telegram.WebApp.HapticFeedback.notificationOccurred(`success`);
-          router.replace(`/events/${result._id}`);
+          router.back();
         }
         return result;
       });

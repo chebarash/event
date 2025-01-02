@@ -3,15 +3,17 @@
   flex-direction: column;
   border-radius: 40px;
   padding: 20px;
-  background-size: cover;
   color: #ffffff;
   gap: var(--gapBox);
+  position: relative;
+  overflow: hidden;
 }
 
 .content {
   display: grid;
   grid-template-columns: 1fr 40px;
   gap: var(--gapText);
+  z-index: 1;
 }
 
 .text {
@@ -47,4 +49,5 @@
   border-radius: 20px;
   background: var(--bg);
   color: var(--fg);
+  z-index: 1;
 }

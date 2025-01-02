@@ -77,7 +77,6 @@ const defaultEvent: EventType = {
     username: ``,
     links: [],
   },
-  authorModel: `clubs`,
   date: new Date(),
   venue: venues[0],
   duration: 1000 * 60 * 60 * 3,
@@ -230,16 +229,10 @@ export default function AdminPage({
     setEvent((event) => ({ ...event, ...e }));
   const [colors, setColors] = useState<Array<string>>([`#000000`]);
 
-  const orgs = [
-    user?.organizer ? [user] : [],
-    user?.clubs ? user.clubs : [],
-  ].flat();
-
   useEffect(() => {
-    if (orgs.length && user && !_id)
+    if (user && user.clubs.length && !_id)
       update({
-        author: orgs[0],
-        authorModel: user.organizer ? `users` : `clubs`,
+        author: user.clubs[0],
       });
   }, [user]);
 
@@ -298,30 +291,28 @@ export default function AdminPage({
     };
   }, [event, waiting]);
 
-  if (!loading && !orgs.length) return notFound();
-  if (_id && !events[_id.join(``)]) return notFound();
+  if ((!loading && !user?.clubs.length) || (_id && !events[_id.join(``)]))
+    return notFound();
   if (!user) return <></>;
 
   return (
     <main>
       <form ref={ref} className={styles.form} onSubmit={submit}>
-        {orgs.length > 1 && !_id && (
+        {user.clubs.length > 1 && !_id && (
           <Section title="Author" description="Choose a club">
             <select
               required
               name="author"
               id="author"
               onChange={(e) => {
-                const author = orgs.find(({ _id }) => _id == e.target.value);
-                if (author)
-                  update({
-                    author,
-                    authorModel: e.target.value == user._id ? `users` : `clubs`,
-                  });
+                const author = user.clubs.find(
+                  ({ _id }) => _id == e.target.value
+                );
+                if (author) update({ author });
               }}
               value={event.author._id}
             >
-              {orgs.map(({ _id, name }) => (
+              {user.clubs.map(({ _id, name }) => (
                 <option key={_id} value={_id}>
                   {name}
                 </option>
@@ -416,10 +407,7 @@ export default function AdminPage({
             priority
           />
         </Section>
-        <Section
-          title="Date"
-          description="Enter the time in GMT+0, which means the time in Tashkent minus five hours."
-        >
+        <Section title="Date" description="The exact time of the event start.">
           <Input
             name="date"
             type="datetime-local"
@@ -427,6 +415,21 @@ export default function AdminPage({
             event={event}
             update={({ date }) => {
               if (date && `${date}`.length) update({ date: new Date(date) });
+            }}
+          />
+        </Section>
+        <Section title="Duration" description="Event duration in minutes.">
+          <Input
+            min={1}
+            type="number"
+            name="duration"
+            event={event}
+            value={event.duration / (1000 * 60)}
+            update={({ duration }) => {
+              if (duration)
+                update({
+                  duration: parseInt(`${duration}`) * 1000 * 60,
+                });
             }}
           />
         </Section>
@@ -443,21 +446,6 @@ export default function AdminPage({
               <option key={venue} value={venue} />
             ))}
           </datalist>
-        </Section>
-        <Section title="Duration" description="Event duration in hours.">
-          <Input
-            min={1}
-            type="number"
-            name="duration"
-            event={event}
-            value={event.duration / (1000 * 60 * 60)}
-            update={({ duration }) => {
-              if (duration)
-                update({
-                  duration: parseInt(`${duration}`) * 1000 * 60 * 60,
-                });
-            }}
-          />
         </Section>
         <SectionOptional
           title="Content"

@@ -23,7 +23,7 @@ export default function List() {
       is_active: false,
       is_visible: false,
     });
-    if (user?.organizer || user?.clubs.length) {
+    if (user?.clubs.length) {
       SecondaryButton.setParams({
         is_active: true,
         is_visible: true,
