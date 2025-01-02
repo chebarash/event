@@ -1,0 +1,32 @@
+.club {
+  display: flex;
+  border-radius: 20px;
+  flex-direction: column;
+  color: #ffffff;
+  gap: var(--gapNarrow);
+  position: relative;
+  overflow: hidden;
+}
+
+.title,
+.date {
+  margin: 0 25px;
+}
+
+.title {
+  margin-top: 25px;
+}
+
+.cover {
+  position: relative;
+  display: flex;
+}
+
+.gradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 20px;
+  z-index: 1;
+}

@@ -1,0 +1,96 @@
+.event {
+  display: flex;
+  border-radius: 20px;
+  flex-direction: column;
+  color: #ffffff;
+  gap: var(--gapNarrow);
+  position: relative;
+}
+
+.event img {
+  border-radius: 0 0 20px 20px;
+}
+
+.cancelled .title {
+  position: relative;
+}
+
+.cancelled .title::before {
+  content: "cancelled";
+  color: var(--accent);
+  text-transform: lowercase;
+  font-size: 32px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: -5px;
+  right: -5px;
+  height: 5px;
+  top: 14px;
+  border-radius: 5px;
+}
+
+.cancelled {
+  background: #808080 !important;
+}
+
+.cancelled img {
+  filter: grayscale(100%);
+}
+
+.cancelled .gradient {
+  background: linear-gradient(180deg, #808080 0%, #80808000 100%) !important;
+}
+
+.private {
+  outline: solid var(--accent) 4px;
+  border: solid var(--bg) 5px;
+}
+
+.event[href="#"] {
+  cursor: default;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  top: -15px;
+  right: -20px;
+  animation: reg 1s ease;
+  -webkit-animation: reg 1s ease;
+}
+
+@keyframes reg {
+  0% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.title,
+.date {
+  margin: 0 25px;
+}
+
+.title {
+  margin-top: 25px;
+}
+
+.cover {
+  position: relative;
+  display: flex;
+}
+
+.gradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 20px;
+  z-index: 1;
+}

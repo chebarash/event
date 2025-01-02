@@ -7,8 +7,20 @@
   --fg: var(--tg-theme-text-color, #000000);
   --subFg: var(--tg-theme-subtitle-text-color, #4d4d4d);
 
-  --paddingX: 24px;
-  --paddingY: 40px;
+  --paddingX: 25px;
+  --paddingY: 25px;
+
+  --gapBox: 30px;
+  --gapSection: 40px;
+  --gapText: 12px;
+  --gapNarrow: 5px;
+
+  --fontSize: 16px;
+  --fontSizeLarge: 24px;
+
+  --fontMain: "Montserrat", sans-serif;
+  --fontTitle: "Dela Gothic One", sans-serif;
+  --fontMono: "Sometype Mono", monospace;
 }
 
 button {
@@ -23,18 +35,17 @@ button:disabled {
 *,
 *::before,
 *::after {
-  scroll-behavior: smooth;
-
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 
-  font-family: "Montserrat";
+  font-family: var(--fontMain);
   font-optical-sizing: auto;
   font-style: normal;
   font-weight: 400;
+  font-size: var(--fontSize);
 
-  line-height: 100%;
+  line-height: 1.2;
 
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -59,21 +70,10 @@ body {
   min-height: 100vh;
 }
 
-body::after {
-  content: "";
-  position: fixed;
-  left: 0;
-  right: 0;
-  background: var(--bg);
-  height: 60px;
-  filter: blur(16px);
-  z-index: 9999;
-  pointer-events: none;
-}
-
-body::after {
-  bottom: 0;
-  transform: translateY(30px);
+main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapBox);
 }
 
 a {
@@ -83,6 +83,24 @@ a {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fontTitle);
+  font-size: var(--fontSizeLarge);
+  text-transform: uppercase;
+}
+
+section > h2 {
+  margin-left: 10px;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .toast {

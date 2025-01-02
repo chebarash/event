@@ -1,16 +1,20 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const routes = [`clubs`, `tickets`];
+
 export function middleware(request: NextRequest) {
-  const _id = request.nextUrl.searchParams.get(`tgWebAppStartParam`);
+  let _id = request.nextUrl.searchParams.get(`tgWebAppStartParam`);
   if (_id) {
-    if (_id === "67376b65f2c7a874499e98ab") {
-      return NextResponse.redirect(
-        new URL(`/?_id=67383dafad59886322bd4329`, request.nextUrl.origin)
-      );
-    }
+    let def = `events`;
+    for (let route of routes)
+      if (_id.startsWith(route)) {
+        def = route;
+        _id = _id.slice(route.length);
+        break;
+      }
     return NextResponse.redirect(
-      new URL(`/?_id=${_id}`, request.nextUrl.origin)
+      new URL(`/${def}/${_id}`, request.nextUrl.origin)
     );
   }
   return NextResponse.next();

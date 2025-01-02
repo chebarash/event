@@ -1,0 +1,54 @@
+.registered {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapBox);
+  margin: 0 10px;
+}
+
+.registered li {
+  display: flex;
+  gap: var(--gapText);
+  position: relative;
+}
+
+.star {
+  position: absolute;
+  top: -15px;
+  right: -20px;
+  animation: reg 1s ease;
+  -webkit-animation: reg 1s ease;
+}
+
+@keyframes reg {
+  0% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.registered img {
+  border-radius: 100%;
+  margin: 10px 0;
+}
+
+.registered span {
+  display: flex;
+  gap: 8px;
+}
+
+.registered pre {
+  cursor: pointer;
+  font-family: var(--fontMono);
+  font-weight: 500;
+  font-style: normal;
+}
+
+.registered div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapNarrow);
+}

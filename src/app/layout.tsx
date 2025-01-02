@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
-import Header from "./components/header";
 import { Suspense } from "react";
-import { ToastProvider } from "./hooks/useToast";
-import { UserProvider } from "./hooks/useUser";
-import { EventsProvider } from "./hooks/useEvents";
+import { ToastProvider } from "../hooks/useToast";
+import { UserProvider } from "../hooks/useUser";
+import { EventsProvider } from "../hooks/useEvents";
 import { Analytics } from "@vercel/analytics/react";
-import { EventType } from "./types/types";
-import axios from "axios";
+import { EventType } from "../types/types";
+import Header from "@/ui/header/header";
+import axiosInstance from "@/hooks/axiosInstance";
 
 export const metadata: Metadata = {
   title: `Event`,
@@ -24,15 +24,9 @@ export default async function RootLayout({
 }>) {
   const date = new Date();
   date.setDate(date.getDate() - 1);
-  const result = (
-    await axios.get<Array<EventType>>(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/event?gte=${date.toISOString()}`
-    )
-  ).data.map(({ date, deadline, ...extra }) => ({
-    date: new Date(date),
-    deadline: deadline ? new Date(deadline) : undefined,
-    ...extra,
-  }));
+  const result = await axiosInstance.get<Array<EventType>>(
+    `/event?gte=${date.toISOString()}`
+  );
   return (
     <html lang="en">
       <head>
@@ -56,7 +50,7 @@ export default async function RootLayout({
         <Analytics />
         <ToastProvider>
           <UserProvider>
-            <EventsProvider event={result}>
+            <EventsProvider event={result.data}>
               <Suspense>
                 <Header />
                 {children}
