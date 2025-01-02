@@ -13,6 +13,7 @@ const EventsContext = createContext<{
   isRegistered: (event: EventType, _id?: string) => boolean;
   editEvent: (event: EventType) => any;
   createEvent: (event: EventType) => any;
+  participateEvent: (_id: string, participant: string) => any;
 }>({
   events: {},
   daily: {},
@@ -22,6 +23,7 @@ const EventsContext = createContext<{
     event.registered.some((p) => _id === p._id),
   editEvent: (event: EventType) => {},
   createEvent: (event: EventType) => {},
+  participateEvent: (_id: string, participant: string) => {},
 });
 
 export function EventsProvider({
@@ -58,6 +60,11 @@ export function EventsProvider({
   });
   const { fetchData: create } = useAxios<EventType>({
     url: `/event`,
+    method: `post`,
+    manual: true,
+  });
+  const { fetchData: participated } = useAxios<EventType>({
+    url: `/participated`,
     method: `post`,
     manual: true,
   });
@@ -165,6 +172,17 @@ export function EventsProvider({
       return result;
     });
 
+  const participateEvent = async (_id: string, participant: string) =>
+    await upd(async () => {
+      const result = await participated({
+        data: { _id, participant },
+      });
+      window.Telegram.WebApp.HapticFeedback.notificationOccurred(
+        result ? `success` : `error`
+      );
+      return result;
+    });
+
   return (
     <EventsContext.Provider
       value={{
@@ -175,6 +193,7 @@ export function EventsProvider({
         isRegistered,
         editEvent,
         createEvent,
+        participateEvent,
       }}
     >
       {children}

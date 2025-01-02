@@ -116,33 +116,37 @@ export default function Event({
     }
 
     MainButton.onClick(fn);
-    MainButton.setParams({
-      is_active: true,
-      is_visible: true,
-      ...(user?.clubs.some(({ _id }) => _id == author._id)
-        ? {
-            text: canRegister ? `Get Registered` : `Scan Ticket`,
-            color: themeParams.button_color,
-            text_color: themeParams.button_text_color,
-          }
-        : canRegister
-        ? registration
-          ? {
-              text: `Unregister`,
-              color: themeParams.section_bg_color,
-              text_color: themeParams.text_color,
-            }
-          : {
-              text: `Register`,
-              color: themeParams.button_color,
-              text_color: themeParams.button_text_color,
-            }
+    MainButton.setParams(
+      participated.some((p) => user?._id === p._id)
+        ? { is_active: false, is_visible: false }
         : {
-            text: `Get Ticket`,
-            color: themeParams.button_color,
-            text_color: themeParams.button_text_color,
-          }),
-    });
+            is_active: true,
+            is_visible: true,
+            ...(user?.clubs.some(({ _id }) => _id == author._id)
+              ? {
+                  text: canRegister ? `Get Registered` : `Scan Ticket`,
+                  color: themeParams.button_color,
+                  text_color: themeParams.button_text_color,
+                }
+              : canRegister
+              ? registration
+                ? {
+                    text: `Unregister`,
+                    color: themeParams.section_bg_color,
+                    text_color: themeParams.text_color,
+                  }
+                : {
+                    text: `Register`,
+                    color: themeParams.button_color,
+                    text_color: themeParams.button_text_color,
+                  }
+              : {
+                  text: `Get Ticket`,
+                  color: themeParams.button_color,
+                  text_color: themeParams.button_text_color,
+                }),
+          }
+    );
     return () => {
       MainButton.setParams({
         is_active: false,
