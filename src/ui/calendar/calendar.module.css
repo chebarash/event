@@ -4,9 +4,12 @@
   border-radius: 15px;
   overflow-x: auto;
   overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
 }
 
 .li {
+  scroll-snap-align: start;
   display: flex;
   color: var(--fg);
   border-radius: 15px;

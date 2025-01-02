@@ -77,6 +77,7 @@ const defaultEvent: EventType = {
     username: ``,
     links: [],
     hidden: false,
+    color: `#000000`,
     leader: {
       _id: ``,
       name: ``,

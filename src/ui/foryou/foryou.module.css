@@ -1,10 +1,30 @@
+.slider {
+  display: flex;
+  gap: var(--gapText);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  margin: 0 calc(var(--paddingX) * -1);
+  padding: 0 var(--paddingX);
+}
+
+.foryou:nth-child(1) {
+  scroll-snap-align: end;
+}
+
+.foryou:nth-child(2) {
+  scroll-snap-align: start;
+}
+
 .foryou {
+  justify-content: space-between;
+  min-width: calc(100vw - var(--paddingX) * 2);
   display: flex;
   flex-direction: column;
   border-radius: 40px;
   padding: 20px;
   color: #ffffff;
-  gap: var(--gapBox);
+  gap: var(--gapText);
   position: relative;
   overflow: hidden;
 }

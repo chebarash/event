@@ -17,7 +17,8 @@
 .ticket {
   display: flex;
   flex-direction: column;
-  height: max-content;
+  height: min-content;
+  width: min-content;
   background: #ffffff;
   color: #000000;
   border-radius: 50px;
@@ -34,9 +35,6 @@
 }
 
 .qr {
-  margin: auto;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1/1;
+  display: flex;
   padding: 40px;
 }

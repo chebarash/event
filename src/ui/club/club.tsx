@@ -80,7 +80,7 @@ export default function Club({
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>{name}</h1>
-            <p className={styles.author}>by {leader.name.split(` `)[0]}</p>
+            <p className={styles.author}>by {leader.name}</p>
           </div>
           {tg && (
             <button

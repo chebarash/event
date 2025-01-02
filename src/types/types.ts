@@ -36,6 +36,7 @@ export type ClubType = {
   cover: string;
   hidden: boolean;
   leader: UserType;
+  color: string;
 };
 
 export type UserType = {

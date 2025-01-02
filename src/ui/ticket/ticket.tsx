@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import styles from "./ticket.module.css";
-import QRCode from "react-qr-code";
+import { QRCode } from "react-qrcode-logo";
 import { useRouter } from "next/navigation";
 
 export default function Ticket({ title, _id }: { title: string; _id: string }) {
@@ -86,12 +86,21 @@ export default function Ticket({ title, _id }: { title: string; _id: string }) {
             fill="#000000"
           />
         </svg>
-        <QRCode
-          className={styles.qr}
-          value={_id}
-          bgColor="#ffffff"
-          fgColor="#000000"
-        />
+        <div className={styles.qr}>
+          <QRCode
+            size={180}
+            value={_id}
+            quietZone={0}
+            bgColor="#ffffff"
+            fgColor="#000000"
+            qrStyle="fluid"
+            eyeRadius={[
+              [20, 0, 0, 0],
+              [0, 20, 0, 0],
+              [0, 0, 0, 20],
+            ]}
+          />
+        </div>
       </section>
       <p>Show at Registration</p>
     </main>
