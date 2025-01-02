@@ -2,17 +2,16 @@
 import useEvents from "@/hooks/useEvents";
 import useUser from "@/hooks/useUser";
 import Event from "@/ui/event/event";
-import { notFound } from "next/navigation";
 
 export default function EventPage({
   params: { _id },
 }: {
   params: { _id: string };
 }) {
-  const { user } = useUser();
+  const { user, loading } = useUser();
   const { events, isRegistered } = useEvents();
 
-  if (!events[_id]) return notFound();
+  if (!events[_id] || loading) return <></>;
 
   return (
     <Event

@@ -5,6 +5,36 @@
   color: #ffffff;
   gap: var(--gapText);
   position: relative;
+  overflow: hidden;
+}
+
+.cancelled .title {
+  position: relative;
+}
+
+.cancelled .title::before {
+  content: "cancelled";
+  color: var(--accent);
+  text-transform: lowercase;
+  font-size: 32px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: -5px;
+  right: -5px;
+  height: 5px;
+  top: 40%;
+  border-radius: 5px;
+}
+
+.cancelled {
+  filter: grayscale(100%);
+}
+
+.private {
+  outline: solid var(--accent) 4px;
+  border: solid var(--bg) 5px;
 }
 
 .event[href="#"] {
@@ -43,10 +73,6 @@
 .cover {
   position: relative;
   display: flex;
-}
-
-.cover img {
-  border-radius: 0 0 20px 20px;
 }
 
 .gradient {
