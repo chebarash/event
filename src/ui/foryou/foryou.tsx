@@ -33,7 +33,13 @@ export default function ForYou({
           </div>
         </div>
         <div className={styles.link}>{button}</div>
-        <Image alt="background" priority src={image} fill objectFit="cover" />
+        <Image
+          alt="background"
+          priority
+          src={image}
+          fill
+          style={{ objectFit: "cover" }}
+        />
       </Link>
     </section>
   );

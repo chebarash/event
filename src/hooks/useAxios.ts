@@ -11,25 +11,16 @@ const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
 
   const fetchData = useCallback(
     async (
-      {
-        params,
-        data,
-      }: {
-        params?: { [name: string]: any };
-        data?: { [name: string]: any };
-      } = { params: {}, data: {} }
+      localConf: AxiosRequestConfig = { params: {}, data: {} }
     ): Promise<T | null> => {
       setLoading(true);
       setError(null);
       try {
-        config.headers = {
+        const conf = { ...config, ...localConf };
+        conf.headers = {
           Authorization: window.Telegram.WebApp.initDataUnsafe.user?.id,
         };
-        config.params = { ...config.params, ...params };
-        config.data = { ...config.data, ...data };
-        const response: AxiosResponse<T> = await axiosInstance.request<T>(
-          config
-        );
+        const response: AxiosResponse<T> = await axiosInstance.request<T>(conf);
         setData(response.data);
         return response.data;
       } catch (err) {

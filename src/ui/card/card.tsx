@@ -15,15 +15,24 @@ export default function Card({
   private: prvt,
   cancelled,
   registration,
-}: EventType & { registration?: boolean }) {
-  const time = date.toLocaleString(`en`, { timeStyle: `short` });
+  includeDate,
+  disabled,
+}: EventType & {
+  registration?: boolean;
+  includeDate?: boolean;
+  disabled?: boolean;
+}) {
+  const time = date.toLocaleString(`en`, {
+    timeStyle: `short`,
+    dateStyle: includeDate ? `medium` : undefined,
+  });
   const end = new Date(date.getTime() + duration).toLocaleString(`en`, {
     timeStyle: `short`,
   });
 
   return (
     <Link
-      href={`/events/${_id}`}
+      href={disabled ? `#` : `/events/${_id}`}
       className={[
         styles.event,
         cancelled ? styles.cancelled : ``,

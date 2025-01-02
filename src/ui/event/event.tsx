@@ -8,6 +8,7 @@ import ToJsx from "../jsx/jsx";
 import useEvents from "@/hooks/useEvents";
 import useUser from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const getTimeRemaining = (total: number): [number | string, string] => {
   const minutes = Math.floor((total / 1000 / 60) % 60);
@@ -157,7 +158,6 @@ export default function Event({
   }, [registration, user]);
   return (
     <main
-      id={_id}
       className={[
         styles.event,
         cancelled ? styles.cancelled : ``,
@@ -188,7 +188,7 @@ export default function Event({
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>{title}</h1>
-            <div className={styles.author}>
+            <Link href={`/clubs/${author._id}`} className={styles.author}>
               <p>by</p>
               <Image
                 src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${author.cover}`}
@@ -197,7 +197,7 @@ export default function Event({
                 alt="picture"
               />
               <p>{author.name}</p>
-            </div>
+            </Link>
           </div>
           <button
             className={styles.share}

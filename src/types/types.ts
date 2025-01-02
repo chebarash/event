@@ -34,6 +34,8 @@ export type ClubType = {
   description: string;
   links: Array<{ url: string; text: string }>;
   cover: string;
+  hidden: boolean;
+  leader: UserType;
 };
 
 export type UserType = {

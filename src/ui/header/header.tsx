@@ -117,7 +117,7 @@ export default function Header() {
             />
           </svg>
         </button>
-        {!loading && (
+        {(!loading || user) && (
           <>
             {user ? (
               <Image
