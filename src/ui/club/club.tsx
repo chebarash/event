@@ -1,13 +1,12 @@
 "use client";
 
-import styles from "./club.module.css";
 import { ClubType, EventType, UserType } from "@/types/types";
+import useUser from "@/hooks/useUser";
+import styles from "./club.module.css";
+import { useEffect } from "react";
+import Card from "../card/card";
 import Image from "next/image";
 import ToJsx from "../jsx/jsx";
-import Card from "../card/card";
-import { useEffect } from "react";
-import useUser from "@/hooks/useUser";
-import useEvents from "@/hooks/useEvents";
 
 export default function Club({
   _id,
@@ -22,7 +21,6 @@ export default function Club({
 }: ClubType & { members: number; rank: number; events: Array<EventType> }) {
   const tg = links.find(({ text }) => text == `Telegram`);
   const { user, fetchData } = useUser();
-  const { events: e } = useEvents();
 
   useEffect(() => {
     const { MainButton, themeParams, HapticFeedback } = window.Telegram.WebApp;
@@ -124,7 +122,7 @@ export default function Club({
         </div>
       </div>
       {events.map((event) => (
-        <Card key={event._id} {...event} includeDate disabled={!e[event._id]} />
+        <Card key={event._id} {...event} includeDate />
       ))}
     </main>
   );

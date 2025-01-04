@@ -1,8 +1,8 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./header.module.css";
-import { usePathname, useRouter } from "next/navigation";
 import useUser from "@/hooks/useUser";
 import Image from "next/image";
 
@@ -15,6 +15,7 @@ export default function Header() {
   const isHome = pathname == `/`;
 
   useEffect(() => {
+    router.prefetch(`/`);
     window.addEventListener("scroll", listenToScroll);
     return () => window.removeEventListener("scroll", listenToScroll);
   }, []);

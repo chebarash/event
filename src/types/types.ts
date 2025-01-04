@@ -25,6 +25,8 @@ export type EventType = {
   button?: string;
   private?: boolean;
   cancelled?: boolean;
+  isRegistered?: boolean;
+  isParticipated?: boolean;
 };
 
 export type ClubType = {
@@ -55,4 +57,10 @@ export type ForYouType = {
   button: string;
   image: string;
   link: string;
+};
+
+export type EventContextType = EventType & {
+  update: () => any;
+  edit: (event: EventType) => any;
+  participate: (participant: string) => any;
 };

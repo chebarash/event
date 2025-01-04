@@ -1,8 +1,9 @@
 "use client";
+
 import { createContext, useContext } from "react";
+import { AxiosRequestConfig } from "axios";
 import { UserType } from "../types/types";
 import useAxios from "./useAxios";
-import { AxiosRequestConfig } from "axios";
 
 const UserContext = createContext<{
   user: UserType | null;

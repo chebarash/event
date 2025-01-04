@@ -1,13 +1,12 @@
 "use client";
 
+import { EventContextType } from "@/types/types";
+import { useRouter } from "next/navigation";
 import styles from "./event.module.css";
-import { EventType } from "@/types/types";
-import Image from "next/image";
+import useUser from "@/hooks/useUser";
 import { useEffect } from "react";
 import ToJsx from "../jsx/jsx";
-import useEvents from "@/hooks/useEvents";
-import useUser from "@/hooks/useUser";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 
 const getTimeRemaining = (total: number): [number | string, string] => {
@@ -33,17 +32,17 @@ export default function Event({
   duration,
   shares,
   registered,
-  participated,
+  isRegistered,
+  isParticipated,
   hashtags,
   spots,
   deadline,
   external,
   private: prvt,
   cancelled,
-  registration,
-}: EventType & { registration?: boolean }) {
+  update,
+}: EventContextType) {
   const router = useRouter();
-  const { update } = useEvents();
   const { user } = useUser();
 
   const day = [
@@ -67,7 +66,7 @@ export default function Event({
     timeTillEvent > 0 &&
     timeTillDeadline > 0 &&
     !cancelled &&
-    (!spots || registration || spots - registered.length > 0);
+    (!spots || isRegistered || spots - registered.length > 0);
 
   const fn = () => {
     if (!user) {
@@ -81,18 +80,18 @@ export default function Event({
       return window.Telegram.WebApp.close();
     }
     if (user.clubs.some(({ _id }) => _id == author._id))
-      return router.push(`/registration/${_id}`);
+      return router.push(`${_id}/registration`);
     if (!canRegister) {
-      return router.push(`/tickets/${_id}`);
+      return router.push(`${_id}/ticket`);
     }
-    update(_id);
-    if (external && !registration)
+    update();
+    if (external && !isRegistered)
       if (external.startsWith(`https://t.me/`))
         window.Telegram.WebApp.openTelegramLink(external);
       else window.Telegram.WebApp.openLink(external);
   };
 
-  const fnSc = () => router.push(`/admin/${_id}`);
+  const fnSc = () => router.push(`${_id}/edit`);
 
   useEffect(() => {
     const {
@@ -117,7 +116,7 @@ export default function Event({
 
     MainButton.onClick(fn);
     MainButton.setParams(
-      participated.some((p) => user?._id === p._id) || cancelled
+      isParticipated || cancelled
         ? { is_active: false, is_visible: false }
         : {
             is_active: true,
@@ -129,7 +128,7 @@ export default function Event({
                   text_color: themeParams.button_text_color,
                 }
               : canRegister
-              ? registration
+              ? isRegistered
                 ? {
                     text: `Unregister`,
                     color: themeParams.section_bg_color,
@@ -159,7 +158,8 @@ export default function Event({
       });
       SecondaryButton.offClick(fnSc);
     };
-  }, [registration, user]);
+  }, [isRegistered, user]);
+
   return (
     <main
       className={[
@@ -168,7 +168,7 @@ export default function Event({
         prvt ? styles.private : ``,
       ].join(` `)}
     >
-      {registration && (
+      {isRegistered && (
         <svg className={styles.star} width="60" viewBox="0 0 52 48" fill="none">
           <path
             d="M41.162 7.08965L40.0403 5.0664L38.2005 6.46879L34.0049 9.66681L34.6221 4.22542L34.8745 2H32.6348H19.3652H17.1255L17.3779 4.22543L17.9951 9.66681L13.7995 6.46879L11.9597 5.0664L10.838 7.08965L4.25084 18.9708L3.19873 20.8685L5.17569 21.7628L10.1212 24L5.17569 26.2372L3.19873 27.1315L4.25084 29.0292L10.838 40.9104L11.9597 42.9336L13.7995 41.5312L17.9951 38.3332L17.3779 43.7746L17.1255 46H19.3652H32.6348H34.8745L34.6221 43.7746L34.0049 38.3332L38.2005 41.5312L40.0403 42.9336L41.162 40.9104L47.7492 29.0292L48.8013 27.1315L46.8243 26.2372L41.8788 24L46.8243 21.7628L48.8013 20.8685L47.7492 18.9708L41.162 7.08965Z"
@@ -243,11 +243,11 @@ export default function Event({
         </div>
       </div>
       {timeTillEvent > 0 &&
-        (timeLeft || spotsLeft != undefined || registration) && (
+        (timeLeft || spotsLeft != undefined || isRegistered) && (
           <div className={styles.container}>
             <div className={styles.footer}>
-              {registration && <p>event added to your calendar</p>}
-              {spotsLeft != undefined && !registration && (
+              {isRegistered && <p>event added to your calendar</p>}
+              {spotsLeft != undefined && !isRegistered && (
                 <div>
                   <h3>
                     {spotsLeft > 1 ? spotsLeft : spotsLeft < 1 ? `NO` : `LAST`}
@@ -255,7 +255,7 @@ export default function Event({
                   <p>{spotsLeft == 1 ? `spot left` : `spots left`}</p>
                 </div>
               )}
-              {timeLeft && !registration && (
+              {timeLeft && !isRegistered && (
                 <div>
                   {typeof timeLeft[0] == `number` && <p>deadline in</p>}
                   <h3>{timeLeft[0]}</h3>

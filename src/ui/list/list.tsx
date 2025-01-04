@@ -1,23 +1,28 @@
 "use client";
+
 import { useRouter, useSearchParams } from "next/navigation";
+import { DailyType } from "@/types/types";
 import styles from "./list.module.css";
-import { useEffect } from "react";
-import useEvents from "@/hooks/useEvents";
 import useUser from "@/hooks/useUser";
+import { useEffect } from "react";
 import Card from "../card/card";
 
-export default function List() {
+export default function List({ daily }: { daily: DailyType }) {
   const router = useRouter();
   const day = useSearchParams().get(`day`);
-  const { daily, isRegistered } = useEvents();
   const { user } = useUser();
   const date = day
     ? new Date(Date.now() + 1000 * 60 * 60 * 24 * parseInt(day)).toDateString()
     : 0;
+  const events = daily[date]?.filter(
+    ({ author: { _id }, private: p }) =>
+      (user && user.member.some((c) => c._id === _id)) || !p
+  );
 
-  const fnSc = () => router.push(`/admin`);
+  const fnSc = () => router.push(`/events/create`);
 
   useEffect(() => {
+    router.prefetch(`/events/create`);
     const { MainButton, SecondaryButton, themeParams } = window.Telegram.WebApp;
     MainButton.setParams({
       is_active: false,
@@ -44,12 +49,12 @@ export default function List() {
 
   return (
     <div className={styles.list}>
-      {daily[date]?.length ? (
-        daily[date].map((event) => (
+      {events?.length ? (
+        events.map((event) => (
           <Card
             {...event}
             key={event._id}
-            registration={isRegistered(event, user?._id)}
+            registration={event.registered.some(({ _id }) => _id === user?._id)}
           />
         ))
       ) : (

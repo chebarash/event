@@ -1,19 +1,19 @@
 "use client";
 
-import useEvents from "@/hooks/useEvents";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import styles from "./calendar.module.css";
+import { DailyType } from "@/types/types";
+import useUser from "@/hooks/useUser";
 import Link from "next/link";
 
-import styles from "./calendar.module.css";
-
-export default function Calendar() {
-  const [month, setMonth] = useState<string>();
-  const [list, setList] = useState<Array<JSX.Element>>([]);
-  const day = useSearchParams().get(`day`);
-  const router = useRouter();
-  const { daily } = useEvents();
+export default function Calendar({ daily }: { daily: DailyType }) {
   const scrollContainerRef = useRef<HTMLUListElement>(null);
+  const [list, setList] = useState<Array<JSX.Element>>([]);
+  const [month, setMonth] = useState<string>();
+  const day = useSearchParams().get(`day`);
+  const { user } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
     const date = new Date();
@@ -62,7 +62,12 @@ export default function Calendar() {
           className={[
             styles.li,
             [6, 0].includes(thisDay.getDay()) ? styles.weekend : ``,
-            daily[thisDay.toDateString()] ? `` : styles.disabled,
+            daily[thisDay.toDateString()]?.filter(
+              ({ author: { _id }, private: p }) =>
+                (user && user.member.some((c) => c._id === _id)) || !p
+            ).length
+              ? ``
+              : styles.disabled,
             `${i}` == day ? styles.active : ``,
           ].join(` `)}
         >
@@ -77,7 +82,7 @@ export default function Calendar() {
         </li>,
       ]);
     }
-  }, [day, daily]);
+  }, [day, daily, user]);
 
   return (
     <section>
