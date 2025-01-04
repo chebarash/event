@@ -1,12 +1,12 @@
 "use client";
 
-import useToast from "@/hooks/useToast";
 import styles from "./page.module.css";
-import useEvents from "@/hooks/useEvents";
+import { useEffect } from "react";
+import { useEventContext } from "@/hooks/useEvent";
+import useToast from "@/hooks/useToast";
 import useUser from "@/hooks/useUser";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { useEffect } from "react";
 import { UserType } from "@/types/types";
 
 const Participant = ({
@@ -52,18 +52,14 @@ const Participant = ({
   );
 };
 
-export default function EventPage({
-  params: { _id },
-}: {
-  params: { _id: string };
-}) {
+export default function RegistrationPage() {
   const { user, loading } = useUser();
-  const { events, participateEvent } = useEvents();
-  const event = events[_id];
+  const { date, deadline, author, registered, participated, participate } =
+    useEventContext();
 
-  const timeTillEvent = event.date.getTime() - new Date().getTime();
-  const timeTillDeadline = event.deadline
-    ? event.deadline.getTime() - new Date().getTime()
+  const timeTillEvent = date.getTime() - new Date().getTime();
+  const timeTillDeadline = deadline
+    ? deadline.getTime() - new Date().getTime()
     : 1;
 
   const canRegister = timeTillEvent > 0 && timeTillDeadline > 0;
@@ -75,7 +71,7 @@ export default function EventPage({
         text: "Scan Ticket",
       },
       async (data) => {
-        await participateEvent(_id, data);
+        await participate(data);
         closeScanQrPopup();
       }
     );
@@ -83,7 +79,7 @@ export default function EventPage({
 
   useEffect(() => {
     const { MainButton, themeParams } = window.Telegram.WebApp;
-    if (user && user.clubs.some(({ _id }) => _id == event.author._id)) {
+    if (user && user.clubs.some(({ _id }) => _id == author._id)) {
       if (!canRegister) fn();
       MainButton.setParams({
         is_active: true,
@@ -103,19 +99,18 @@ export default function EventPage({
     };
   }, []);
 
-  if (!event) return notFound();
-  if (!loading && !user?.clubs.some(({ _id }) => _id == event.author._id))
+  if (!loading && !user?.clubs.some(({ _id }) => _id == author._id))
     return notFound();
 
   return (
     <main>
       <ul className={styles.registered}>
-        {event.participated.map((user) => (
+        {participated.map((user) => (
           <Participant key={user._id} participated {...user} />
         ))}
-        {event.registered
+        {registered
           .filter(
-            ({ _id }) => !event.participated.map(({ _id }) => _id).includes(_id)
+            ({ _id }) => !participated.map(({ _id }) => _id).includes(_id)
           )
           .map((user) => (
             <Participant key={user._id} {...user} />

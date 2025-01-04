@@ -4,29 +4,19 @@ import "./globals.css";
 import { Suspense } from "react";
 import { ToastProvider } from "../hooks/useToast";
 import { UserProvider } from "../hooks/useUser";
-import { EventsProvider } from "../hooks/useEvents";
 import { Analytics } from "@vercel/analytics/react";
-import { EventType } from "../types/types";
 import Header from "@/ui/header/header";
-import axiosInstance from "@/hooks/axiosInstance";
 
 export const metadata: Metadata = {
   title: `Event`,
   description: `The ultimate hub for students`,
 };
 
-export const revalidate = 5;
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const date = new Date();
-  date.setDate(date.getDate() - 1);
-  const result = await axiosInstance.get<Array<EventType>>(
-    `/event?gte=${date.toISOString()}`
-  );
   return (
     <html lang="en">
       <head>
@@ -50,12 +40,10 @@ export default async function RootLayout({
         <Analytics />
         <ToastProvider>
           <UserProvider>
-            <EventsProvider event={result.data}>
-              <Suspense>
-                <Header />
-                {children}
-              </Suspense>
-            </EventsProvider>
+            <Suspense>
+              <Header />
+              {children}
+            </Suspense>
           </UserProvider>
         </ToastProvider>
       </body>

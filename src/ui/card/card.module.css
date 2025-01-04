@@ -48,11 +48,6 @@
   border: solid var(--bg) 5px;
 }
 
-.event[href="#"] {
-  cursor: default;
-  pointer-events: none;
-}
-
 .star {
   position: absolute;
   top: -15px;

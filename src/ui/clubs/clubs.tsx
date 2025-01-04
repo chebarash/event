@@ -3,8 +3,8 @@
 import { ClubType } from "@/types/types";
 import styles from "./clubs.module.css";
 import { useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Clubs({
   clubs,

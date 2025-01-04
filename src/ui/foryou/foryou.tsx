@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import styles from "./foryou.module.css";
 import { ForYouType } from "@/types/types";
+import styles from "./foryou.module.css";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ForYou({
   title,

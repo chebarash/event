@@ -1,22 +1,9 @@
 "use client";
-import useEvents from "@/hooks/useEvents";
-import useUser from "@/hooks/useUser";
+
+import { useEventContext } from "@/hooks/useEvent";
 import Event from "@/ui/event/event";
 
-export default function EventPage({
-  params: { _id },
-}: {
-  params: { _id: string };
-}) {
-  const { user, loading } = useUser();
-  const { events, isRegistered } = useEvents();
-
-  if (!events[_id] || loading) return <></>;
-
-  return (
-    <Event
-      {...events[_id]}
-      registration={isRegistered(events[_id], user?._id)}
-    />
-  );
+export default function EventPage() {
+  const event = useEventContext();
+  return <Event {...event} />;
 }

@@ -1,13 +1,11 @@
 "use client";
 
-import styles from "./page.module.css";
-import useEvents from "@/hooks/useEvents";
+import { EventType, EventContextType } from "@/types/types";
+import { Vibrant } from "node-vibrant/browser";
+import styles from "./admin.module.css";
 import useUser from "@/hooks/useUser";
-import { EventType } from "@/types/types";
 import ToJsx from "@/ui/jsx/jsx";
 import Image from "next/image";
-import { notFound } from "next/navigation";
-import { Vibrant } from "node-vibrant/browser";
 import {
   FormEvent,
   InputHTMLAttributes,
@@ -16,6 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
+import Loading from "../loading/loading";
 
 const venues = [
   `Conference Hall`,
@@ -106,15 +105,13 @@ const Section = ({
   title: string;
   description?: string;
   children: any;
-}) => {
-  return (
-    <section className={styles.section}>
-      <h3>{title}</h3>
-      {description && <p>{description}</p>}
-      {children}
-    </section>
-  );
-};
+}) => (
+  <section className={styles.section}>
+    <h3>{title}</h3>
+    {description && <p>{description}</p>}
+    {children}
+  </section>
+);
 
 const SectionOptional = ({
   title,
@@ -132,23 +129,21 @@ const SectionOptional = ({
   event: EventType;
   update: (e: Partial<EventType>) => any;
   value: any;
-}) => {
-  return (
-    <Section title={title} description={description}>
-      {event[name] ? (
-        children
-      ) : (
-        <button
-          type="button"
-          className={styles.button}
-          onClick={() => update({ [name]: value })}
-        >
-          Add
-        </button>
-      )}
-    </Section>
-  );
-};
+}) => (
+  <Section title={title} description={description}>
+    {event[name] ? (
+      children
+    ) : (
+      <button
+        type="button"
+        className={styles.button}
+        onClick={() => update({ [name]: value })}
+      >
+        Add
+      </button>
+    )}
+  </Section>
+);
 
 const Input = ({
   required = true,
@@ -223,16 +218,15 @@ const formatDateToISO = (date: Date): string => {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
-export default function AdminPage({
-  params: { _id },
-}: {
-  params: { _id?: Array<string> };
-}) {
+export default function Admin(
+  props:
+    | (EventContextType & { editing: true })
+    | { create: (event: EventType) => any; editing?: false }
+) {
   const ref = useRef<HTMLFormElement>(null);
-  const { user, loading } = useUser();
-  const { events, editEvent, createEvent } = useEvents();
+  const { user } = useUser();
   const [event, setEvent] = useState<EventType>(
-    _id ? events[_id.join(``)] : defaultEvent
+    props.editing ? props : defaultEvent
   );
   const [waiting, setWait] = useState<boolean>(false);
   const update = (e: Partial<EventType>) =>
@@ -240,7 +234,7 @@ export default function AdminPage({
   const [colors, setColors] = useState<Array<string>>([`#000000`]);
 
   useEffect(() => {
-    if (user && user.clubs.length && !_id)
+    if (user && user.clubs.length && !props.editing)
       update({
         author: user.clubs[0],
       });
@@ -251,11 +245,13 @@ export default function AdminPage({
     if (!ref.current?.reportValidity()) return;
     if (waiting) return;
     window.Telegram.WebApp.showConfirm(
-      `Are you sure you want to ${_id ? `edit` : `organize`} "${event.title}"?`,
+      `Are you sure you want to ${props ? `edit` : `organize`} "${
+        event.title
+      }"?`,
       async (ok) => {
         if (ok) {
           setWait(true);
-          await (_id ? editEvent : createEvent)(event);
+          await (props.editing ? props.edit : props.create)(event);
           setWait(false);
         }
       }
@@ -288,7 +284,7 @@ export default function AdminPage({
     MainButton.setParams({
       is_active: true,
       is_visible: true,
-      text: _id ? `Save` : `Create`,
+      text: props.editing ? `Save` : `Create`,
       color: themeParams.section_bg_color,
       text_color: themeParams.text_color,
     });
@@ -301,14 +297,12 @@ export default function AdminPage({
     };
   }, [event, waiting]);
 
-  if ((!loading && !user?.clubs.length) || (_id && !events[_id.join(``)]))
-    return notFound();
-  if (!user) return <></>;
+  if (!user) return <Loading />;
 
   return (
     <main>
       <form ref={ref} className={styles.form} onSubmit={submit}>
-        {user.clubs.length > 1 && !_id && (
+        {user.clubs.length > 1 && !props.editing && (
           <Section title="Author" description="Choose a club">
             <select
               required
@@ -330,7 +324,7 @@ export default function AdminPage({
             </select>
           </Section>
         )}
-        {_id && (
+        {props.editing && (
           <Section
             title="Event status"
             description="If you can not organize an event, you can cancel it."

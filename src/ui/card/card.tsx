@@ -2,8 +2,8 @@
 
 import { EventType } from "@/types/types";
 import styles from "./card.module.css";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Card({
   _id,
@@ -16,11 +16,9 @@ export default function Card({
   cancelled,
   registration,
   includeDate,
-  disabled,
 }: EventType & {
   registration?: boolean;
   includeDate?: boolean;
-  disabled?: boolean;
 }) {
   const time = date.toLocaleString(`en`, {
     timeStyle: `short`,
@@ -32,7 +30,7 @@ export default function Card({
 
   return (
     <Link
-      href={disabled ? `#` : `/events/${_id}`}
+      href={`/events/${_id}`}
       className={[
         styles.event,
         cancelled ? styles.cancelled : ``,

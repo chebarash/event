@@ -1,20 +1,22 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-
-const routes = [`clubs`, `tickets`];
+import { NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
-  let _id = request.nextUrl.searchParams.get(`tgWebAppStartParam`);
+  const _id = request.nextUrl.searchParams.get(`tgWebAppStartParam`);
   if (_id) {
-    let def = `events`;
-    for (let route of routes)
-      if (_id.startsWith(route)) {
-        def = route;
-        _id = _id.slice(route.length);
-        break;
-      }
+    if (_id.startsWith(`clubs`))
+      return NextResponse.redirect(
+        new URL(`/${_id.replace(`clubs`, `clubs/`)}`, request.nextUrl.origin)
+      );
+    if (_id.startsWith(`ticket`))
+      return NextResponse.redirect(
+        new URL(
+          `/events/${_id.replace(`ticket`, ``)}/ticket`,
+          request.nextUrl.origin
+        )
+      );
     return NextResponse.redirect(
-      new URL(`/${def}/${_id}`, request.nextUrl.origin)
+      new URL(`/events/${_id}`, request.nextUrl.origin)
     );
   }
   return NextResponse.next();

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-import styles from "./ticket.module.css";
-import { QRCode } from "react-qrcode-logo";
 import { useRouter } from "next/navigation";
+import { QRCode } from "react-qrcode-logo";
+import styles from "./ticket.module.css";
+import { useEffect } from "react";
 
 export default function Ticket({
   title,
