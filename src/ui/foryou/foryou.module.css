@@ -8,15 +8,8 @@
   padding: 0 var(--paddingX);
 }
 
-.foryou:nth-child(1) {
-  scroll-snap-align: end;
-}
-
-.foryou:nth-child(2) {
-  scroll-snap-align: start;
-}
-
 .foryou {
+  scroll-snap-align: center;
   justify-content: space-between;
   min-width: calc(100vw - var(--paddingX) * 2);
   display: flex;

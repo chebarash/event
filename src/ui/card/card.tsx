@@ -30,6 +30,7 @@ export default function Card({
 
   return (
     <Link
+      prefetch={true}
       href={`/events/${_id}`}
       className={[
         styles.event,

@@ -17,6 +17,7 @@ export default function ForYou({
       <h2>For You</h2>
       <div className={styles.slider}>
         <Link
+          prefetch={true}
           className={styles.foryou}
           href="/clubs"
           style={{
@@ -54,7 +55,7 @@ export default function ForYou({
             />
           </svg>
         </Link>
-        <Link className={styles.foryou} href={link}>
+        <Link prefetch={true} className={styles.foryou} href={link}>
           <div className={styles.content}>
             <div className={styles.text}>
               <h3>{title}</h3>

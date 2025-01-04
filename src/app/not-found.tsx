@@ -14,6 +14,7 @@ export default function NotFound() {
       <h1>Not Found</h1>
       <p>Could not find requested resource</p>
       <Link
+        prefetch={true}
         href="/"
         style={{
           border: `2px solid var(--fg)`,

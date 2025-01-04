@@ -94,6 +94,9 @@ export default function Event({
   const fnSc = () => router.push(`${_id}/edit`);
 
   useEffect(() => {
+    router.prefetch(`${_id}/edit`);
+    router.prefetch(`${_id}/ticket`);
+    router.prefetch(`${_id}/registration`);
     const {
       MainButton,
       SecondaryButton,
@@ -192,7 +195,11 @@ export default function Event({
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>{title}</h1>
-            <Link href={`/clubs/${author._id}`} className={styles.author}>
+            <Link
+              prefetch={true}
+              href={`/clubs/${author._id}`}
+              className={styles.author}
+            >
               <p>by</p>
               <Image
                 src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${author.cover}`}

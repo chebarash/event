@@ -8,6 +8,7 @@ import useUser from "@/hooks/useUser";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { UserType } from "@/types/types";
+import useAxios from "@/hooks/useAxios";
 
 const Participant = ({
   name,
@@ -54,8 +55,13 @@ const Participant = ({
 
 export default function RegistrationPage() {
   const { user, loading } = useUser();
-  const { date, deadline, author, registered, participated, participate } =
+  const { _id, date, deadline, author, registered, participated, participate } =
     useEventContext();
+  const { fetchData } = useAxios({
+    url: `/registered?_id=${_id}`,
+    method: `get`,
+    manual: true,
+  });
 
   const timeTillEvent = date.getTime() - new Date().getTime();
   const timeTillDeadline = deadline
@@ -77,8 +83,15 @@ export default function RegistrationPage() {
     );
   };
 
+  const scFn = async () => {
+    const { SecondaryButton } = window.Telegram.WebApp;
+    SecondaryButton.showProgress();
+    await fetchData();
+    SecondaryButton.hideProgress();
+  };
+
   useEffect(() => {
-    const { MainButton, themeParams } = window.Telegram.WebApp;
+    const { MainButton, SecondaryButton, themeParams } = window.Telegram.WebApp;
     if (user && user.clubs.some(({ _id }) => _id == author._id)) {
       if (!canRegister) fn();
       MainButton.setParams({
@@ -88,14 +101,27 @@ export default function RegistrationPage() {
         color: themeParams.button_color,
         text_color: themeParams.button_text_color,
       });
+      SecondaryButton.setParams({
+        is_active: true,
+        is_visible: true,
+        text: `Get List`,
+        color: themeParams.button_color,
+        text_color: themeParams.button_text_color,
+      });
       MainButton.onClick(fn);
+      SecondaryButton.onClick(scFn);
     }
     return () => {
       MainButton.setParams({
         is_active: false,
         is_visible: false,
       });
+      SecondaryButton.setParams({
+        is_active: false,
+        is_visible: false,
+      });
       MainButton.offClick(fn);
+      SecondaryButton.offClick(scFn);
     };
   }, []);
 

@@ -25,6 +25,7 @@ export default function Clubs({
         <h2>clubs</h2>
         {clubs.map(({ _id, color, name, members, cover }) => (
           <Link
+            prefetch={true}
             key={_id}
             href={`/clubs/${_id}`}
             className={styles.club}

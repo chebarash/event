@@ -12,7 +12,11 @@ export default function List({ daily }: { daily: DailyType }) {
   const day = useSearchParams().get(`day`);
   const { user } = useUser();
   const date = day
-    ? new Date(Date.now() + 1000 * 60 * 60 * 24 * parseInt(day)).toDateString()
+    ? new Date(
+        Date.now() + 1000 * 60 * 60 * 24 * parseInt(day)
+      ).toLocaleDateString("en-US", {
+        timeZone: "Etc/GMT-5",
+      })
     : 0;
   const events = daily[date]?.filter(
     ({ author: { _id }, private: p }) =>

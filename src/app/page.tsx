@@ -5,7 +5,7 @@ import ForYou from "@/ui/foryou/foryou";
 import Greeting from "@/ui/greeting/greeting";
 import List from "@/ui/list/list";
 
-export const revalidate = 5;
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const {
@@ -16,7 +16,9 @@ export default async function Home() {
   }>(`/`);
   const daily: DailyType = {};
   events.forEach((event) => {
-    const day = event.date.toDateString();
+    const day = new Date(event.date).toLocaleDateString("en-US", {
+      timeZone: "Etc/GMT-5",
+    });
     if (!daily[day]) daily[day] = [];
     daily[day].push(event);
   });

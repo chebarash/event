@@ -357,6 +357,15 @@ export default function Admin(
             event={event}
             update={update}
           />
+          <button
+            type="button"
+            className={styles.button}
+            onClick={async () =>
+              update({ picture: await navigator.clipboard.readText() })
+            }
+          >
+            Paste
+          </button>
         </Section>
         <Section title="Color" description="Choose event card color.">
           <select
@@ -482,6 +491,25 @@ export default function Admin(
               });
             }}
           />
+          <button
+            type="button"
+            className={styles.button}
+            onClick={async () => {
+              const data = await navigator.clipboard.readText();
+              update({
+                content: data.length
+                  ? {
+                      type: /^AgACAgIAAxkBAAI[A-Za-z0-9_\-]{53,70}$/.test(data)
+                        ? `photo`
+                        : `video`,
+                      fileId: data,
+                    }
+                  : undefined,
+              });
+            }}
+          >
+            Paste
+          </button>
           <section className={styles.preview}>
             {event.content?.type == `photo` ? (
               <Image

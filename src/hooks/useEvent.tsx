@@ -1,7 +1,7 @@
 "use client";
 
 import { EventContextType, EventType } from "@/types/types";
-import { createContext, use, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { notFound, useRouter } from "next/navigation";
 import Loading from "@/ui/loading/loading";
 import useAxios from "./useAxios";

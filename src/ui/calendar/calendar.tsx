@@ -62,7 +62,11 @@ export default function Calendar({ daily }: { daily: DailyType }) {
           className={[
             styles.li,
             [6, 0].includes(thisDay.getDay()) ? styles.weekend : ``,
-            daily[thisDay.toDateString()]?.filter(
+            daily[
+              thisDay.toLocaleDateString("en-US", {
+                timeZone: "Etc/GMT-5",
+              })
+            ]?.filter(
               ({ author: { _id }, private: p }) =>
                 (user && user.member.some((c) => c._id === _id)) || !p
             ).length
@@ -71,7 +75,7 @@ export default function Calendar({ daily }: { daily: DailyType }) {
             `${i}` == day ? styles.active : ``,
           ].join(` `)}
         >
-          <Link href={`/?day=${i}`} className={styles.button}>
+          <Link prefetch={true} href={`/?day=${i}`} className={styles.button}>
             <p className={styles.day}>
               {thisDay.toLocaleDateString(`en`, { weekday: `short` })}
             </p>

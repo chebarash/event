@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { AxiosRequestConfig } from "axios";
 import { UserType } from "../types/types";
 import useAxios from "./useAxios";
@@ -24,6 +24,12 @@ export function UserProvider({
     url: `/user`,
     method: `get`,
   });
+
+  useEffect(() => {
+    const { expand, disableVerticalSwipes } = window.Telegram.WebApp;
+    disableVerticalSwipes();
+    expand();
+  }, []);
 
   return (
     <UserContext.Provider value={{ user: data, loading, fetchData }}>
