@@ -9,6 +9,8 @@
   color: #ffffff;
   gap: var(--gapNarrow);
   position: relative;
+  width: 100%;
+  z-index: 9;
 }
 
 .event img {

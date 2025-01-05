@@ -40,9 +40,11 @@ const EventContext = createContext<EventContextType>({
   hashtags: [],
   isRegistered: false,
   isParticipated: false,
+  loadingVote: false,
   update: () => {},
   edit: (event: Partial<EventType>) => {},
   participate: (participant: string) => {},
+  vote: (option: string) => {},
 });
 
 export function useEventContext() {
@@ -59,6 +61,7 @@ export default function EventProvider({
   const router = useRouter();
   const [event, set] = useState<EventType>(initial);
   const { user, loading } = useUser();
+  const [loadingVote, setLoadingVote] = useState(false);
   const { fetchData: fetchRegister } = useAxios<EventType>({
     url: `/registered`,
     method: `post`,
@@ -72,6 +75,11 @@ export default function EventProvider({
   const { fetchData: fetchParticipate } = useAxios<EventType>({
     url: `/participated`,
     method: `post`,
+    manual: true,
+  });
+  const { fetchData: fetchVote } = useAxios<EventType>({
+    url: `/vote`,
+    method: `get`,
     manual: true,
   });
 
@@ -140,6 +148,18 @@ export default function EventProvider({
       return result;
     });
 
+  const vote = async (option: string) => {
+    setLoadingVote(true);
+    const result = await fetchVote({
+      params: { _id: event._id, option },
+    });
+    window.Telegram.WebApp.HapticFeedback.notificationOccurred(
+      result ? `success` : `error`
+    );
+    if (result) setEvent(result);
+    setLoadingVote(false);
+  };
+
   let next: any = children;
 
   if (event.private)
@@ -157,7 +177,9 @@ export default function EventProvider({
     }
 
   return (
-    <EventContext.Provider value={{ ...event, update, edit, participate }}>
+    <EventContext.Provider
+      value={{ ...event, loadingVote, update, edit, participate, vote }}
+    >
       {next}
     </EventContext.Provider>
   );

@@ -11,10 +11,14 @@
 
 .motion {
   display: flex;
-  border-radius: 20px;
   position: relative;
   aspect-ratio: 16/9;
-  overflow: hidden;
+  border-radius: 20px;
+  z-index: 9;
+}
+
+.cover {
+  border-radius: 20px;
 }
 
 .cancelled .title {
@@ -42,6 +46,7 @@
   right: -20px;
   animation: reg 1s ease;
   -webkit-animation: reg 1s ease;
+  z-index: 1;
 }
 
 @keyframes reg {
@@ -58,6 +63,10 @@
 .private .motion {
   outline: solid var(--accent) 4px;
   border: solid var(--bg) 5px;
+}
+
+.private .cover {
+  border-radius: 15px;
 }
 
 .box {
@@ -198,4 +207,87 @@
 
 .footer h3 {
   line-height: 1;
+}
+
+.voting {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapNarrow);
+  margin: 0 -10px;
+  padding: 10px;
+  border-radius: 20px;
+  color: var(--fg);
+  position: relative;
+  transition: opacity ease 500ms;
+}
+
+.voting::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: var(--subBg);
+  border-radius: 20px;
+  opacity: 0.5;
+}
+
+.voting * {
+  z-index: 1;
+}
+
+.voting.loading {
+  opacity: 0.5;
+}
+
+.voting h2 {
+  padding: var(--gapNarrow) 10px;
+}
+
+.voting div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapText);
+}
+
+.option {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  color: var(--fg);
+}
+
+.option:disabled {
+  color: var(--accent);
+  position: relative;
+}
+
+.option:disabled .bg {
+  background: var(--accent);
+  opacity: 0.2;
+}
+
+.name {
+  font-size: var(--fontSize);
+  font-weight: 500;
+}
+
+.percent {
+  font-size: var(--fontSizeLarge);
+  font-weight: 700;
+}
+
+.bg {
+  transition: width ease 1s;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--fg);
+  border-radius: 10px;
+  opacity: 0.05;
 }

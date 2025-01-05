@@ -120,25 +120,19 @@ const SectionOptional = ({
   name,
   event,
   update,
-  value,
 }: {
   title: string;
   description?: string;
   children: any;
   name: keyof EventType;
   event: EventType;
-  update: (e: Partial<EventType>) => any;
-  value: any;
+  update: () => any;
 }) => (
   <Section title={title} description={description}>
     {event[name] ? (
       children
     ) : (
-      <button
-        type="button"
-        className={styles.button}
-        onClick={() => update({ [name]: value })}
-      >
+      <button type="button" className={styles.button} onClick={update}>
         Add
       </button>
     )}
@@ -155,7 +149,7 @@ const Input = ({
 }: InputHTMLAttributes<HTMLInputElement> & {
   name: keyof EventType;
   event: EventType;
-  update: (e: Partial<EventType>) => any;
+  update: (e: string) => any;
 }) => (
   <input
     {...props}
@@ -166,7 +160,7 @@ const Input = ({
     value={
       props.defaultValue || props.value ? props.value : (event[name] as string)
     }
-    onChange={(e) => update({ [name]: e.target.value })}
+    onChange={(e) => update(e.target.value)}
   />
 );
 
@@ -179,7 +173,7 @@ const TextArea = ({
 }: TextareaHTMLAttributes<HTMLTextAreaElement> & {
   name: keyof EventType;
   event: EventType;
-  update: (e: Partial<EventType>) => any;
+  update: (e: string) => any;
 }) => {
   const ref = useRef<HTMLTextAreaElement>(null);
 
@@ -199,7 +193,7 @@ const TextArea = ({
       required={required}
       value={event[name] as string}
       onChange={(e) => {
-        update({ [name]: e.target.value });
+        update(e.target.value);
         e.target.style.height = `0`;
         e.target.style.height = `${e.target.scrollHeight}px`;
       }}
@@ -339,23 +333,32 @@ export default function Admin(
           </Section>
         )}
         <Section title="Title" description="Name of the event max 100 symbols.">
-          <Input minLength={3} name="title" event={event} update={update} />
+          <Input
+            minLength={3}
+            name="title"
+            event={event}
+            update={(title) => update({ title })}
+          />
         </Section>
         <Section
           title="Description"
           description="Describe the event in detail, you can use formatting that is supported in telegram."
         >
-          <TextArea name="description" event={event} update={update} />
+          <TextArea
+            name="description"
+            event={event}
+            update={(description) => update({ description })}
+          />
         </Section>
         <Section
           title="Picture"
           description="Just send a 16x9 photo to the bot and copy and paste his answer."
         >
           <Input
-            pattern="^AgACAgIAAxkBAAI[A-Za-z0-9_\-]{53,70}$"
+            pattern="^AgACAgIAAxkBA[A-Za-z0-9_\-]{53,70}$"
             name="picture"
             event={event}
-            update={update}
+            update={(picture) => update({ picture })}
           />
           <button
             type="button"
@@ -426,8 +429,8 @@ export default function Admin(
             type="datetime-local"
             defaultValue={formatDateToISO(event.date)}
             event={event}
-            update={({ date }) => {
-              if (date && `${date}`.length) update({ date: new Date(date) });
+            update={(date) => {
+              if (date && date.length) update({ date: new Date(date) });
             }}
           />
         </Section>
@@ -438,7 +441,7 @@ export default function Admin(
             name="duration"
             event={event}
             value={event.duration / (1000 * 60)}
-            update={({ duration }) => {
+            update={(duration) => {
               if (duration)
                 update({
                   duration: parseInt(`${duration}`) * 1000 * 60,
@@ -452,7 +455,7 @@ export default function Admin(
             name="venue"
             list="venues"
             event={event}
-            update={update}
+            update={(venue) => update({ venue })}
           />
           <datalist id="venues">
             {venues.map((venue) => (
@@ -463,29 +466,30 @@ export default function Admin(
         <SectionOptional
           title="Content"
           description="The message media that the user will see when you share the event. Just send a photo or video to the bot and copy-paste its response."
-          value={{
-            type: `photo`,
-            fileId: event.picture,
-          }}
           event={event}
-          update={update}
+          update={() =>
+            update({
+              content: {
+                type: `photo`,
+                fileId: event.picture,
+              },
+            })
+          }
           name="content"
         >
           <Input
-            pattern="^(AgACAgIAAxkBAAI|BAACAgIAAxkBAAI)[A-Za-z0-9_\-]{53,70}$"
+            pattern="^(AgACAgIAAxkBA|BAACAgIAAxkBA)[A-Za-z0-9_\-]{53,70}$"
             name="content"
             value={event.content?.fileId}
             event={event}
-            update={({ content }) => {
+            update={(fileId) => {
               update({
-                content: `${content}`.length
+                content: fileId.length
                   ? {
-                      type: /^AgACAgIAAxkBAAI[A-Za-z0-9_\-]{53,70}$/.test(
-                        `${content}`
-                      )
+                      type: /^AgACAgIAAxkBA[A-Za-z0-9_\-]{53,70}$/.test(fileId)
                         ? `photo`
                         : `video`,
-                      fileId: `${content}`,
+                      fileId,
                     }
                   : undefined,
               });
@@ -499,7 +503,7 @@ export default function Admin(
               update({
                 content: data.length
                   ? {
-                      type: /^AgACAgIAAxkBAAI[A-Za-z0-9_\-]{53,70}$/.test(data)
+                      type: /^AgACAgIAAxkBA[A-Za-z0-9_\-]{53,70}$/.test(data)
                         ? `photo`
                         : `video`,
                       fileId: data,
@@ -533,9 +537,8 @@ export default function Admin(
         <SectionOptional
           title="Template"
           description="The message template that the user will see when you share the event, you can use variables like {{title}}."
-          value={defaultTemplate}
           event={event}
-          update={update}
+          update={() => update({ template: defaultTemplate })}
           name="template"
         >
           <TextArea
@@ -543,9 +546,9 @@ export default function Admin(
             required
             name="template"
             event={event}
-            update={({ template }) =>
+            update={(template) =>
               update({
-                template: template!.length ? template : undefined,
+                template: template.length ? template : undefined,
               })
             }
           />
@@ -585,17 +588,16 @@ export default function Admin(
         <SectionOptional
           title="Button"
           description="Custom button text under message"
-          value="Open in Event"
           event={event}
-          update={update}
+          update={() => update({ button: `Open in Event` })}
           name="button"
         >
           <Input
             name="button"
             event={event}
-            update={({ button }) =>
+            update={(button) =>
               update({
-                button: button!.length ? button : undefined,
+                button: button.length ? button : undefined,
               })
             }
           />
@@ -604,17 +606,16 @@ export default function Admin(
           title="External"
           description="Custom registration link"
           event={event}
-          update={update}
+          update={() => update({ external: `https://t.me/puevent` })}
           name="external"
-          value="https://t.me/puevent"
         >
           <Input
             type="url"
             name="external"
             event={event}
-            update={({ external }) =>
+            update={(external) =>
               update({
-                external: external!.length ? external : undefined,
+                external: external.length ? external : undefined,
               })
             }
           />
@@ -623,18 +624,17 @@ export default function Admin(
           title="Spots"
           description="Limit number of registrations"
           event={event}
-          update={update}
+          update={() => update({ spots: 1 })}
           name="spots"
-          value={1}
         >
           <Input
             type="number"
             name="spots"
             min={1}
             event={event}
-            update={({ spots }) =>
+            update={(spots) =>
               update({
-                spots: `${spots}`.length ? parseInt(`${spots}`) : undefined,
+                spots: spots.length ? parseInt(spots) : undefined,
               })
             }
           />
@@ -643,23 +643,20 @@ export default function Admin(
           title="Deadline"
           description="Registration deadline"
           event={event}
-          update={update}
+          update={() => update({ deadline: new Date() })}
           name="deadline"
-          value={new Date()}
         >
           <Input
             name="deadline"
             type="datetime-local"
             defaultValue={event.deadline && formatDateToISO(event.deadline)}
             event={event}
-            update={({ deadline }) => {
+            update={(deadline) =>
               update({
                 deadline:
-                  deadline && `${deadline}`.length
-                    ? new Date(deadline)
-                    : undefined,
-              });
-            }}
+                  deadline && deadline.length ? new Date(deadline) : undefined,
+              })
+            }
           />
         </SectionOptional>
         <Section title="Privacy" description="Event visibility.">
@@ -671,6 +668,73 @@ export default function Admin(
             {event.private ? `Only for club members` : `Public`}
           </button>
         </Section>
+        <SectionOptional
+          title="Voting"
+          event={event}
+          update={() =>
+            update({
+              voting: {
+                title: `Voting Title`,
+                options: event.voting?.options || [],
+                votes: event.voting?.votes || [],
+              },
+            })
+          }
+          name="voting"
+        >
+          <Input
+            name="voting"
+            value={event.voting?.title}
+            event={event}
+            update={(title) =>
+              update({
+                voting: title.length
+                  ? {
+                      title,
+                      options: event.voting?.options || [],
+                      votes: event.voting?.votes || [],
+                    }
+                  : undefined,
+              })
+            }
+          />
+          <p>Options</p>
+          {event.voting?.options.map((option, i) => (
+            <Input
+              key={i}
+              name="voting"
+              value={option}
+              event={event}
+              update={(option) => {
+                update({
+                  voting: {
+                    title: event.voting?.title || ``,
+                    options:
+                      event.voting?.options
+                        .map((o, j) => (i == j ? option : o))
+                        .filter((o) => o.length) || [],
+                    votes: event.voting?.votes || [],
+                  },
+                });
+              }}
+            />
+          ))}
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() =>
+              update({
+                voting: {
+                  title: event.voting?.title || ``,
+                  options: [...(event.voting?.options || []), `Option`],
+                  votes: event.voting?.votes || [],
+                },
+              })
+            }
+          >
+            Add option
+          </button>
+        </SectionOptional>
         <button type="submit" style={{ display: `none` }}></button>
       </form>
     </main>

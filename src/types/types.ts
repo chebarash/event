@@ -27,6 +27,11 @@ export type EventType = {
   cancelled?: boolean;
   isRegistered?: boolean;
   isParticipated?: boolean;
+  voting?: {
+    title: string;
+    options: Array<string>;
+    votes: Array<{ user: string; option: string }>;
+  };
 };
 
 export type ClubType = {
@@ -60,7 +65,9 @@ export type ForYouType = {
 };
 
 export type EventContextType = EventType & {
+  loadingVote: boolean;
   update: () => any;
   edit: (event: EventType) => any;
   participate: (participant: string) => any;
+  vote: (option: string) => any;
 };

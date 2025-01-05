@@ -123,7 +123,7 @@ export default function RegistrationPage() {
       MainButton.offClick(fn);
       SecondaryButton.offClick(scFn);
     };
-  }, []);
+  }, [user]);
 
   if (!loading && !user?.clubs.some(({ _id }) => _id == author._id))
     return notFound();
