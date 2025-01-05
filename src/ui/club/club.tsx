@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import Card from "../card/card";
 import Image from "next/image";
 import ToJsx from "../jsx/jsx";
+import { motion } from "framer-motion";
 
 export default function Club({
   _id,
@@ -67,16 +68,18 @@ export default function Club({
 
   return (
     <main>
-      <Image
-        src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + cover}
-        alt="cover"
-        width={0}
-        height={0}
-        sizes="100vw"
-        style={{ width: "100%", height: "auto" }}
-        priority
-        className={styles.cover}
-      />
+      <motion.div className={styles.club} layoutId={`club-${_id}`}>
+        <Image
+          src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + cover}
+          alt="cover"
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "100%", height: "auto" }}
+          priority
+          className={styles.cover}
+        />
+      </motion.div>
       <div className={styles.box}>
         <div className={styles.header}>
           <div>

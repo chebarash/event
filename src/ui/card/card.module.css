@@ -1,5 +1,9 @@
 .event {
   display: flex;
+}
+
+.motion {
+  display: flex;
   border-radius: 20px;
   flex-direction: column;
   color: #ffffff;
@@ -31,7 +35,7 @@
   border-radius: 5px;
 }
 
-.cancelled {
+.cancelled .motion {
   background: #808080 !important;
 }
 
@@ -43,7 +47,7 @@
   background: linear-gradient(180deg, #808080 0%, #80808000 100%) !important;
 }
 
-.private {
+.private .motion {
   outline: solid var(--accent) 4px;
   border: solid var(--bg) 5px;
 }
@@ -79,6 +83,7 @@
 .cover {
   position: relative;
   display: flex;
+  aspect-ratio: 16/9;
 }
 
 .gradient {

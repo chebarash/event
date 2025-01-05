@@ -2,6 +2,21 @@
   position: relative;
 }
 
+.club {
+  display: flex;
+  border-radius: 100%;
+  overflow: hidden;
+  aspect-ratio: 1/1;
+}
+
+.motion {
+  display: flex;
+  border-radius: 20px;
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
 .cancelled .title {
   position: relative;
 }
@@ -40,11 +55,7 @@
   }
 }
 
-.cover {
-  border-radius: 20px;
-}
-
-.private .cover {
+.private .motion {
   outline: solid var(--accent) 4px;
   border: solid var(--bg) 5px;
 }
@@ -77,10 +88,6 @@
 
 .author p {
   font-weight: 500;
-}
-
-.author img {
-  border-radius: 100%;
 }
 
 .share {

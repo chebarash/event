@@ -5,6 +5,7 @@ import styles from "./clubs.module.css";
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function Clubs({
   clubs,
@@ -22,37 +23,41 @@ export default function Clubs({
   return (
     <main>
       <section>
-        <h2>clubs</h2>
         {clubs.map(({ _id, color, name, members, cover }) => (
           <Link
             prefetch={true}
             key={_id}
             href={`/clubs/${_id}`}
             className={styles.club}
-            style={{ background: color }}
           >
-            <h2 className={styles.title}>{name}</h2>
-            <p className={styles.date}>
-              {members} {members === 1 ? "member" : "members"}
-            </p>
-            <div className={styles.cover}>
-              <div
-                className={styles.gradient}
-                style={{
-                  background: `linear-gradient(180deg,${color} 0%,${color}00 100%)`,
-                }}
-              ></div>
-              <Image
-                src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + cover}
-                alt="cover"
-                width={0}
-                height={0}
-                sizes="100vw"
-                style={{ width: "100%", height: "auto" }}
-                priority
-                className={styles.cover}
-              />
-            </div>
+            <motion.div
+              className={styles.motion}
+              layoutId={`club-${_id}`}
+              style={{ background: color }}
+            >
+              <h2 className={styles.title}>{name}</h2>
+              <p className={styles.date}>
+                {members} {members === 1 ? "member" : "members"}
+              </p>
+              <div className={styles.cover}>
+                <div
+                  className={styles.gradient}
+                  style={{
+                    background: `linear-gradient(180deg,${color} 0%,${color}00 100%)`,
+                  }}
+                ></div>
+                <Image
+                  src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + cover}
+                  alt="cover"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  style={{ width: "100%", height: "auto" }}
+                  priority
+                  className={styles.cover}
+                />
+              </div>
+            </motion.div>
           </Link>
         ))}
       </section>

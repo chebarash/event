@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import ToJsx from "../jsx/jsx";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const getTimeRemaining = (total: number): [number | string, string] => {
   const minutes = Math.floor((total / 1000 / 60) % 60);
@@ -181,16 +182,18 @@ export default function Event({
           />
         </svg>
       )}
-      <Image
-        src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + picture}
-        alt="cover"
-        width={0}
-        height={0}
-        sizes="100vw"
-        style={{ width: "100%", height: "auto" }}
-        priority
-        className={styles.cover}
-      />
+      <motion.div className={styles.motion} layoutId={`event-${_id}`}>
+        <Image
+          src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + picture}
+          alt="cover"
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "100%", height: "auto" }}
+          priority
+          className={styles.cover}
+        />
+      </motion.div>
       <div className={styles.box}>
         <div className={styles.header}>
           <div>
@@ -201,12 +204,17 @@ export default function Event({
               className={styles.author}
             >
               <p>by</p>
-              <Image
-                src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${author.cover}`}
-                width={40}
-                height={40}
-                alt="picture"
-              />
+              <motion.div
+                className={styles.club}
+                layoutId={`club-${author._id}`}
+              >
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${author.cover}`}
+                  width={40}
+                  height={40}
+                  alt="picture"
+                />
+              </motion.div>
               <p>{author.name}</p>
             </Link>
           </div>
