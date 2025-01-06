@@ -41,7 +41,13 @@ const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
   );
 
   useEffect(() => {
-    if (!config.manual && !data && !loading) fetchData();
+    if (
+      !config.manual &&
+      !data &&
+      !loading &&
+      window.Telegram.WebApp.initData.length
+    )
+      fetchData();
   }, []);
 
   return { data, error, loading, fetchData };

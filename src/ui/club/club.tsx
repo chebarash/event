@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import Card from "../card/card";
 import Image from "next/image";
 import ToJsx from "../jsx/jsx";
-import { motion } from "framer-motion";
 
 export default function Club({
   _id,
@@ -68,18 +67,16 @@ export default function Club({
 
   return (
     <main>
-      <motion.div className={styles.club} layoutId={`club-${_id}`}>
-        <Image
-          src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + cover}
-          alt="cover"
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
-          priority
-          className={styles.cover}
-        />
-      </motion.div>
+      <Image
+        src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + cover}
+        alt="cover"
+        width={0}
+        height={0}
+        sizes="100vw"
+        style={{ width: "100%", height: "auto" }}
+        priority
+        className={styles.cover}
+      />
       <div className={styles.box}>
         <div className={styles.header}>
           <div>
@@ -124,9 +121,24 @@ export default function Club({
           )}
         </div>
       </div>
-      {events.map((event) => (
-        <Card key={event._id} {...event} includeDate />
-      ))}
+      {events
+        .filter(
+          ({ author, private: p }) =>
+            (user &&
+              user.member.some((c) => c._id === (author as any as string))) ||
+            !p
+        )
+        .map((event) => (
+          <Card
+            key={event._id}
+            {...event}
+            includeDate
+            registration={
+              !!user &&
+              (event.registered as any as Array<string>).includes(user._id)
+            }
+          />
+        ))}
     </main>
   );
 }

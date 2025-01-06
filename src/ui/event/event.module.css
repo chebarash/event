@@ -2,23 +2,10 @@
   position: relative;
 }
 
-.club {
-  display: flex;
-  border-radius: 100%;
-  overflow: hidden;
-  aspect-ratio: 1/1;
-}
-
-.motion {
-  display: flex;
-  position: relative;
-  aspect-ratio: 16/9;
-  border-radius: 20px;
-  z-index: 9;
-}
-
 .cover {
+  display: flex;
   border-radius: 20px;
+  overflow: hidden;
 }
 
 .cancelled .title {
@@ -36,7 +23,7 @@
   border-radius: 5px;
 }
 
-.cancelled .cover {
+.cancelled .cover img {
   filter: grayscale(100%);
 }
 
@@ -60,13 +47,9 @@
   }
 }
 
-.private .motion {
+.private .cover {
   outline: solid var(--accent) 4px;
   border: solid var(--bg) 5px;
-}
-
-.private .cover {
-  border-radius: 15px;
 }
 
 .box {
@@ -93,6 +76,10 @@
   display: flex;
   align-items: center;
   gap: calc(var(--gapNarrow) * 2);
+}
+
+.author img {
+  border-radius: 100%;
 }
 
 .author p {
@@ -196,7 +183,7 @@
   padding: 10px 0;
   border-radius: 25px 25px 0 0;
   color: var(--fg);
-  z-index: 100;
+  z-index: 9999;
 }
 
 .footer div {
@@ -290,4 +277,17 @@
   background: var(--fg);
   border-radius: 10px;
   opacity: 0.05;
+  animation: bg 2s ease;
+}
+
+@keyframes bg {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 0;
+  }
+  100% {
+    width: width;
+  }
 }

@@ -110,7 +110,7 @@ section {
   left: 0;
   right: 0;
   display: flex;
-  z-index: 9999999;
+  z-index: 999;
   flex-direction: column;
   gap: 12px;
   align-items: center;

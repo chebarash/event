@@ -1,16 +1,10 @@
 .club {
   display: flex;
-}
-
-.motion {
-  display: flex;
-  border-radius: 20px;
   flex-direction: column;
   color: #ffffff;
   gap: var(--gapNarrow);
-  position: relative;
   overflow: hidden;
-  width: 100%;
+  border-radius: 20px;
 }
 
 .title,
@@ -23,9 +17,9 @@
 }
 
 .cover {
+  aspect-ratio: 1/1;
   position: relative;
   display: flex;
-  aspect-ratio: 1/1;
 }
 
 .gradient {

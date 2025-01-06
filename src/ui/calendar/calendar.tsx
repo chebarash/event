@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import styles from "./calendar.module.css";
 import { DailyType } from "@/types/types";
@@ -13,7 +13,6 @@ export default function Calendar({ daily }: { daily: DailyType }) {
   const [month, setMonth] = useState<string>();
   const day = useSearchParams().get(`day`);
   const { user } = useUser();
-  const router = useRouter();
 
   useEffect(() => {
     const date = new Date();
@@ -51,6 +50,14 @@ export default function Calendar({ daily }: { daily: DailyType }) {
     for (let i = 0; i < 40; i++) {
       const thisDay = new Date(date);
       thisDay.setDate(date.getDate() + i);
+      const disabled = !daily[
+        thisDay.toLocaleDateString("en-US", {
+          timeZone: "Etc/GMT-5",
+        })
+      ]?.filter(
+        ({ author: { _id }, private: p }) =>
+          (user && user.member.some((c) => c._id === _id)) || !p
+      ).length;
       setList((list) => [
         ...list,
         <li
@@ -58,21 +65,12 @@ export default function Calendar({ daily }: { daily: DailyType }) {
           className={[
             styles.li,
             [6, 0].includes(thisDay.getDay()) ? styles.weekend : ``,
-            daily[
-              thisDay.toLocaleDateString("en-US", {
-                timeZone: "Etc/GMT-5",
-              })
-            ]?.filter(
-              ({ author: { _id }, private: p }) =>
-                (user && user.member.some((c) => c._id === _id)) || !p
-            ).length
-              ? ``
-              : styles.disabled,
+            disabled ? styles.disabled : ``,
             `${i}` == (day || `0`) ? styles.active : ``,
           ].join(` `)}
         >
           <Link
-            prefetch={true}
+            prefetch={!disabled}
             shallow
             href={`/?day=${i}`}
             className={styles.button}
