@@ -46,10 +46,6 @@ export default function Calendar({ daily }: { daily: DailyType }) {
   }, []);
 
   useEffect(() => {
-    if (!day) router.push(`/?day=0`);
-  }, [day, router]);
-
-  useEffect(() => {
     const date = new Date();
     setList([]);
     for (let i = 0; i < 40; i++) {
@@ -72,10 +68,15 @@ export default function Calendar({ daily }: { daily: DailyType }) {
             ).length
               ? ``
               : styles.disabled,
-            `${i}` == day ? styles.active : ``,
+            `${i}` == (day || `0`) ? styles.active : ``,
           ].join(` `)}
         >
-          <Link prefetch={true} href={`/?day=${i}`} className={styles.button}>
+          <Link
+            prefetch={true}
+            shallow
+            href={`/?day=${i}`}
+            className={styles.button}
+          >
             <p className={styles.day}>
               {thisDay.toLocaleDateString(`en`, { weekday: `short` })}
             </p>

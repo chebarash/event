@@ -2,13 +2,19 @@
   display: flex;
   flex-direction: column;
   gap: var(--gapBox);
-  margin: 0 10px;
 }
 
 .registered li {
-  display: flex;
+  display: grid;
+  grid-template-columns: 46px 1fr;
   gap: var(--gapText);
   position: relative;
+}
+
+.registered li > *:first-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .star {
@@ -32,7 +38,6 @@
 
 .registered img {
   border-radius: 100%;
-  margin: 10px 0;
 }
 
 .registered span {
@@ -51,4 +56,19 @@
   display: flex;
   flex-direction: column;
   gap: var(--gapNarrow);
+  overflow: hidden;
+}
+
+.registered h3,
+.registered p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.member h3 {
+  color: var(--accent);
+}
+
+.registered h3 {
+  font-size: var(--fontSizeMid);
 }

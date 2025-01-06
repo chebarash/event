@@ -9,6 +9,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { UserType } from "@/types/types";
 import useAxios from "@/hooks/useAxios";
+import Loading from "@/ui/loading/loading";
 
 const Participant = ({
   name,
@@ -16,17 +17,33 @@ const Participant = ({
   email,
   id,
   participated,
-}: UserType & { participated?: boolean }) => {
+  index,
+  member,
+  author,
+}: UserType & {
+  participated?: boolean;
+  index: number;
+  author: string;
+}) => {
   const { toast } = useToast();
 
   return (
-    <li>
-      <Image
-        src={picture || `/profile.png`}
-        width={40}
-        height={40}
-        alt="profile"
-      />
+    <li
+      className={
+        (member as unknown as Array<string>).includes(author)
+          ? styles.member
+          : ``
+      }
+    >
+      <div>
+        <h3>{index}.</h3>
+        <Image
+          src={picture || `/profile.png`}
+          width={46}
+          height={46}
+          alt="profile"
+        />
+      </div>
       <div>
         <h3>{name}</h3>
         <pre
@@ -125,21 +142,33 @@ export default function RegistrationPage() {
     };
   }, [user]);
 
-  if (!loading && !user?.clubs.some(({ _id }) => _id == author._id))
+  if (!user) return <Loading />;
+  if (!loading && !user.clubs.some(({ _id }) => _id == author._id))
     return notFound();
 
   return (
     <main>
       <ul className={styles.registered}>
-        {participated.map((user) => (
-          <Participant key={user._id} participated {...user} />
+        {participated.map((user, i) => (
+          <Participant
+            key={user._id}
+            participated
+            {...user}
+            index={i + 1}
+            author={author._id}
+          />
         ))}
         {registered
           .filter(
             ({ _id }) => !participated.map(({ _id }) => _id).includes(_id)
           )
-          .map((user) => (
-            <Participant key={user._id} {...user} />
+          .map((user, i) => (
+            <Participant
+              key={user._id}
+              {...user}
+              index={participated.length + i + 1}
+              author={author._id}
+            />
           ))}
       </ul>
     </main>

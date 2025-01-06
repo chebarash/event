@@ -47,7 +47,7 @@ export default function Event({
   vote,
 }: EventContextType) {
   const router = useRouter();
-  const { user } = useUser();
+  const { user, loading } = useUser();
 
   const day = [
     date.toLocaleDateString(`en`, { month: `long` }),
@@ -96,6 +96,18 @@ export default function Event({
   };
 
   const fnSc = () => router.push(`${_id}/edit`);
+
+  useEffect(() => {
+    const { showProgress, hideProgress, disable, enable } =
+      window.Telegram.WebApp.MainButton;
+    if (loading) {
+      showProgress();
+      disable();
+    } else {
+      hideProgress();
+      enable();
+    }
+  }, [loading]);
 
   useEffect(() => {
     router.prefetch(`${_id}/edit`);

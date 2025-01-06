@@ -15,7 +15,6 @@ export default function Header() {
   const isHome = pathname == `/`;
 
   useEffect(() => {
-    router.prefetch(`/`);
     window.addEventListener("scroll", listenToScroll);
     return () => window.removeEventListener("scroll", listenToScroll);
   }, []);
@@ -33,7 +32,7 @@ export default function Header() {
   }, [isHome, router]);
 
   const listenToScroll = () => {
-    let heightToHideFrom = 100;
+    let heightToHideFrom = 50;
     const winScroll =
       document.body.scrollTop || document.documentElement.scrollTop;
 
