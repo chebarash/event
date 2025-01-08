@@ -5,14 +5,14 @@ import { useEffect, useState } from "react";
 import styles from "./header.module.css";
 import useUser from "@/hooks/useUser";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading } = useUser();
-
-  const isHome = pathname == `/`;
+  const [isHome, setIsHome] = useState(pathname == `/`);
 
   useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
@@ -20,8 +20,12 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
+    setIsHome(pathname == `/` || window.history.length <= 1);
+  }, [pathname]);
+
+  useEffect(() => {
     const { BackButton } = window.Telegram.WebApp;
-    if (isHome || window.history.length <= 1) BackButton.hide();
+    if (isHome) BackButton.hide();
     else BackButton.show();
     const fn = () => router.back();
     BackButton.onClick(fn);
@@ -29,7 +33,7 @@ export default function Header() {
       BackButton.offClick(fn);
       BackButton.hide();
     };
-  }, [isHome, router]);
+  }, [isHome]);
 
   const listenToScroll = () => {
     let heightToHideFrom = 50;
@@ -127,21 +131,11 @@ export default function Header() {
                 alt="picture"
               />
             ) : (
-              <button
-                className={styles.login}
-                onClick={() => {
-                  window.Telegram.WebApp.openLink(
-                    `${process.env.NEXT_PUBLIC_BASE_URL}/auth?id=${
-                      window.Telegram.WebApp.initDataUnsafe.user?.id
-                    }&from=${encodeURIComponent(
-                      `${process.env.NEXT_PUBLIC_APP_URL}`
-                    )}`
-                  );
-                  window.Telegram.WebApp.close();
-                }}
-              >
-                Log In
-              </button>
+              pathname != `/login` && (
+                <Link className={styles.login} href="/login">
+                  Log In
+                </Link>
+              )
             )}
           </>
         )}
