@@ -36,14 +36,16 @@ export type EventType = {
 
 export type ClubType = {
   _id: string;
-  username: string;
   name: string;
   description: string;
-  links: Array<{ url: string; text: string }>;
+  channel?: string;
   cover: string;
   hidden: boolean;
   leader: UserType;
   color: string;
+  members: number;
+  rank: number;
+  events: Array<EventType>;
 };
 
 export type UserType = {
@@ -70,4 +72,17 @@ export type EventContextType = EventType & {
   edit: (event: EventType) => any;
   participate: (participant: string) => any;
   vote: (option: string) => any;
+};
+
+export type ShortClubType = {
+  _id: string;
+  description: string;
+  channel?: string;
+  cover: string;
+  color: string;
+};
+
+export type ClubContextType = ClubType & {
+  update: () => any;
+  edit: (event: ShortClubType) => any;
 };

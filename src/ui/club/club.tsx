@@ -1,48 +1,50 @@
 "use client";
 
-import { ClubType, EventType, UserType } from "@/types/types";
+import { ClubContextType } from "@/types/types";
 import useUser from "@/hooks/useUser";
 import styles from "./club.module.css";
 import { useEffect } from "react";
 import Card from "../card/card";
 import Image from "next/image";
 import ToJsx from "../jsx/jsx";
+import { useRouter } from "next/navigation";
 
 export default function Club({
   _id,
   cover,
   leader,
   name,
-  links,
+  channel,
   description,
   members,
   rank,
   events,
-}: ClubType & { members: number; rank: number; events: Array<EventType> }) {
-  const tg = links.find(({ text }) => text == `Telegram`);
-  const { user, fetchData } = useUser();
+  update,
+}: ClubContextType) {
+  const { user } = useUser();
+  const router = useRouter();
+
+  const fnSc = () => router.push(`${_id}/edit`);
 
   useEffect(() => {
-    const { MainButton, themeParams, HapticFeedback } = window.Telegram.WebApp;
-    const fn = async () => {
-      MainButton.showProgress(true);
-      MainButton.disable();
-      const user = (await fetchData({
-        url: `/clubs`,
-        method: `post`,
-        data: { _id },
-      })) as UserType;
-      HapticFeedback.notificationOccurred(
-        user.member.some((club) => club._id == _id) ? `success` : `error`
-      );
-      MainButton.enable();
-      MainButton.hideProgress();
-    };
-    if (user) {
+    const { MainButton, SecondaryButton, themeParams } = window.Telegram.WebApp;
+
+    if (leader._id == user?._id) {
+      SecondaryButton.setParams({
+        is_active: true,
+        is_visible: true,
+        text: `Edit`,
+        color: themeParams.section_bg_color,
+        text_color: themeParams.text_color,
+      });
+      SecondaryButton.onClick(fnSc);
+    }
+
+    if (user && user.email.endsWith(`@newuu.uz`)) {
       MainButton.setParams({
         is_visible: true,
         is_active: true,
-        ...(user.member.some((club) => club._id == _id)
+        ...(user.member.some((c) => c._id === _id)
           ? {
               text: `Leave`,
               color: themeParams.section_bg_color,
@@ -54,14 +56,19 @@ export default function Club({
               text_color: themeParams.button_text_color,
             }),
       });
-      MainButton.onClick(fn);
+      MainButton.onClick(update);
     }
     return () => {
       MainButton.setParams({
         is_active: false,
         is_visible: false,
       });
-      MainButton.offClick(fn);
+      MainButton.offClick(update);
+      SecondaryButton.setParams({
+        is_active: false,
+        is_visible: false,
+      });
+      SecondaryButton.offClick(fnSc);
     };
   }, [user]);
 
@@ -83,10 +90,14 @@ export default function Club({
             <h1 className={styles.title}>{name}</h1>
             <p className={styles.author}>by {leader.name}</p>
           </div>
-          {tg && (
+          {channel && (
             <button
               className={styles.share}
-              onClick={() => window.Telegram.WebApp.openTelegramLink(tg.url)}
+              onClick={() =>
+                window.Telegram.WebApp.openTelegramLink(
+                  `https://t.me/${channel}`
+                )
+              }
             >
               <svg width="22" height="20" viewBox="0 0 22 20">
                 <path
