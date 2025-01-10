@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { QRCode } from "react-qrcode-logo";
 import styles from "./ticket.module.css";
 import { useEffect } from "react";
+import { useRouterContext } from "@/hooks/useRouter";
 
 export default function Ticket({
   title,
@@ -16,7 +16,7 @@ export default function Ticket({
   eventId: string;
   registered: boolean;
 }) {
-  const router = useRouter();
+  const { replace } = useRouterContext();
   const bg = registered ? `#000000` : `#ff0d0d`;
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function Ticket({
       color: `#ffffff`,
       text_color: `#000000`,
     });
-    const fn = () => router.replace(`/events/${eventId}`);
+    const fn = () => replace(`/events/${eventId}`);
     MainButton.onClick(fn);
     return () => {
       MainButton.setParams({

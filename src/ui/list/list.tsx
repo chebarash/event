@@ -1,14 +1,15 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { DailyType } from "@/types/types";
 import styles from "./list.module.css";
 import useUser from "@/hooks/useUser";
 import { useEffect } from "react";
 import Card from "../card/card";
+import { useRouterContext } from "@/hooks/useRouter";
 
 export default function List({ daily }: { daily: DailyType }) {
-  const router = useRouter();
+  const { push } = useRouterContext();
   const day = useSearchParams().get(`day`);
   const { user } = useUser();
   const date = day
@@ -23,15 +24,13 @@ export default function List({ daily }: { daily: DailyType }) {
       (user && user.member.some((c) => c._id === _id)) || !p
   );
 
-  const fnSc = () => router.push(`/events/create`);
-
   useEffect(() => {
-    router.prefetch(`/events/create`);
     const { MainButton, SecondaryButton, themeParams } = window.Telegram.WebApp;
     MainButton.setParams({
       is_active: false,
       is_visible: false,
     });
+    const fnSc = push(`/events/create`);
     if (user?.clubs.length) {
       SecondaryButton.setParams({
         is_active: true,

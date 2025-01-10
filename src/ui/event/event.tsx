@@ -1,13 +1,13 @@
 "use client";
 
 import { EventContextType } from "@/types/types";
-import { useRouter } from "next/navigation";
 import styles from "./event.module.css";
 import useUser from "@/hooks/useUser";
 import { useEffect } from "react";
 import ToJsx from "../jsx/jsx";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouterContext } from "@/hooks/useRouter";
 
 const getTimeRemaining = (total: number): [number | string, string] => {
   const minutes = Math.floor((total / 1000 / 60) % 60);
@@ -45,7 +45,7 @@ export default function Event({
   update,
   vote,
 }: EventContextType) {
-  const router = useRouter();
+  const { push } = useRouterContext();
   const { user, loading } = useUser();
 
   const day = [
@@ -71,31 +71,6 @@ export default function Event({
     !cancelled &&
     (!spots || isRegistered || spots - registered.length > 0);
 
-  const fn = () => {
-    if (!user) {
-      window.Telegram.WebApp.openLink(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/auth?id=${
-          window.Telegram.WebApp.initDataUnsafe.user?.id
-        }&from=${encodeURIComponent(
-          `${process.env.NEXT_PUBLIC_APP_URL}?startapp=${_id}`
-        )}`
-      );
-      return window.Telegram.WebApp.close();
-    }
-    if (user.clubs.some(({ _id }) => _id == author._id))
-      return router.push(`${_id}/registration`);
-    if (!canRegister) {
-      return router.push(`${_id}/ticket`);
-    }
-    update();
-    if (external && !isRegistered)
-      if (external.startsWith(`https://t.me/`))
-        window.Telegram.WebApp.openTelegramLink(external);
-      else window.Telegram.WebApp.openLink(external);
-  };
-
-  const fnSc = () => router.push(`${_id}/edit`);
-
   useEffect(() => {
     const { showProgress, hideProgress, disable, enable } =
       window.Telegram.WebApp.MainButton;
@@ -109,9 +84,6 @@ export default function Event({
   }, [loading]);
 
   useEffect(() => {
-    router.prefetch(`${_id}/edit`);
-    router.prefetch(`${_id}/ticket`);
-    router.prefetch(`${_id}/registration`);
     const {
       MainButton,
       SecondaryButton,
@@ -119,6 +91,29 @@ export default function Event({
       requestWriteAccess,
       initDataUnsafe,
     } = window.Telegram.WebApp;
+    const registration = push(`${_id}/registration`);
+    const ticket = push(`${_id}/ticket`);
+    const fn = () => {
+      if (!user) {
+        window.Telegram.WebApp.openLink(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/auth?id=${
+            window.Telegram.WebApp.initDataUnsafe.user?.id
+          }&from=${encodeURIComponent(
+            `${process.env.NEXT_PUBLIC_APP_URL}?startapp=${_id}`
+          )}`
+        );
+        return window.Telegram.WebApp.close();
+      }
+      if (user.clubs.some(({ _id }) => _id == author._id))
+        return registration();
+      if (!canRegister) return ticket();
+      update();
+      if (external && !isRegistered)
+        if (external.startsWith(`https://t.me/`))
+          window.Telegram.WebApp.openTelegramLink(external);
+        else window.Telegram.WebApp.openLink(external);
+    };
+    const fnSc = push(`${_id}/edit`);
     if (initDataUnsafe.user && !initDataUnsafe.user.allows_write_to_pm)
       requestWriteAccess();
     if (user?.clubs.some(({ _id }) => _id == author._id)) {

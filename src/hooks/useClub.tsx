@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { useRouter } from "next/navigation";
 import useAxios from "./useAxios";
 import useUser from "./useUser";
 import {
@@ -10,6 +9,7 @@ import {
   ShortClubType,
   UserType,
 } from "@/types/types";
+import { useRouterContext } from "./useRouter";
 
 const ClubContext = createContext<ClubContextType>({
   _id: ``,
@@ -44,7 +44,7 @@ export default function ClubProvider({
   children: any;
   club: ClubType;
 }) {
-  const router = useRouter();
+  const { back } = useRouterContext();
   const [club, set] = useState<ClubType>(initial);
   const { user, fetchData } = useUser();
   const { fetchData: fetchEdit } = useAxios<ClubType>({
@@ -84,7 +84,7 @@ export default function ClubProvider({
       const result = await fetchEdit({ data });
       if (result) {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred(`success`);
-        router.back();
+        back();
       }
       return result;
     });

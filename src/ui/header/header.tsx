@@ -1,41 +1,21 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./header.module.css";
 import useUser from "@/hooks/useUser";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouterContext } from "@/hooks/useRouter";
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
-  const pathname = usePathname();
-  const router = useRouter();
   const { user, loading } = useUser();
-  const [isHome, setIsHome] = useState(true);
-  const [length, setLength] = useState(1);
+  const { isHome, pathname, back } = useRouterContext();
 
   useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
     return () => window.removeEventListener("scroll", listenToScroll);
   }, []);
-
-  useEffect(() => {
-    setLength((l) => ++l);
-    setIsHome(length <= 1);
-  }, [pathname]);
-
-  useEffect(() => {
-    const { BackButton } = window.Telegram.WebApp;
-    if (isHome) BackButton.hide();
-    else BackButton.show();
-    const fn = () => router.back();
-    BackButton.onClick(fn);
-    return () => {
-      BackButton.offClick(fn);
-      BackButton.hide();
-    };
-  }, [isHome]);
 
   const listenToScroll = () => {
     let heightToHideFrom = 50;
@@ -57,14 +37,7 @@ export default function Header() {
       {loading && !user && <div className={styles.loading}></div>}
       <div className={styles.container}>
         <button
-          onClick={() => {
-            if (isHome) {
-              setLength(1);
-              return router.push(`/?`);
-            }
-            setLength((l) => (l - 2 > 1 ? l - 2 : 1));
-            router.back();
-          }}
+          onClick={back}
           disabled={pathname == `/`}
           className={styles.logo}
         >
@@ -138,7 +111,7 @@ export default function Header() {
                 alt="picture"
               />
             ) : (
-              pathname != `/login` && (
+              ![`/login`, `/policy`].includes(pathname) && (
                 <Link className={styles.login} href="/login">
                   Log In
                 </Link>

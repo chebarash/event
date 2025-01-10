@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import Card from "../card/card";
 import Image from "next/image";
 import ToJsx from "../jsx/jsx";
-import { useRouter } from "next/navigation";
+import { useRouterContext } from "@/hooks/useRouter";
 
 export default function Club({
   _id,
@@ -22,12 +22,11 @@ export default function Club({
   update,
 }: ClubContextType) {
   const { user } = useUser();
-  const router = useRouter();
-
-  const fnSc = () => router.push(`${_id}/edit`);
+  const { push } = useRouterContext();
 
   useEffect(() => {
     const { MainButton, SecondaryButton, themeParams } = window.Telegram.WebApp;
+    const fnSc = push(`${_id}/edit`);
 
     if (leader._id == user?._id) {
       SecondaryButton.setParams({

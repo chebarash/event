@@ -6,6 +6,7 @@ import { ToastProvider } from "../hooks/useToast";
 import { UserProvider } from "../hooks/useUser";
 import { Analytics } from "@vercel/analytics/react";
 import Header from "@/ui/header/header";
+import RouterProvider from "@/hooks/useRouter";
 
 export const metadata: Metadata = {
   title: `Event`,
@@ -50,14 +51,16 @@ export default function RootLayout({
       </head>
       <body>
         <Analytics />
-        <ToastProvider>
-          <UserProvider>
-            <Suspense>
-              <Header />
-              {children}
-            </Suspense>
-          </UserProvider>
-        </ToastProvider>
+        <RouterProvider>
+          <ToastProvider>
+            <UserProvider>
+              <Suspense>
+                <Header />
+                {children}
+              </Suspense>
+            </UserProvider>
+          </ToastProvider>
+        </RouterProvider>
       </body>
     </html>
   );

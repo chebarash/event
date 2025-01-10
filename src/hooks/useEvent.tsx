@@ -2,10 +2,11 @@
 
 import { EventContextType, EventType } from "@/types/types";
 import { createContext, useContext, useEffect, useState } from "react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import Loading from "@/ui/loading/loading";
 import useAxios from "./useAxios";
 import useUser from "./useUser";
+import { useRouterContext } from "./useRouter";
 
 const EventContext = createContext<EventContextType>({
   _id: ``,
@@ -59,7 +60,7 @@ export default function EventProvider({
   children: any;
   event: EventType;
 }) {
-  const router = useRouter();
+  const { back } = useRouterContext();
   const [event, set] = useState<EventType>(initial);
   const { user, loading } = useUser();
   const [loadingVote, setLoadingVote] = useState(false);
@@ -134,7 +135,7 @@ export default function EventProvider({
       const result = await fetchEdit({ data });
       if (result) {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred(`success`);
-        router.back();
+        back();
       }
       return result;
     });

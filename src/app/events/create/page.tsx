@@ -1,13 +1,14 @@
 "use client";
 
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { EventType } from "@/types/types";
 import useAxios from "@/hooks/useAxios";
 import useUser from "@/hooks/useUser";
 import Admin from "@/ui/admin/admin";
+import { useRouterContext } from "@/hooks/useRouter";
 
 export default function CreatePage() {
-  const router = useRouter();
+  const { replace } = useRouterContext();
   const { user, loading } = useUser();
   const { fetchData } = useAxios<EventType>({
     url: `/event`,
@@ -26,7 +27,7 @@ export default function CreatePage() {
     });
     if (result) {
       HapticFeedback.notificationOccurred(`success`);
-      router.replace(`/events/${result._id}`);
+      replace(`/events/${result._id}`);
     }
     MainButton.enable();
     MainButton.hideProgress();
