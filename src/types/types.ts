@@ -68,7 +68,7 @@ export type ForYouType = {
 
 export type EventContextType = EventType & {
   loadingVote: boolean;
-  update: () => any;
+  update: (userId?: string) => any;
   edit: (event: EventType) => any;
   participate: (participant: string) => any;
   vote: (option: string) => any;

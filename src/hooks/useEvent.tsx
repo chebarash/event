@@ -110,20 +110,21 @@ export default function EventProvider({
     MainButton.hideProgress();
   };
 
-  const update = async () =>
+  const update = async (userId?: string) =>
     await action(async () => {
       const result = await fetchRegister({
         data: {
           _id: event._id,
           registered: event.isRegistered,
+          userId,
         },
       });
-      if (!event.registered) {
+      if (!event.registered && !userId) {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
       }
       window.Telegram.WebApp.HapticFeedback.notificationOccurred(
-        !event.registered ? `success` : `warning`
+        !event.registered || userId ? `success` : `warning`
       );
       return result;
     });

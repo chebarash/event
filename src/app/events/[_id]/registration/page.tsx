@@ -7,11 +7,12 @@ import useToast from "@/hooks/useToast";
 import useUser from "@/hooks/useUser";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { UserType } from "@/types/types";
+import { EventContextType, UserType } from "@/types/types";
 import useAxios from "@/hooks/useAxios";
 import Loading from "@/ui/loading/loading";
 
 const Participant = ({
+  _id,
   name,
   picture,
   email,
@@ -20,10 +21,12 @@ const Participant = ({
   index,
   member,
   author,
+  update,
 }: UserType & {
   participated?: boolean;
   index: number;
   author: string;
+  update: EventContextType["update"];
 }) => {
   const { toast } = useToast();
 
@@ -35,7 +38,17 @@ const Participant = ({
           : ``
       }
     >
-      <div>
+      <button
+        onClick={() => {
+          if (!participated)
+            window.Telegram.WebApp.showConfirm(
+              `Are you sure you want to delete ${name}?`,
+              async (ok) => {
+                if (ok) await update(_id);
+              }
+            );
+        }}
+      >
         <h3>{index}.</h3>
         <Image
           src={picture || `/profile.png`}
@@ -43,9 +56,15 @@ const Participant = ({
           height={46}
           alt="profile"
         />
-      </div>
+      </button>
       <div>
-        <h3>{name}</h3>
+        <h3
+          onClick={() => {
+            window.Telegram.WebApp.openTelegramLink(`https://t.me/@id${id}`);
+          }}
+        >
+          {name}
+        </h3>
         <pre
           onClick={() => {
             navigator.clipboard.writeText(`${id}`);
@@ -72,8 +91,16 @@ const Participant = ({
 
 export default function RegistrationPage() {
   const { user, loading } = useUser();
-  const { _id, date, deadline, author, registered, participated, participate } =
-    useEventContext();
+  const {
+    _id,
+    date,
+    deadline,
+    author,
+    registered,
+    participated,
+    update,
+    participate,
+  } = useEventContext();
   const { fetchData } = useAxios({
     url: `/registered?_id=${_id}`,
     method: `get`,
@@ -101,10 +128,11 @@ export default function RegistrationPage() {
   };
 
   const scFn = async () => {
-    const { SecondaryButton } = window.Telegram.WebApp;
+    const { SecondaryButton, openTelegramLink } = window.Telegram.WebApp;
     SecondaryButton.showProgress();
     await fetchData();
     SecondaryButton.hideProgress();
+    openTelegramLink(`https://t.me/pueventbot`);
   };
 
   useEffect(() => {
@@ -156,6 +184,7 @@ export default function RegistrationPage() {
             {...user}
             index={i + 1}
             author={author._id}
+            update={update}
           />
         ))}
         {registered
@@ -168,6 +197,7 @@ export default function RegistrationPage() {
               {...user}
               index={participated.length + i + 1}
               author={author._id}
+              update={update}
             />
           ))}
       </ul>

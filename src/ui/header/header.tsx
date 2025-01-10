@@ -12,7 +12,8 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading } = useUser();
-  const [isHome, setIsHome] = useState(pathname == `/`);
+  const [isHome, setIsHome] = useState(true);
+  const [length, setLength] = useState(1);
 
   useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
@@ -20,7 +21,8 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    setIsHome(pathname == `/` || window.history.length <= 1);
+    setLength((l) => ++l);
+    setIsHome(length <= 1);
   }, [pathname]);
 
   useEffect(() => {
@@ -54,12 +56,15 @@ export default function Header() {
     >
       <div className={styles.container}>
         <button
-          onClick={() =>
-            window.history?.length && window.history.length > 1
-              ? router.back()
-              : router.push(`/?`)
-          }
-          disabled={isHome}
+          onClick={() => {
+            if (isHome) {
+              setLength(1);
+              return router.push(`/?`);
+            }
+            setLength((l) => (l - 2 > 1 ? l - 2 : 1));
+            router.back();
+          }}
+          disabled={pathname == `/`}
           className={styles.logo}
         >
           <svg width="140" viewBox="0 0 120 18" fill="none">
@@ -114,6 +119,7 @@ export default function Header() {
               className={styles.star}
             />
             <path
+              className={styles.arrow}
               fillRule="evenodd"
               clipRule="evenodd"
               d="M17.9999 7.17327L15.0357 1.82674L11.4701 4.54456L11.4715 4.53248L5.58643 9L11.4715 13.4675L11.4701 13.4554L15.0357 16.1733L17.9999 10.8267L13.9618 9L17.9999 7.17327Z"

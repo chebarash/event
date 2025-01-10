@@ -52,7 +52,8 @@
   font-style: normal;
 }
 
-.registered div {
+.registered div,
+.registered button {
   display: flex;
   flex-direction: column;
   gap: var(--gapNarrow);
