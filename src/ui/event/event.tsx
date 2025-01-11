@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouterContext } from "@/hooks/useRouter";
 
-const getTimeRemaining = (total: number): [number | string, string] => {
+export const getTimeRemaining = (total: number): [number | string, string] => {
   const minutes = Math.floor((total / 1000 / 60) % 60);
   const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
   const days = Math.floor(total / (1000 * 60 * 60 * 24));
@@ -64,6 +64,7 @@ export default function Event({
   const timeTillDeadline = deadline
     ? deadline.getTime() - new Date().getTime()
     : 1;
+  const timeTillEnd = timeTillEvent + duration;
 
   const canRegister =
     timeTillEvent > 0 &&
@@ -93,6 +94,9 @@ export default function Event({
     } = window.Telegram.WebApp;
     const registration = push(`${_id}/registration`);
     const ticket = push(`${_id}/ticket`);
+
+    const isOrganizer = user?.clubs.some(({ _id }) => _id == author._id);
+
     const fn = () => {
       if (!user) {
         window.Telegram.WebApp.openLink(
@@ -116,7 +120,7 @@ export default function Event({
     const fnSc = push(`${_id}/edit`);
     if (initDataUnsafe.user && !initDataUnsafe.user.allows_write_to_pm)
       requestWriteAccess();
-    if (user?.clubs.some(({ _id }) => _id == author._id)) {
+    if (isOrganizer) {
       SecondaryButton.setParams({
         is_active: true,
         is_visible: true,
@@ -129,14 +133,17 @@ export default function Event({
 
     MainButton.onClick(fn);
     MainButton.setParams(
-      isParticipated || cancelled
+      isParticipated || cancelled || (timeTillEnd < 0 && !isOrganizer)
         ? { is_active: false, is_visible: false }
         : {
             is_active: true,
             is_visible: true,
-            ...(user?.clubs.some(({ _id }) => _id == author._id)
+            ...(isOrganizer
               ? {
-                  text: canRegister ? `Get Registered` : `Scan Ticket`,
+                  text:
+                    canRegister || timeTillEnd < 0
+                      ? `Get Registered`
+                      : `Scan Ticket`,
                   color: themeParams.button_color,
                   text_color: themeParams.button_text_color,
                 }
@@ -171,7 +178,7 @@ export default function Event({
       });
       SecondaryButton.offClick(fnSc);
     };
-  }, [isRegistered, user]);
+  }, [isRegistered, isParticipated, user]);
 
   return (
     <main
@@ -256,14 +263,15 @@ export default function Event({
                     voting.votes.length) *
                     100 || 0
                 );
+                const voted = voting.votes.some(
+                  (vote) => option == vote.option && vote.user == user?._id
+                );
                 return (
                   <button
-                    className={styles.option}
+                    className={voted ? styles.optionVoted : styles.option}
                     key={i}
                     onClick={() => vote(option)}
-                    disabled={voting.votes.some(
-                      (vote) => option == vote.option && vote.user == user?._id
-                    )}
+                    disabled={voted || !canRegister}
                   >
                     <p className={styles.name}>{option}</p>
                     <p className={styles.percent}>{percent}%</p>

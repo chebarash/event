@@ -12,13 +12,11 @@ export default function List({ daily }: { daily: DailyType }) {
   const { push } = useRouterContext();
   const day = useSearchParams().get(`day`);
   const { user } = useUser();
-  const date = day
-    ? new Date(
-        Date.now() + 1000 * 60 * 60 * 24 * parseInt(day)
-      ).toLocaleDateString("en-US", {
-        timeZone: "Etc/GMT-5",
-      })
-    : 0;
+  const date = new Date(
+    Date.now() + 1000 * 60 * 60 * 24 * parseInt(day || `0`)
+  ).toLocaleDateString("en-US", {
+    timeZone: "Etc/GMT-5",
+  });
   const events = daily[date]?.filter(
     ({ author: { _id }, private: p }) =>
       (user && user.member.some((c) => c._id === _id)) || !p

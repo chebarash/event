@@ -183,7 +183,7 @@
   padding: 10px 0;
   border-radius: 25px 25px 0 0;
   color: var(--fg);
-  z-index: 9999;
+  z-index: 99999;
 }
 
 .footer div {
@@ -238,7 +238,8 @@
   gap: var(--gapText);
 }
 
-.option {
+.option,
+.optionVoted {
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -248,12 +249,12 @@
   color: var(--fg);
 }
 
-.option:disabled {
+.optionVoted {
   color: var(--accent);
   position: relative;
 }
 
-.option:disabled .bg {
+.optionVoted .bg {
   background: var(--accent);
   opacity: 0.2;
 }

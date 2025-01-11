@@ -16,6 +16,7 @@ import {
 } from "react";
 import Loading from "../loading/loading";
 import { useSearchParams } from "next/navigation";
+import { getTimeRemaining } from "../event/event";
 
 const venues = [
   `Conference Hall`,
@@ -585,9 +586,7 @@ export default function Admin(
                       timeStyle: `short`,
                       timeZone: `Asia/Tashkent`,
                     }),
-                    duration: `${event.duration / (1000 * 60 * 60)} ${
-                      event.duration / (1000 * 60 * 60) == 1 ? `hour` : `hours`
-                    }`,
+                    duration: getTimeRemaining(event.duration).join(` `),
                     author: event.author.name,
                   }).reduce((template, [name, value]) => {
                     return template.replace(

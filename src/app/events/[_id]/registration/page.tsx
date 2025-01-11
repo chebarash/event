@@ -98,6 +98,9 @@ export default function RegistrationPage() {
     author,
     registered,
     participated,
+    cancelled,
+    spots,
+    duration,
     update,
     participate,
   } = useEventContext();
@@ -111,8 +114,13 @@ export default function RegistrationPage() {
   const timeTillDeadline = deadline
     ? deadline.getTime() - new Date().getTime()
     : 1;
+  const timeTillEnd = timeTillEvent + duration;
 
-  const canRegister = timeTillEvent > 0 && timeTillDeadline > 0;
+  const canRegister =
+    timeTillEvent > 0 &&
+    timeTillDeadline > 0 &&
+    !cancelled &&
+    (!spots || spots - registered.length > 0);
 
   const fn = () => {
     const { showScanQrPopup, closeScanQrPopup } = window.Telegram.WebApp;
@@ -138,7 +146,7 @@ export default function RegistrationPage() {
   useEffect(() => {
     const { MainButton, SecondaryButton, themeParams } = window.Telegram.WebApp;
     if (user && user.clubs.some(({ _id }) => _id == author._id)) {
-      if (!canRegister) fn();
+      if (!canRegister && timeTillEnd >= 0) fn();
       MainButton.setParams({
         is_active: true,
         is_visible: true,
