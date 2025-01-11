@@ -26,9 +26,10 @@ export function UserProvider({
   });
 
   useEffect(() => {
-    const { expand, disableVerticalSwipes } = window.Telegram.WebApp;
+    const { expand, disableVerticalSwipes, ready } = window.Telegram.WebApp;
     disableVerticalSwipes();
     expand();
+    ready();
   }, []);
 
   return (

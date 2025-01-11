@@ -61,7 +61,7 @@ export default function Card({
           }}
         ></div>
         <Image
-          src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + picture}
+          src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${picture}`}
           alt="cover"
           width={0}
           height={0}

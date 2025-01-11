@@ -266,7 +266,7 @@ export default function Admin(
     (async () => {
       try {
         const colors = await Vibrant.from(
-          process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + event.picture
+          `${process.env.NEXT_PUBLIC_BASE_URL}/photo/${event.picture}`
         ).getPalette();
         const c = [
           colors.Vibrant?.hex,
@@ -359,6 +359,9 @@ export default function Admin(
             event={event}
             update={(description) => update({ description })}
           />
+          <div className={styles.preview}>
+            <ToJsx>{event.description}</ToJsx>
+          </div>
         </Section>
         <Section
           title="Picture"
@@ -424,7 +427,7 @@ export default function Admin(
           </div>
           <Image
             className={styles.cover}
-            src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + event.picture}
+            src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${event.picture}`}
             alt="cover"
             width={0}
             height={0}
@@ -524,25 +527,26 @@ export default function Admin(
           >
             Paste
           </button>
-          <section className={styles.preview}>
-            {event.content?.type == `photo` ? (
-              <Image
-                src={
-                  process.env.NEXT_PUBLIC_BASE_URL +
-                  `/photo/` +
-                  event.content.fileId
-                }
-                alt="cover"
-                width={0}
-                height={0}
-                sizes="100vw"
-                style={{ width: "100%", height: "auto" }}
-                priority
-              />
-            ) : (
-              <p>Video preview is not available</p>
-            )}
-          </section>
+          {event.content && (
+            <section className={styles.preview}>
+              {event.content.type == `photo` ? (
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${event.content.fileId}`}
+                  alt="cover"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  style={{ width: "100%", height: "auto" }}
+                  priority
+                />
+              ) : (
+                <video
+                  controls
+                  src={`${process.env.NEXT_PUBLIC_BASE_URL}/video/${event.content.fileId}`}
+                />
+              )}
+            </section>
+          )}
         </SectionOptional>
         <SectionOptional
           title="Template"

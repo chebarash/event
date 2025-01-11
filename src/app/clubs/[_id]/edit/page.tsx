@@ -42,7 +42,7 @@ export default function EditPage() {
     (async () => {
       try {
         const colors = await Vibrant.from(
-          process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + club.cover
+          `${process.env.NEXT_PUBLIC_BASE_URL}/photo/${club.cover}`
         ).getPalette();
         const c = [
           colors.Vibrant?.hex,
@@ -206,7 +206,7 @@ export default function EditPage() {
           </div>
           <Image
             className={styles.cover}
-            src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + club.cover}
+            src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${club.cover}`}
             alt="cover"
             width={0}
             height={0}

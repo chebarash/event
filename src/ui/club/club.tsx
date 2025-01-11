@@ -74,7 +74,7 @@ export default function Club({
   return (
     <main>
       <Image
-        src={process.env.NEXT_PUBLIC_BASE_URL + `/photo/` + cover}
+        src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${cover}`}
         alt="cover"
         width={0}
         height={0}
