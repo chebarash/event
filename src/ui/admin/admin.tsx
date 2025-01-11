@@ -15,6 +15,7 @@ import {
   useState,
 } from "react";
 import Loading from "../loading/loading";
+import { useSearchParams } from "next/navigation";
 
 const venues = [
   `Conference Hall`,
@@ -61,40 +62,6 @@ const venues = [
   `UCA B14`,
   `UCA 2nd Floor`,
 ];
-
-const defaultEvent: EventType = {
-  _id: ``,
-  title: `Event Name`,
-  picture: `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
-  color: `#000000`,
-  description: `<b>bold</b>\n<i>italic</i>\n<u>underline</u>\n<s>strikethrough</s>\n<tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough </s> <u>underline italic bold</u></i> bold</b>\n<a href="http://chebarash.uz">inline URL</a>\n<a href="http://t.me/puevent">inline mention of a user</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n<blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>\n<blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>`,
-  author: {
-    _id: ``,
-    name: ``,
-    description: ``,
-    cover: ``,
-    hidden: false,
-    leader: {
-      _id: ``,
-      name: ``,
-      email: ``,
-      id: 0,
-      member: [],
-      clubs: [],
-    },
-    color: ``,
-    members: 0,
-    rank: 0,
-    events: [],
-  },
-  date: new Date(),
-  venue: venues[0],
-  duration: 1000 * 60 * 60 * 3,
-  shares: 0,
-  registered: [],
-  participated: [],
-  hashtags: [],
-};
 
 const defaultTemplate = `<b>{{title}}</b>\n\n{{description}}\n\n<b>Venue:</b> {{venue}}\n<b>Date:</b> {{date}}\n<b>Time:</b> {{time}}\n<b>Author:</b> {{author}}\n<b>Duration:</b> {{duration}}`;
 
@@ -219,6 +186,48 @@ export default function Admin(
     | { create: (event: EventType) => any; editing?: false }
 ) {
   const ref = useRef<HTMLFormElement>(null);
+  const searchParams = useSearchParams();
+  const pictureParam = searchParams.get("picture");
+  const contentParam = searchParams.get("content");
+  const descriptionParam = searchParams.get("description");
+  const defaultEvent: EventType = {
+    _id: ``,
+    title: `Event Name`,
+    picture:
+      pictureParam ||
+      `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
+    color: `#000000`,
+    description:
+      descriptionParam ||
+      `<b>bold</b>\n<i>italic</i>\n<u>underline</u>\n<s>strikethrough</s>\n<tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough </s> <u>underline italic bold</u></i> bold</b>\n<a href="http://chebarash.uz">inline URL</a>\n<a href="http://t.me/puevent">inline mention of a user</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n<blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>\n<blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>`,
+    author: {
+      _id: ``,
+      name: ``,
+      description: ``,
+      cover: ``,
+      hidden: false,
+      leader: {
+        _id: ``,
+        name: ``,
+        email: ``,
+        id: 0,
+        member: [],
+        clubs: [],
+      },
+      color: ``,
+      members: 0,
+      rank: 0,
+      events: [],
+    },
+    date: new Date(),
+    venue: venues[0],
+    duration: 1000 * 60 * 60 * 3,
+    shares: 0,
+    registered: [],
+    participated: [],
+    hashtags: [],
+    content: contentParam ? { fileId: contentParam, type: `video` } : undefined,
+  };
   const { user } = useUser();
   const [event, setEvent] = useState<EventType>(
     props.editing ? props : defaultEvent
