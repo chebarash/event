@@ -54,6 +54,7 @@ export default function Header() {
         isHome ? `` : styles.nothome,
       ].join(` `)}
     >
+      {loading && !user && <div className={styles.loading}></div>}
       <div className={styles.container}>
         <button
           onClick={() => {
