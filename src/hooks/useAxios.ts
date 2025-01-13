@@ -17,9 +17,11 @@ const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
       setError(null);
       try {
         const conf = { ...config, ...localConf };
-        conf.headers = {
-          Authorization: window.Telegram.WebApp.initDataUnsafe.user?.id,
-        };
+        conf.headers = window.Telegram.WebApp.initData.length
+          ? {
+              Authorization: `tma ${window.Telegram.WebApp.initData}`,
+            }
+          : {};
         const response: AxiosResponse<T> = await axiosInstance.request<T>(conf);
         setData(response.data);
         return response.data;
@@ -41,11 +43,7 @@ const useAxios = <T>(config: AxiosRequestConfig & { manual?: boolean }) => {
   );
 
   useEffect(() => {
-    if (
-      !config.manual &&
-      window.Telegram.WebApp.initData.length
-    )
-      fetchData();
+    if (!config.manual && window.Telegram.WebApp.initData.length) fetchData();
   }, []);
 
   return { data, error, loading, fetchData };
