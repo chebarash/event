@@ -1,15 +1,16 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { AxiosRequestConfig } from "axios";
-import { UserContextType, UserType } from "../types/types";
+import { UserType } from "../types/types";
 import useAxios from "./useAxios";
 
 const UserContext = createContext<{
-  user?: UserContextType;
+  user: UserType | null;
   loading: boolean;
   fetchData: (config: AxiosRequestConfig) => any;
 }>({
+  user: null,
   loading: true,
   fetchData: () => {},
 });
@@ -19,42 +20,21 @@ export function UserProvider({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [loaded, setLoaded] = useState(false);
-  const [user, setUser] = useState<UserContextType>();
   const { data, loading, fetchData } = useAxios<UserType>({
     url: `/user`,
     method: `get`,
   });
 
   useEffect(() => {
-    const { expand, disableVerticalSwipes, ready, CloudStorage, initData } =
-      window.Telegram.WebApp;
-    if (initData.length)
-      CloudStorage.getItem(`user`, (_, u) => {
-        if (u)
-          setUser((user) =>
-            typeof user == `undefined`
-              ? { ...JSON.parse(u), initial: true }
-              : user
-          );
-      });
+    const { expand, disableVerticalSwipes, ready } = window.Telegram.WebApp;
     disableVerticalSwipes();
     expand();
     ready();
-    setLoaded(true);
   }, []);
 
-  useEffect(() => {
-    const { CloudStorage, initData } = window.Telegram.WebApp;
-    setUser(data);
-    if (initData.length)
-      if (data) CloudStorage.setItem(`user`, JSON.stringify(data));
-      else CloudStorage.removeItem(`user`);
-  }, [data]);
-
   return (
-    <UserContext.Provider value={{ user, loading, fetchData }}>
-      {loaded && children}
+    <UserContext.Provider value={{ user: data, loading, fetchData }}>
+      {children}
     </UserContext.Provider>
   );
 }

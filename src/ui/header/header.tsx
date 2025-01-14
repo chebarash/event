@@ -34,7 +34,7 @@ export default function Header() {
         isHome ? `` : styles.nothome,
       ].join(` `)}
     >
-      {loading && user?.initial && <div className={styles.loading}></div>}
+      {loading && !user && <div className={styles.loading}></div>}
       <div className={styles.container}>
         <button
           onClick={back}
@@ -101,21 +101,24 @@ export default function Header() {
             />
           </svg>
         </button>
-        {typeof user !== `undefined` &&
-          (user ? (
-            <Image
-              src={user.picture || `/profile.png`}
-              width={46}
-              height={46}
-              alt="picture"
-            />
-          ) : (
-            ![`/login`, `/policy`].includes(pathname) && (
-              <Link className={styles.login} href="/login">
-                Log In
-              </Link>
-            )
-          ))}
+        {(!loading || user) && (
+          <>
+            {user ? (
+              <Image
+                src={user.picture || `/profile.png`}
+                width={46}
+                height={46}
+                alt="picture"
+              />
+            ) : (
+              ![`/login`, `/policy`].includes(pathname) && (
+                <Link className={styles.login} href="/login">
+                  Log In
+                </Link>
+              )
+            )}
+          </>
+        )}
       </div>
     </header>
   );

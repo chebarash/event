@@ -86,5 +86,3 @@ export type ClubContextType = ClubType & {
   update: () => any;
   edit: (event: ShortClubType) => any;
 };
-
-export type UserContextType = (UserType & { initial?: boolean }) | null;
