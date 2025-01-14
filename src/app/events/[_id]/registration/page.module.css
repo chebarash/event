@@ -6,7 +6,7 @@
 
 .registered li {
   display: grid;
-  grid-template-columns: 46px 1fr;
+  grid-template-columns: 55px 1fr;
   gap: var(--gapText);
   position: relative;
 }

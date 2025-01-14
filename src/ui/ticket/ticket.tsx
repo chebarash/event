@@ -39,10 +39,8 @@ export default function Ticket({
         is_visible: false,
       });
       MainButton.offClick(fn);
-      if (themeParams.bottom_bar_bg_color && themeParams.header_bg_color) {
-        setBottomBarColor(themeParams.bottom_bar_bg_color);
-        setHeaderColor(themeParams.header_bg_color);
-      }
+      setBottomBarColor(`bottom_bar_bg_color`);
+      setHeaderColor(`bg_color`);
     };
   }, []);
 

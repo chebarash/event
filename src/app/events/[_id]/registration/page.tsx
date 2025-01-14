@@ -49,7 +49,7 @@ const Participant = ({
             );
         }}
       >
-        <h3>{index}.</h3>
+        <h3>{index}</h3>
         <Image
           src={picture || `/profile.png`}
           width={46}
@@ -128,10 +128,7 @@ export default function RegistrationPage() {
       {
         text: "Scan Ticket",
       },
-      async (data) => {
-        await participate(data);
-        closeScanQrPopup();
-      }
+      (data) => participate(data)
     );
   };
 
