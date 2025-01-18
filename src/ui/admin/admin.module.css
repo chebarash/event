@@ -46,19 +46,15 @@
 
 .colors {
   display: flex;
-  height: 100px;
-  margin-bottom: -105px;
-  z-index: 9;
-  mask: linear-gradient(black, black, transparent);
-  border-radius: 20px 20px 0 0;
+  gap: var(--gapText);
 }
 
 .colors button {
-  padding: 20px 0;
-  justify-content: center;
+  aspect-ratio: 1/1;
+  border-radius: 100%;
   display: flex;
-}
-
-.cover {
-  border-radius: 20px;
+  align-items: center;
+  justify-content: center;
+  border: solid 2px #fff;
+  outline: solid 1px #000;
 }

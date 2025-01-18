@@ -1,43 +1,52 @@
 "use client";
 
-import { EventType } from "@/types/types";
+import { ClubType, EventType } from "@/types/types";
 import styles from "./card.module.css";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Card({
   _id,
-  title,
-  picture,
-  color,
-  duration,
-  date,
-  private: prvt,
-  cancelled,
+  fg,
+  bg,
   registration,
   includeDate,
-}: EventType & {
+  disabled,
+  ...extra
+}: ((EventType & { type: `event` }) | (ClubType & { type: `club` })) & {
   registration?: boolean;
   includeDate?: boolean;
+  disabled?: boolean;
 }) {
-  const time = date.toLocaleString(`en`, {
-    timeStyle: `short`,
-    dateStyle: includeDate ? `medium` : undefined,
-  });
-  const end = new Date(date.getTime() + duration).toLocaleString(`en`, {
-    timeStyle: `short`,
-  });
+  const subtitle =
+    extra.type == `event`
+      ? `${extra.date.toLocaleString(`en`, {
+          timeStyle: `short`,
+          dateStyle: includeDate ? `medium` : undefined,
+        })} - ${new Date(extra.date.getTime() + extra.duration).toLocaleString(
+          `en`,
+          {
+            timeStyle: `short`,
+          }
+        )}`
+      : `${extra.members} ${extra.members === 1 ? "member" : "members"}`;
 
   return (
     <Link
       prefetch={true}
-      href={`/events/${_id}`}
+      href={`/${extra.type}s/${_id}`}
       className={[
         styles.event,
-        cancelled ? styles.cancelled : ``,
-        prvt ? styles.private : ``,
+        extra.type == `event` && extra.cancelled ? styles.cancelled : ``,
+        extra.type == `event` && extra.private ? styles.private : ``,
       ].join(` `)}
-      style={{ background: color }}
+      style={{
+        background: bg,
+        color: fg,
+        pointerEvents: disabled ? `none` : `auto`,
+      }}
+      aria-disabled={disabled}
+      tabIndex={disabled ? -1 : undefined}
     >
       {registration && (
         <svg className={styles.star} width="60" viewBox="0 0 52 48" fill="none">
@@ -49,19 +58,21 @@ export default function Card({
           />
         </svg>
       )}
-      <h2 className={styles.title}>{title}</h2>
-      <p className={styles.date}>
-        {time} - {end}
-      </p>
+      <h2 className={styles.title}>
+        {extra.type == `event` ? extra.title : extra.name}
+      </h2>
+      <p className={styles.date}>{subtitle}</p>
       <div className={styles.cover}>
         <div
           className={styles.gradient}
           style={{
-            background: `linear-gradient(180deg,${color} 0%,${color}00 100%)`,
+            background: `linear-gradient(180deg,${bg} 0%,${bg}00 100%)`,
           }}
         ></div>
         <Image
-          src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${picture}`}
+          src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${
+            extra.type == `event` ? extra.picture : extra.cover
+          }`}
           alt="cover"
           width={0}
           height={0}

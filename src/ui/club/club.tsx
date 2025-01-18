@@ -147,6 +147,7 @@ export default function Club({
               !!user &&
               (event.registered as any as Array<string>).includes(user._id)
             }
+            type="event"
           />
         ))}
     </main>

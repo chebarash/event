@@ -7,7 +7,8 @@ export type EventType = {
   _id: string;
   title: string;
   picture: string;
-  color: string;
+  fg: string;
+  bg: string;
   description: string;
   author: ClubType;
   date: Date;
@@ -42,7 +43,8 @@ export type ClubType = {
   cover: string;
   hidden: boolean;
   leader: UserType;
-  color: string;
+  fg: string;
+  bg: string;
   members: number;
   rank: number;
   events: Array<EventType>;
@@ -79,7 +81,8 @@ export type ShortClubType = {
   description: string;
   channel?: string;
   cover: string;
-  color: string;
+  fg: string;
+  bg: string;
 };
 
 export type ClubContextType = ClubType & {

@@ -56,6 +56,7 @@ export default function List({ daily }: { daily: DailyType }) {
             {...event}
             key={event._id}
             registration={event.registered.some(({ _id }) => _id === user?._id)}
+            type="event"
           />
         ))
       ) : (

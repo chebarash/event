@@ -9,10 +9,56 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import styles from "@/ui/admin/admin.module.css";
 import Image from "next/image";
 import { Vibrant } from "node-vibrant/browser";
+import Card from "@/ui/card/card";
+
+const ColorPicker = ({
+  name,
+  colors,
+  club,
+  update,
+}: {
+  name: `fg` | `bg`;
+  colors: Array<string>;
+  club: ShortClubType;
+  update: (e: Partial<ShortClubType>) => any;
+}) => {
+  const notName = name == `bg` ? `fg` : `bg`;
+  return (
+    <div className={styles.colors}>
+      {colors.map((color) => (
+        <button
+          key={color}
+          type="button"
+          style={{
+            backgroundColor: color,
+            width: `calc(100% / ${colors.length})`,
+          }}
+          onClick={() =>
+            update({
+              [name]: color,
+              [notName]: color == club[notName] ? club[name] : club[notName],
+            })
+          }
+        >
+          {club[name] == color && (
+            <svg width="20" height="21" viewBox="0 0 20 21">
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M1.0003 0.5H20.0003V19.5H16.0003V7.32843L3.0003 20.3284L0.171875 17.5L13.1719 4.5H1.0003V0.5Z"
+                fill={club[notName]}
+              />
+            </svg>
+          )}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 export default function EditPage() {
   const { user, loading } = useUser();
-  const { _id, description, channel, cover, color, leader, edit } =
+  const { _id, description, channel, cover, bg, fg, edit, ...extra } =
     useClubContext();
   const [waiting, setWait] = useState<boolean>(false);
   const [club, setClub] = useState<ShortClubType>({
@@ -20,10 +66,14 @@ export default function EditPage() {
     description,
     channel,
     cover,
-    color,
+    bg,
+    fg,
   });
   const ref = useRef<HTMLFormElement>(null);
   const [colors, setColors] = useState<Array<string>>([`#000000`]);
+
+  const update = (e: Partial<ShortClubType>) =>
+    setClub((club) => ({ ...club, ...e }));
 
   const submit = async (e?: FormEvent<HTMLFormElement>) => {
     if (e) e.preventDefault();
@@ -52,8 +102,10 @@ export default function EditPage() {
           colors.DarkMuted?.hex,
           colors.LightMuted?.hex,
         ].filter((color) => color != undefined) as Array<string>;
-        setColors(c);
-        if (!c.includes(club.color)) setClub({ ...club, color: c[0] });
+        const list = [`#ffffff`, `#000000`, ...c];
+        setColors(list);
+        if (!list.includes(club.bg)) setClub({ ...club, bg: list[1] });
+        if (!list.includes(club.fg)) setClub({ ...club, fg: list[0] });
       } catch (e) {}
     })();
   }, [club.cover]);
@@ -77,7 +129,7 @@ export default function EditPage() {
     };
   }, [club, waiting]);
 
-  if (!loading && leader._id != user?._id) return notFound();
+  if (!loading && extra.leader._id != user?._id) return notFound();
   if (!user) return <Loading />;
 
   return (
@@ -160,19 +212,20 @@ export default function EditPage() {
           </button>
         </section>
         <section className={styles.section}>
-          <h3>Color</h3>
-          <p>Choose club card color.</p>
+          <h3>Colors</h3>
+          <p>Choose club card colors.</p>
           <select
             required
-            name="author"
-            id="author"
+            name="bg"
+            id="bg"
             onChange={(e) =>
               setClub({
                 ...club,
-                color: e.target.value,
+                bg: e.target.value,
+                fg: e.target.value == club.fg ? club.bg : club.fg,
               })
             }
-            value={club.color}
+            value={club.bg}
           >
             {colors.map((color) => (
               <option key={color} value={color}>
@@ -180,40 +233,28 @@ export default function EditPage() {
               </option>
             ))}
           </select>
-          <div className={styles.colors}>
+          <ColorPicker colors={colors} name="bg" club={club} update={update} />
+          <select
+            required
+            name="fbg"
+            id="fg"
+            onChange={(e) =>
+              setClub({
+                ...club,
+                fg: e.target.value,
+                bg: e.target.value == club.bg ? club.fg : club.bg,
+              })
+            }
+            value={club.fg}
+          >
             {colors.map((color) => (
-              <button
-                key={color}
-                type="button"
-                style={{
-                  backgroundColor: color,
-                  width: `calc(100% / ${colors.length})`,
-                }}
-                onClick={() => setClub({ ...club, color })}
-              >
-                {club.color == color && (
-                  <svg width="20" height="21" viewBox="0 0 20 21">
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M1.0003 0.5H20.0003V19.5H16.0003V7.32843L3.0003 20.3284L0.171875 17.5L13.1719 4.5H1.0003V0.5Z"
-                      fill="#ffffff"
-                    />
-                  </svg>
-                )}
-              </button>
+              <option key={color} value={color}>
+                {color}
+              </option>
             ))}
-          </div>
-          <Image
-            className={styles.cover}
-            src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${club.cover}`}
-            alt="cover"
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{ width: "100%", height: "auto" }}
-            priority
-          />
+          </select>
+          <ColorPicker colors={colors} name="fg" club={club} update={update} />
+          <Card {...club} {...extra} type="club" disabled />
         </section>
       </form>
     </main>

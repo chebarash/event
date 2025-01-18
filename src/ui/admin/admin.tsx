@@ -17,6 +17,7 @@ import {
 import Loading from "../loading/loading";
 import { useSearchParams } from "next/navigation";
 import { getTimeRemaining } from "../event/event";
+import Card from "../card/card";
 
 const venues = [
   `Conference Hall`,
@@ -171,6 +172,51 @@ const TextArea = ({
   );
 };
 
+const ColorPicker = ({
+  name,
+  colors,
+  event,
+  update,
+}: {
+  name: `fg` | `bg`;
+  colors: Array<string>;
+  event: EventType;
+  update: (e: Partial<EventType>) => any;
+}) => {
+  const notName = name == `bg` ? `fg` : `bg`;
+  return (
+    <div className={styles.colors}>
+      {colors.map((color) => (
+        <button
+          key={color}
+          type="button"
+          style={{
+            backgroundColor: color,
+            width: `calc(100% / ${colors.length})`,
+          }}
+          onClick={() =>
+            update({
+              [name]: color,
+              [notName]: color == event[notName] ? event[name] : event[notName],
+            })
+          }
+        >
+          {event[name] == color && (
+            <svg width="20" height="21" viewBox="0 0 20 21">
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M1.0003 0.5H20.0003V19.5H16.0003V7.32843L3.0003 20.3284L0.171875 17.5L13.1719 4.5H1.0003V0.5Z"
+                fill={event[notName]}
+              />
+            </svg>
+          )}
+        </button>
+      ))}
+    </div>
+  );
+};
+
 const formatDateToISO = (date: Date): string => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -197,7 +243,8 @@ export default function Admin(
     picture:
       pictureParam ||
       `AgACAgIAAxkBAAIEU2bAemXsC2637DDaH2RfEeluu0NmAAJr4TEb8x4BSvU86RHWlyQHAQADAgADdwADNQQ`,
-    color: `#000000`,
+    bg: `#000000`,
+    fg: `#ffffff`,
     description:
       descriptionParam ||
       `<b>bold</b>\n<i>italic</i>\n<u>underline</u>\n<s>strikethrough</s>\n<tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough </s> <u>underline italic bold</u></i> bold</b>\n<a href="http://chebarash.uz">inline URL</a>\n<a href="http://t.me/puevent">inline mention of a user</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n<blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>\n<blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>`,
@@ -215,7 +262,8 @@ export default function Admin(
         member: [],
         clubs: [],
       },
-      color: ``,
+      bg: ``,
+      fg: ``,
       members: 0,
       rank: 0,
       events: [],
@@ -277,8 +325,10 @@ export default function Admin(
           colors.DarkMuted?.hex,
           colors.LightMuted?.hex,
         ].filter((color) => color != undefined) as Array<string>;
-        setColors(c);
-        if (!c.includes(event.color)) update({ color: c[0] });
+        const list = [`#ffffff`, `#000000`, ...c];
+        setColors(list);
+        if (!list.includes(event.bg)) update({ bg: list[1] });
+        if (!list.includes(event.fg)) update({ fg: list[0] });
       } catch (e) {}
     })();
   }, [event.picture]);
@@ -384,17 +434,18 @@ export default function Admin(
             Paste
           </button>
         </Section>
-        <Section title="Color" description="Choose event card color.">
+        <Section title="Colors" description="Choose event card colors.">
           <select
             required
-            name="author"
-            id="author"
+            name="bg"
+            id="bg"
             onChange={(e) =>
               update({
-                color: e.target.value,
+                bg: e.target.value,
+                fg: e.target.value == event.fg ? event.bg : event.fg,
               })
             }
-            value={event.color}
+            value={event.bg}
           >
             {colors.map((color) => (
               <option key={color} value={color}>
@@ -402,40 +453,37 @@ export default function Admin(
               </option>
             ))}
           </select>
-          <div className={styles.colors}>
-            {colors.map((color) => (
-              <button
-                key={color}
-                type="button"
-                style={{
-                  backgroundColor: color,
-                  width: `calc(100% / ${colors.length})`,
-                }}
-                onClick={() => update({ color })}
-              >
-                {event.color == color && (
-                  <svg width="20" height="21" viewBox="0 0 20 21">
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M1.0003 0.5H20.0003V19.5H16.0003V7.32843L3.0003 20.3284L0.171875 17.5L13.1719 4.5H1.0003V0.5Z"
-                      fill="#ffffff"
-                    />
-                  </svg>
-                )}
-              </button>
-            ))}
-          </div>
-          <Image
-            className={styles.cover}
-            src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${event.picture}`}
-            alt="cover"
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{ width: "100%", height: "auto" }}
-            priority
+          <ColorPicker
+            colors={colors}
+            name="bg"
+            event={event}
+            update={update}
           />
+          <select
+            required
+            name="fg"
+            id="fg"
+            onChange={(e) =>
+              update({
+                fg: e.target.value,
+                bg: e.target.value == event.bg ? event.fg : event.bg,
+              })
+            }
+            value={event.fg}
+          >
+            {colors.map((color) => (
+              <option key={color} value={color}>
+                {color}
+              </option>
+            ))}
+          </select>
+          <ColorPicker
+            colors={colors}
+            name="fg"
+            event={event}
+            update={update}
+          />
+          <Card {...event} disabled type="event" />
         </Section>
         <Section title="Date" description="The exact time of the event start.">
           <Input
