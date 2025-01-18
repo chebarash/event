@@ -19,6 +19,7 @@ export default function Club({
   members,
   rank,
   events,
+  username,
   update,
 }: ClubContextType) {
   const { user } = useUser();
@@ -87,7 +88,18 @@ export default function Club({
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>{name}</h1>
-            <p className={styles.author}>by {leader.name}</p>
+            <button
+              className={styles.author}
+              disabled={!username}
+              onClick={() => {
+                if (username)
+                  window.Telegram.WebApp.openTelegramLink(
+                    `https://t.me/${username}`
+                  );
+              }}
+            >
+              by {leader.name}
+            </button>
           </div>
           {channel && (
             <button

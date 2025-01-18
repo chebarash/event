@@ -325,7 +325,7 @@ export default function Admin(
           colors.DarkMuted?.hex,
           colors.LightMuted?.hex,
         ].filter((color) => color != undefined) as Array<string>;
-        const list = [`#ffffff`, `#000000`, ...c];
+        const list = Array.from(new Set([`#ffffff`, `#000000`, ...c]));
         setColors(list);
         if (!list.includes(event.bg)) update({ bg: list[1] });
         if (!list.includes(event.fg)) update({ fg: list[0] });
@@ -419,7 +419,7 @@ export default function Admin(
           description="Just send a 16x9 photo to the bot and copy and paste his answer."
         >
           <Input
-            pattern="^AgACAgIAAxkBA[A-Za-z0-9_\-]{53,70}$"
+            pattern="^AgACAgIAAxkBA[A-Za-z0-9_\-]{53,90}$"
             name="picture"
             event={event}
             update={(picture) => update({ picture })}
@@ -540,7 +540,7 @@ export default function Admin(
           name="content"
         >
           <Input
-            pattern="^(AgACAgIAAxkBA|BAACAgIAAxkBA)[A-Za-z0-9_\-]{53,70}$"
+            pattern="^(AgACAgIAAxkBA|BAACAgIAAxkBA)[A-Za-z0-9_\-]{53,90}$"
             name="content"
             value={event.content?.fileId}
             event={event}
@@ -548,7 +548,7 @@ export default function Admin(
               update({
                 content: fileId.length
                   ? {
-                      type: /^AgACAgIAAxkBA[A-Za-z0-9_\-]{53,70}$/.test(fileId)
+                      type: /^AgACAgIAAxkBA[A-Za-z0-9_\-]{53,90}$/.test(fileId)
                         ? `photo`
                         : `video`,
                       fileId,
@@ -565,7 +565,7 @@ export default function Admin(
               update({
                 content: data.length
                   ? {
-                      type: /^AgACAgIAAxkBA[A-Za-z0-9_\-]{53,70}$/.test(data)
+                      type: /^AgACAgIAAxkBA[A-Za-z0-9_\-]{53,90}$/.test(data)
                         ? `photo`
                         : `video`,
                       fileId: data,

@@ -77,7 +77,11 @@ export default function Card({
           width={0}
           height={0}
           sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
+          style={{
+            width: "100%",
+            height: "auto",
+            aspectRatio: extra.type == `event` ? undefined : "1/1",
+          }}
           priority
           className={styles.cover}
         />

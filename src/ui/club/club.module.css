@@ -68,7 +68,7 @@
   right: -14px;
   animation: top 1s ease alternate-reverse;
   animation-iteration-count: 2;
-  animation-delay: 2s;
+  animation-delay: 1s;
 }
 
 @keyframes top {

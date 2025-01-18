@@ -122,12 +122,12 @@ export default function EventProvider({
           userId,
         },
       });
-      if (!event.registered && !userId) {
+      if (!event.isRegistered && !userId) {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
       }
       window.Telegram.WebApp.HapticFeedback.notificationOccurred(
-        !event.registered || userId ? `success` : `warning`
+        !event.isRegistered || userId ? `success` : `warning`
       );
       return result;
     });

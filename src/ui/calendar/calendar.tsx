@@ -71,7 +71,6 @@ export default function Calendar({ daily }: { daily: DailyType }) {
         >
           <Link
             prefetch={!disabled}
-            shallow
             href={`/?day=${i}`}
             className={styles.button}
           >

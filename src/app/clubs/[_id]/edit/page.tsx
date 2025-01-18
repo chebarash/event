@@ -7,7 +7,6 @@ import Loading from "@/ui/loading/loading";
 import { ShortClubType } from "@/types/types";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import styles from "@/ui/admin/admin.module.css";
-import Image from "next/image";
 import { Vibrant } from "node-vibrant/browser";
 import Card from "@/ui/card/card";
 
@@ -102,7 +101,7 @@ export default function EditPage() {
           colors.DarkMuted?.hex,
           colors.LightMuted?.hex,
         ].filter((color) => color != undefined) as Array<string>;
-        const list = [`#ffffff`, `#000000`, ...c];
+        const list = Array.from(new Set([`#ffffff`, `#000000`, ...c]));
         setColors(list);
         if (!list.includes(club.bg)) setClub({ ...club, bg: list[1] });
         if (!list.includes(club.fg)) setClub({ ...club, fg: list[0] });
@@ -192,7 +191,7 @@ export default function EditPage() {
             type="text"
             name="cover"
             id="cover"
-            pattern="^AgACAgIAAxkBA[A-Za-z0-9_\-]{53,70}$"
+            pattern="^AgACAgIAAxkBA[A-Za-z0-9_\-]{53,90}$"
             value={club.cover}
             onChange={(e) =>
               setClub({
