@@ -45,7 +45,7 @@ export type ClubType = {
   leader: UserType;
   fg: string;
   bg: string;
-  members: number;
+  members: Array<UserType>;
   rank: number;
   events: Array<EventType>;
   username?: string;

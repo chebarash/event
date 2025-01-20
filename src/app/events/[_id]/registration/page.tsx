@@ -123,7 +123,7 @@ export default function RegistrationPage() {
     (!spots || spots - registered.length > 0);
 
   const fn = () => {
-    const { showScanQrPopup, closeScanQrPopup } = window.Telegram.WebApp;
+    const { showScanQrPopup } = window.Telegram.WebApp;
     showScanQrPopup(
       {
         text: "Scan Ticket",

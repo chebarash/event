@@ -31,7 +31,7 @@ const EventContext = createContext<EventContextType>({
     },
     fg: ``,
     bg: ``,
-    members: 0,
+    members: [],
     rank: 0,
     events: [],
   },

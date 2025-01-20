@@ -264,7 +264,7 @@ export default function Admin(
       },
       bg: ``,
       fg: ``,
-      members: 0,
+      members: [],
       rank: 0,
       events: [],
     },

@@ -125,8 +125,8 @@ export default function Club({
       </div>
       <div className={styles.info}>
         <div className={styles.members}>
-          <h3>{members}</h3>
-          <p>{members === 1 ? "member" : "members"}</p>
+          <h3>{members.length}</h3>
+          <p>{members.length === 1 ? "member" : "members"}</p>
         </div>
         <div className={styles.rank}>
           <p>top</p>

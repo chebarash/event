@@ -27,7 +27,7 @@ const ClubContext = createContext<ClubContextType>({
   },
   fg: ``,
   bg: ``,
-  members: 0,
+  members: [],
   rank: 0,
   events: [],
   update: () => {},

@@ -1,5 +1,3 @@
-"use client";
-
 import { ClubType, EventType } from "@/types/types";
 import styles from "./card.module.css";
 import Image from "next/image";
@@ -29,7 +27,9 @@ export default function Card({
             timeStyle: `short`,
           }
         )}`
-      : `${extra.members} ${extra.members === 1 ? "member" : "members"}`;
+      : `${extra.members.length} ${
+          extra.members.length === 1 ? "member" : "members"
+        }`;
 
   return (
     <Link
