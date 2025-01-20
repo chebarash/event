@@ -76,7 +76,7 @@ export default function ForYou({
           <Image
             alt="background"
             priority
-            src={image}
+            src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${image}`}
             fill
             style={{ objectFit: "cover" }}
           />
