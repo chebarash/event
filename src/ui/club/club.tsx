@@ -8,6 +8,7 @@ import Card from "../card/card";
 import Image from "next/image";
 import ToJsx from "../jsx/jsx";
 import { useRouterContext } from "@/hooks/useRouter";
+import Link from "next/link";
 
 export default function Club({
   _id,
@@ -73,6 +74,8 @@ export default function Club({
     };
   }, [user]);
 
+  const disabled = !user || !user.clubs.some((c) => c._id == _id);
+
   return (
     <main>
       <Image
@@ -124,12 +127,20 @@ export default function Club({
         </div>
         <ToJsx>{description}</ToJsx>
       </div>
-      {!hidden && (
+      {(!hidden || !disabled) && (
         <div className={styles.info}>
-          <div className={styles.members}>
+          <Link
+            href={`/clubs/${_id}/members`}
+            className={styles.members}
+            style={{
+              pointerEvents: disabled ? `none` : `auto`,
+            }}
+            aria-disabled={disabled}
+            tabIndex={disabled ? -1 : undefined}
+          >
             <h3>{members.length}</h3>
             <p>{members.length === 1 ? "member" : "members"}</p>
-          </div>
+          </Link>
           <div className={styles.rank}>
             <p>top</p>
             <h3>{rank}</h3>

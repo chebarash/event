@@ -32,6 +32,7 @@ const ClubContext = createContext<ClubContextType>({
   events: [],
   update: () => {},
   edit: (club: ShortClubType) => {},
+  remove: (userId: string) => {},
 });
 
 export function useClubContext() {
@@ -51,6 +52,11 @@ export default function ClubProvider({
   const { fetchData: fetchEdit } = useAxios<ClubType>({
     url: `/clubs`,
     method: `put`,
+    manual: true,
+  });
+  const { fetchData: fetchRemove } = useAxios<ClubType>({
+    url: `/clubs`,
+    method: `post`,
     manual: true,
   });
 
@@ -90,8 +96,16 @@ export default function ClubProvider({
       return result;
     });
 
+  const remove = (userId: string) =>
+    action(async () => {
+      const result = await fetchRemove({ data: { _id: initial._id, userId } });
+      if (result)
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred(`success`);
+      return result;
+    });
+
   return (
-    <ClubContext.Provider value={{ ...club, update, edit }}>
+    <ClubContext.Provider value={{ ...club, update, edit, remove }}>
       {children}
     </ClubContext.Provider>
   );

@@ -89,4 +89,5 @@ export type ShortClubType = {
 export type ClubContextType = ClubType & {
   update: () => any;
   edit: (event: ShortClubType) => any;
+  remove: (userId: string) => any;
 };

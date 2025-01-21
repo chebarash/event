@@ -1,0 +1,52 @@
+.registered {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapBox);
+}
+
+.registered li {
+  display: grid;
+  grid-template-columns: 55px 1fr;
+  gap: var(--gapText);
+  position: relative;
+}
+
+.registered li > *:first-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.registered img {
+  border-radius: 100%;
+}
+
+.registered span {
+  display: flex;
+  gap: 8px;
+}
+
+.registered pre {
+  cursor: pointer;
+  font-family: var(--fontMono);
+  font-weight: 500;
+  font-style: normal;
+}
+
+.registered div,
+.registered button {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapNarrow);
+  overflow: hidden;
+}
+
+.registered h3,
+.registered p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.registered h3 {
+  font-size: var(--fontSizeMid);
+}

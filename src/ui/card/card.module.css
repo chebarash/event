@@ -79,6 +79,7 @@
 .cover {
   position: relative;
   display: flex;
+  min-height: 40px;
 }
 
 .gradient {

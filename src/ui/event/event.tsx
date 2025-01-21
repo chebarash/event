@@ -108,8 +108,7 @@ export default function Event({
         );
         return window.Telegram.WebApp.close();
       }
-      if (user.clubs.some(({ _id }) => _id == author._id))
-        return registration();
+      if (isOrganizer) return registration();
       if (!canRegister) return ticket();
       update();
       if (external && !isRegistered)
@@ -140,10 +139,7 @@ export default function Event({
             is_visible: true,
             ...(isOrganizer
               ? {
-                  text:
-                    canRegister || timeTillEnd < 0
-                      ? `Get Registered`
-                      : `Scan Ticket`,
+                  text: `Get Registered`,
                   color: themeParams.button_color,
                   text_color: themeParams.button_text_color,
                 }

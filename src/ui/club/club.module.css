@@ -38,7 +38,8 @@
   gap: var(--gapText);
 }
 
-.info > div {
+.info > div,
+.info > a {
   width: max-content;
   display: flex;
   padding: 12px;
