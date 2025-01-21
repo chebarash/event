@@ -61,7 +61,9 @@ export default function Card({
       <h2 className={styles.title}>
         {extra.type == `event` ? extra.title : extra.name}
       </h2>
-      <p className={styles.date}>{subtitle}</p>
+      {(extra.type == `event` || !extra.hidden) && (
+        <p className={styles.date}>{subtitle}</p>
+      )}
       <div className={styles.cover}>
         <div
           className={styles.gradient}

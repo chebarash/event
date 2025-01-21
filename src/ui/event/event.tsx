@@ -271,7 +271,7 @@ export default function Event({
                     className={voted ? styles.optionVoted : styles.option}
                     key={i}
                     onClick={() => vote(option)}
-                    disabled={voted || !canRegister}
+                    disabled={voted || timeTillEnd < 0}
                   >
                     <p className={styles.name}>{option}</p>
                     <p className={styles.percent}>{percent}%</p>
