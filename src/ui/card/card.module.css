@@ -11,8 +11,10 @@
   border-radius: 0 0 20px 20px;
 }
 
-.cancelled .title {
+.cancelled .title,
+.cancelled .date {
   position: relative;
+  color: #80808080;
 }
 
 .cancelled .title::before {
@@ -32,15 +34,16 @@
 }
 
 .cancelled {
-  background: #808080 !important;
+  background: #000000 !important;
 }
 
 .cancelled img {
   filter: grayscale(100%);
+  opacity: 0.5;
 }
 
 .cancelled .gradient {
-  background: linear-gradient(180deg, #808080 0%, #80808000 100%) !important;
+  background: linear-gradient(180deg, #000000 0%, #00000000 100%) !important;
 }
 
 .private {
