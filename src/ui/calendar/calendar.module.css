@@ -51,6 +51,7 @@
 }
 
 .date {
-  font-size: 32px;
+  font-size: 40px;
   font-family: var(--fontTitle);
+  line-height: 100%;
 }
