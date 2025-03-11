@@ -196,6 +196,7 @@ export default function Event({
       )}
       <div className={styles.cover}>
         <Image
+          unoptimized
           src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${picture}`}
           alt="cover"
           width={0}
@@ -216,6 +217,7 @@ export default function Event({
             >
               <p>by</p>
               <Image
+                unoptimized
                 src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${author.cover}`}
                 width={40}
                 height={40}

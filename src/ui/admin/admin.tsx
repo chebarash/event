@@ -580,6 +580,7 @@ export default function Admin(
             <section className={styles.preview}>
               {event.content.type == `photo` ? (
                 <Image
+                  unoptimized
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${event.content.fileId}`}
                   alt="cover"
                   width={0}

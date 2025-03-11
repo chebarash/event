@@ -72,6 +72,7 @@ export default function Card({
           }}
         ></div>
         <Image
+          unoptimized
           src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${
             extra.type == `event` ? extra.picture : extra.cover
           }`}

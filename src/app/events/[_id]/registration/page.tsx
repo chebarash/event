@@ -51,6 +51,7 @@ const Participant = ({
       >
         <h3>{index}</h3>
         <Image
+          unoptimized
           src={picture || `/profile.png`}
           width={46}
           height={46}

@@ -74,6 +74,7 @@ export default function ForYou({
           </div>
           <div className={styles.link}>{button}</div>
           <Image
+            unoptimized
             alt="background"
             priority
             src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${image}`}

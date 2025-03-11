@@ -105,6 +105,7 @@ export default function Header() {
           <>
             {user ? (
               <Image
+                unoptimized
                 src={user.picture || `/profile.png`}
                 width={46}
                 height={46}
