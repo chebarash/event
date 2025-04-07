@@ -4,6 +4,8 @@ import Clubs from "@/ui/clubs/clubs";
 
 export const dynamic = "force-dynamic";
 
+const parties = [`6797b731a0297fc8703b182c`,`67f3828eb35dbc13cd81f7ea`];
+
 export default async function ClubsPage({
   searchParams,
 }: {
@@ -12,8 +14,8 @@ export default async function ClubsPage({
   const { data } = await axiosInstance.get<Array<ClubType>>(`/clubs`);
 
   const res = searchParams?.parties
-    ? data.filter(({ _id }) => [`6797b731a0297fc8703b182c`].includes(_id))
-    : data;
+    ? data.filter(({ _id }) => parties.includes(_id))
+    : data.filter(({ _id }) => !parties.includes(_id));
 
   return <Clubs clubs={res} />;
 }
