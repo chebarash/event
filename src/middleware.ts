@@ -4,6 +4,10 @@ import { NextResponse } from "next/server";
 export function middleware(request: NextRequest) {
   const _id = request.nextUrl.searchParams.get(`tgWebAppStartParam`);
   if (_id) {
+    if (_id.startsWith(`parties`))
+      return NextResponse.redirect(
+        new URL(`/clubs?parties=true}`, request.nextUrl.origin)
+      );
     if (_id.startsWith(`clubs`))
       return NextResponse.redirect(
         new URL(`/${_id.replace(`clubs`, `clubs/`)}`, request.nextUrl.origin)
