@@ -4,7 +4,7 @@ import Clubs from "@/ui/clubs/clubs";
 
 export const dynamic = "force-dynamic";
 
-const parties = [`6797b731a0297fc8703b182c`,`67f3828eb35dbc13cd81f7ea`, `67f4faec64ae6a357ed27524`, `67f649a14697aa67579b2166`];
+const parties = [`6797b731a0297fc8703b182c`,`67f3828eb35dbc13cd81f7ea`, `67f4faec64ae6a357ed27524`, `67f649a14697aa67579b2166`, `67f64b734697aa67579b2167`];
 
 export default async function ClubsPage({
   searchParams,
