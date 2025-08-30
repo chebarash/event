@@ -5,13 +5,7 @@ import styles from "./foryou.module.css";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function ForYou({
-  title,
-  subtitle,
-  button,
-  image,
-  link,
-}: ForYouType) {
+export default function ForYou({ foryou }: { foryou: ForYouType | null }) {
   return (
     <section>
       <h2>For You</h2>
@@ -55,33 +49,35 @@ export default function ForYou({
             />
           </svg>
         </Link>
-        <Link prefetch={true} className={styles.foryou} href={link}>
-          <div className={styles.content}>
-            <div className={styles.text}>
-              <h3>{title}</h3>
-              <p>{subtitle}</p>
+        {foryou && (
+          <Link prefetch={true} className={styles.foryou} href={foryou.link}>
+            <div className={styles.content}>
+              <div className={styles.text}>
+                <h3>{foryou.title}</h3>
+                <p>{foryou.subtitle}</p>
+              </div>
+              <div className={styles.share}>
+                <svg width="20" height="21" viewBox="0 0 20 21">
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M1.0003 0.5H20.0003V19.5H16.0003V7.32843L3.0003 20.3284L0.171875 17.5L13.1719 4.5H1.0003V0.5Z"
+                    fill="var(--bg)"
+                  />
+                </svg>
+              </div>
             </div>
-            <div className={styles.share}>
-              <svg width="20" height="21" viewBox="0 0 20 21">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M1.0003 0.5H20.0003V19.5H16.0003V7.32843L3.0003 20.3284L0.171875 17.5L13.1719 4.5H1.0003V0.5Z"
-                  fill="var(--bg)"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className={styles.link}>{button}</div>
-          <Image
-            unoptimized
-            alt="background"
-            priority
-            src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${image}`}
-            fill
-            style={{ objectFit: "cover" }}
-          />
-        </Link>
+            <div className={styles.link}>{foryou.button}</div>
+            <Image
+              unoptimized
+              alt="background"
+              priority
+              src={`${process.env.NEXT_PUBLIC_BASE_URL}/photo/${foryou.image}`}
+              fill
+              style={{ objectFit: "cover" }}
+            />
+          </Link>
+        )}
       </div>
     </section>
   );

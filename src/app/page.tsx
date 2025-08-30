@@ -12,7 +12,7 @@ export default async function Home() {
     data: { events, foryou },
   } = await axiosInstance.get<{
     events: Array<EventType>;
-    foryou: ForYouType;
+    foryou: ForYouType | null;
   }>(`/`);
   const daily: DailyType = {};
   events.forEach((event) => {
@@ -25,7 +25,7 @@ export default async function Home() {
   return (
     <main>
       <Greeting />
-      <ForYou {...foryou} />
+      <ForYou foryou={foryou} />
       <Calendar daily={daily} />
       <List daily={daily} />
     </main>
