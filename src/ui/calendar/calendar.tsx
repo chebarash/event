@@ -68,10 +68,6 @@ export default function Calendar({ daily }: { daily: DailyType }) {
             disabled ? styles.disabled : ``,
             `${i}` == (day || `0`) ? styles.active : ``,
           ].join(` `)}
-          ref={(el) => {
-            if (`${i}` == (day || `0`))
-              el?.scrollIntoView({ behavior: `smooth`, block: `center` });
-          }}
         >
           <Link
             prefetch={!disabled}
